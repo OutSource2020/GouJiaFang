@@ -1,0 +1,86 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="SiteTemplateAgentL1.Master.cs" Inherits="web1.WebsiteAgent.L1.SiteTemplateAgentL1" %>
+
+<!DOCTYPE html>
+
+<html>
+<head runat="server">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title><%: Page.Title %> - PPM</title>
+
+
+<asp:ContentPlaceHolder ID="ContentPlaceHolder_NR1" runat="server">  
+          
+</asp:ContentPlaceHolder>  
+
+<link rel="stylesheet" type="text/css" href="/css/yuanguan.css" >
+<link rel="stylesheet" type="text/css" href="/css/biao.css" >
+<link rel="stylesheet" type="text/css" href="/css/shoucard.css" >
+<link rel="stylesheet" type="text/css" href="/css/anniu.css" >
+
+
+
+    <style type="text/css">
+        .auto-style1 {
+            width: 100%;
+        }
+    </style>
+
+
+
+</head>
+<body>
+    <form id="form1" runat="server">
+        <div>
+
+
+
+
+<div class="navbar">
+  <a href="#">PP代付</a>
+  
+  <div class="dropdown">
+    <button class="dropbtn">代理首页 
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content">
+      <a href="/WebsiteAgent/L1/Overview/代理首页L1.aspx">代理首页L1</a>
+    </div>
+  </div> 
+  
+  <div class="dropdown">
+    <button class="dropbtn">代理数据统计 
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content">
+      <a href="/WebsiteAgent/L1/DetailedData/商户列表代理端.aspx">商户列表</a>
+      <a href="/WebsiteAgent/L1/DetailedData/商户统计充值手续费.aspx">商户统计充值手续费</a>
+      <a href="/WebsiteAgent/L1/DetailedData/商户统计充值余额.aspx">商户统计充值余额</a>
+      <a href="/WebsiteAgent/L1/DetailedData/商户统计提款笔数.aspx">商户统计提款笔数</a>
+    </div>
+  </div> 
+
+<div class="topnav-right">
+    <a href="#search">
+        代理 
+        <asp:Label ID="Label_代理ID" runat="server" Text="代理ID"></asp:Label>
+
+    </a>
+  </div>  
+
+</div>
+
+
+
+
+        </div>
+
+    <div>
+
+        <asp:ContentPlaceHolder id="ContentPlaceHolder_NR2" runat="server">
+        
+        </asp:ContentPlaceHolder>
+    </div>
+    </form>
+</body>
+</html>

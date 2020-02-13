@@ -1,0 +1,83 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="SiteTemplateBackstageL2.Master.cs" Inherits="web1.WebsiteBackstage.L2.SiteTemplateBackstageL2" %>
+
+<!DOCTYPE html>
+
+<html>
+<head runat="server">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title><%: Page.Title %> - PPM</title>
+
+
+<asp:ContentPlaceHolder ID="ContentPlaceHolder_NR1" runat="server">  
+          
+</asp:ContentPlaceHolder>  
+
+<link rel="stylesheet" type="text/css" href="/css/yuanguan.css" >
+<link rel="stylesheet" type="text/css" href="/css/biao.css" >
+<link rel="stylesheet" type="text/css" href="/css/shoucard.css" >
+<link rel="stylesheet" type="text/css" href="/css/anniu.css" >
+
+
+
+    <style type="text/css">
+        .auto-style1 {
+            width: 100%;
+        }
+    </style>
+
+
+
+</head>
+<body>
+    <form id="form1" runat="server">
+        <div>
+
+
+
+
+<div class="navbar">
+  <a href="#">PPPayment</a>
+  
+  <div class="dropdown">
+    <button class="dropbtn">管理控制中心 
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content">
+      <a href="/WebsiteBackstage/L2/ControlCenter/管理控制台.aspx">管理控制台</a>
+    </div>
+  </div>
+  
+  <div class="dropdown">
+    <button class="dropbtn">管理订单 
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content">
+      <a href="/WebsiteBackstage/L2/ManagementOrder/商户充值记录.aspx">商户充值记录</a>
+      <a href="/WebsiteBackstage/L2/ManagementOrder/商户提款记录.aspx">商户提款记录</a>
+    </div>
+  </div> 
+
+
+  <div class="topnav-right">
+    <a href="#search">
+        欢迎 
+        <asp:Label ID="Label_管理ID" runat="server" Text="管理ID"></asp:Label>
+    </a>
+  </div>  
+  
+</div>
+
+
+
+
+        </div>
+
+        <div id="con">  
+        <asp:ContentPlaceHolder ID="ContentPlaceHolder_NR2" runat="server">  
+          
+        </asp:ContentPlaceHolder>  
+    </div> 
+    </form>
+</body>
+</html>

@@ -1,0 +1,4 @@
+﻿1.还原数据库
+2.IIS放入css (80端口无域名)
+3.扫描GoogleAuthenticator二维码 复制密匙覆盖到数据库 'keyga' 内
+4.设置数据库连接

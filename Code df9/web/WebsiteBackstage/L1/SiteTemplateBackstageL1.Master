@@ -1,0 +1,133 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="SiteTemplateBackstageL1.Master.cs" Inherits="web1.WebsiteBackstage.L1.SiteTemplateBackstageL1" %>
+
+<!DOCTYPE html>
+
+<html>
+<head runat="server">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title><%: Page.Title %> - PPM</title>
+
+
+<asp:ContentPlaceHolder ID="ContentPlaceHolder_NR1" runat="server">  
+          
+</asp:ContentPlaceHolder>  
+
+<link rel="stylesheet" type="text/css" href="/css/yuanguan.css" >
+<link rel="stylesheet" type="text/css" href="/css/biao.css" >
+<link rel="stylesheet" type="text/css" href="/css/shoucard.css" >
+<link rel="stylesheet" type="text/css" href="/css/anniu.css" >
+
+
+
+    <style type="text/css">
+        .auto-style1 {
+            width: 100%;
+        }
+    </style>
+
+
+
+</head>
+<body>
+    <form id="form1" runat="server">
+        <div>
+
+
+
+
+<div class="navbar">
+  <a href="#">PPPayment</a>
+  
+  <div class="dropdown">
+    <button class="dropbtn">管理控制中心 
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content">
+      <a href="/WebsiteBackstage/L1/ControlCenter/管理控制台.aspx">管理控制台</a>
+      <a href="/WebsiteBackstage/L1/ManagementBackstage/后台账号列表.aspx">后台账号列表</a>
+      <a href="/WebsiteBackstage/L1/ManagementBackstage/后台账号安全白名单.aspx">后台账号安全白名单</a>
+    </div>
+  </div> 
+
+  <div class="dropdown">
+    <button class="dropbtn">管理银行卡 
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content">
+      <a href="/WebsiteBackstage/L1/ManagementBankCard/管理收款银行卡.aspx">管理收款银行卡</a>
+      <a href="/WebsiteBackstage/L1/ManagementBankCard/管理收款银行卡流水.aspx">管理收款银行卡流水</a>
+      <a href="/WebsiteBackstage/L1/ManagementBankCard/管理收款银行卡统计.aspx">管理收款银行卡统计</a>
+      <a href="/WebsiteBackstage/L1/ManagementBankCard/管理出款银行卡.aspx">管理出款银行卡</a>
+      <a href="/WebsiteBackstage/L1/ManagementBankCard/管理出款银行卡流水.aspx">管理出款银行卡流水</a>
+      <a href="/WebsiteBackstage/L1/ManagementBankCard/管理出款银行卡统计.aspx">管理出款银行卡统计</a>
+    </div>
+  </div> 
+  
+  <div class="dropdown">
+    <button class="dropbtn">管理代理 
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content">
+      <a href="/WebsiteBackstage/L1/ManagementAgent/SettingL1/代理列表L1.aspx">代理列表L1</a>
+      <a href="/WebsiteBackstage/L1/ManagementAgent/SettingL2/代理列表L2.aspx">代理列表L2</a>
+    </div>
+  </div> 
+
+  <div class="dropdown">
+    <button class="dropbtn">管理商户 
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content">
+      <a href="/WebsiteBackstage/L1/ManagementMerchant/商户列表.aspx">商户列表</a>
+      <a href="/WebsiteBackstage/L1/ManagementMerchant/商户银行卡.aspx">商户银行卡</a>
+      <a href="/WebsiteBackstage/L1/ManagementMerchant/商户安全白名单.aspx">商户安全白名单</a>
+      <a href="/WebsiteBackstage/L1/ManagementMerchant/手续费交易明细.aspx">手续费交易明细</a>
+      <a href="/WebsiteBackstage/L1/ManagementMerchant/账户余额交易明细.aspx">账户余额交易明细</a>
+    </div>
+  </div> 
+  
+  <div class="dropdown">
+    <button class="dropbtn">管理订单 
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content">
+      <a href="/WebsiteBackstage/L1/ManagementOrder/商户充值记录.aspx">商户充值记录</a>
+      <a href="/WebsiteBackstage/L1/ManagementOrder/商户提款记录.aspx">商户提款记录</a>
+    </div>
+  </div> 
+  
+  <div class="dropdown">
+    <button class="dropbtn">统计数据 
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content">
+      <a href="/WebsiteBackstage/L1/Statistics/商户统计充值手续费.aspx">商户统计充值手续费</a>
+      <a href="/WebsiteBackstage/L1/Statistics/商户统计充值余额.aspx">商户统计充值余额</a>
+      <a href="/WebsiteBackstage/L1/Statistics/商户统计提款笔数.aspx">商户统计提款笔数</a>
+    </div>
+  </div> 
+
+
+  <div class="topnav-right">
+    <a href="#search">
+        欢迎 
+        <asp:Label ID="Label_管理ID" runat="server" Text="管理ID"></asp:Label>
+    </a>
+  </div>  
+  
+</div>
+
+
+
+
+        </div>
+
+        <div id="con">  
+        <asp:ContentPlaceHolder ID="ContentPlaceHolder_NR2" runat="server">  
+          
+        </asp:ContentPlaceHolder>  
+    </div> 
+    </form>
+</body>
+</html>

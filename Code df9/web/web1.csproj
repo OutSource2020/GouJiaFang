@@ -1,0 +1,1123 @@
+﻿<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{22B3B2FB-686C-4095-BA74-5AEA329A5B86}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>web1</RootNamespace>
+    <AssemblyName>web1</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <Use64BitIISExpress />
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ClosedXML">
+      <HintPath>C:\Users\TEAUser\Desktop\Bin\ClosedXML.dll</HintPath>
+    </Reference>
+    <Reference Include="itextsharp">
+      <HintPath>C:\Users\TEAUser\Desktop\itextsharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="MySql.Data, Version=8.0.16.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="GoogleAuthenticator.aspx" />
+    <Content Include="t1.txt" />
+    <Content Include="Web.config" />
+    <Content Include="WebsiteAgent\L1\DetailedData\商户列表代理端.aspx" />
+    <Content Include="WebsiteAgent\L1\DetailedData\商户统计充值余额.aspx" />
+    <Content Include="WebsiteAgent\L1\DetailedData\商户统计充值手续费.aspx" />
+    <Content Include="WebsiteAgent\L1\DetailedData\商户统计提款笔数.aspx" />
+    <Content Include="WebsiteAgent\L1\Overview\代理首页L1.aspx" />
+    <Content Include="WebsiteAgent\L1\Login\登入.aspx" />
+    <Content Include="WebsiteAgent\L2\DetailedData\商户列表代理端.aspx" />
+    <Content Include="WebsiteAgent\L2\DetailedData\商户统计充值余额.aspx" />
+    <Content Include="WebsiteAgent\L2\DetailedData\商户统计充值手续费.aspx" />
+    <Content Include="WebsiteAgent\L2\DetailedData\商户统计提款笔数.aspx" />
+    <Content Include="WebsiteAgent\L2\Overview\代理首页L2.aspx" />
+    <Content Include="WebsiteAgent\L2\Login\登入.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementBackstage\后台账号列表新增.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementBackstage\后台账号列表设置账号信息.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementBackstage\后台账号安全白名单.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementBackstage\后台账号安全白名单新增.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementBackstage\后台账号安全白名单更新.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementBackstage\后台账号列表.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementBackstage\后台账号列表设置.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementBackstage\后台账号列表设置QR.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementBackstage\后台账号列表设置密码.aspx" />
+    <Content Include="WebsiteBackstage\L2\ControlCenter\管理控制台.aspx" />
+    <Content Include="WebsiteBackstage\L2\Login\登入.aspx" />
+    <Content Include="WebsiteBackstage\L2\ManagementOrder\商户充值记录.aspx" />
+    <Content Include="WebsiteBackstage\L2\ManagementOrder\商户充值记录状态更新判定.aspx" />
+    <Content Include="WebsiteBackstage\L2\ManagementOrder\商户充值记录状态更新号余额.aspx" />
+    <Content Include="WebsiteBackstage\L2\ManagementOrder\商户充值记录状态更新手续费.aspx" />
+    <Content Include="WebsiteBackstage\L2\ManagementOrder\商户提款记录.aspx" />
+    <Content Include="WebsiteBackstage\L2\ManagementOrder\商户提款记录状态更新.aspx" />
+    <Content Include="WebsiteBackstage\L2\ManagementOrder\商户提款记录状态更新冲正.aspx" />
+    <Content Include="WebsiteBackstage\L2\ManagementOrder\商户提款记录详情.aspx" />
+    <Content Include="WebsiteMerchant\MerchantOrder\商户提款单笔.aspx" />
+    <Content Include="WebsiteMerchant\MerchantOrder\商户提款多笔.aspx" />
+    <Content Include="WebsiteMerchant\MerchantOrder\商户提款记录导出.aspx" />
+    <Content Include="WebsiteMerchant\MerchantOrder\手续费交易明细.aspx" />
+    <Content Include="WebsiteMerchant\MerchantOrder\账户余额交易明细.aspx" />
+    <Content Include="WebsiteMerchant\MerchantAccount\商户账号密码支付.aspx" />
+    <Content Include="WebsiteMerchant\MerchantAccount\商户账号密码登入API.aspx" />
+    <Content Include="WebsiteMerchant\MerchantAccount\商户账号绑定邮箱.aspx" />
+    <Content Include="WebsiteMerchant\MerchantAccount\商户账号密码登入.aspx" />
+    <Content Include="WebsiteMerchant\MerchantAccount\银行卡管理详情.aspx" />
+    <Content Include="WebsiteMerchant\MerchantAccount\登出账号.aspx" />
+    <Content Include="WebsiteMerchant\Login\登入.aspx" />
+    <Content Include="WebsiteMerchant\MerchantOverview\商户首页.aspx" />
+    <Content Include="WebsiteMerchant\MerchantAccount\商户账号.aspx" />
+    <Content Include="WebsiteMerchant\MerchantAccount\平台公告.aspx" />
+    <Content Include="WebsiteMerchant\MerchantAccount\平台公告内容.aspx" />
+    <Content Include="WebsiteMerchant\MerchantAccount\日志管理.aspx" />
+    <Content Include="WebsiteMerchant\MerchantAccount\银行卡管理.aspx" />
+    <Content Include="WebsiteMerchant\MerchantAccount\银行卡管理新增.aspx" />
+    <Content Include="WebsiteMerchant\MerchantOrder\商户充值.aspx" />
+    <Content Include="WebsiteMerchant\MerchantOrder\商户充值记录.aspx" />
+    <Content Include="WebsiteMerchant\MerchantOrder\商户提款记录.aspx" />
+    <Content Include="WebsiteBackstage\L1\Login\登入.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementAgent\SettingL2\代理列表L2新增.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementAgent\SettingL2\代理列表L2设置.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementAgent\SettingL2\代理列表L2设置信息.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementAgent\SettingL2\代理列表L2设置安全.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementAgent\SettingL2\代理列表L2设置安全QR.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementAgent\SettingL2\代理列表L2设置安全密码.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementAgent\SettingL2\代理列表L2设置安全绑定手机.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementAgent\SettingL2\代理列表L2设置安全绑定邮箱.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementAgent\SettingL2\代理列表L2.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementAgent\SettingL1\代理列表L1.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementAgent\SettingL1\代理列表L1新增.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementAgent\SettingL1\代理列表L1设置安全QR.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementAgent\SettingL1\代理列表L1设置.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementAgent\SettingL1\代理列表L1设置安全.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementAgent\SettingL1\代理列表L1设置安全绑定手机.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementAgent\SettingL1\代理列表L1设置安全绑定邮箱.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementAgent\SettingL1\代理列表L1设置信息.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementAgent\SettingL1\代理列表L1设置安全密码.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementMerchant\商户安全白名单.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementMerchant\商户安全白名单新增.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementMerchant\商户安全白名单更新.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementMerchant\商户列表充值手续费.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementMerchant\商户列表设置安全.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementMerchant\商户列表设置安全绑定手机.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementMerchant\商户列表设置安全绑定邮箱.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementMerchant\商户列表设置安全密码.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementMerchant\商户列表设置安全QR.aspx" />
+    <Content Include="WebsiteBackstage\L1\ControlCenter\管理控制台.aspx" />
+    <Content Include="WebsiteBackstage\L1\ControlCenter\编号标识.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementOrder\商户提款记录.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementOrder\商户充值记录状态更新判定.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementOrder\商户充值记录状态更新手续费.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementBankCard\管理出款银行卡统计.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementBankCard\管理收款银行卡统计.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementBankCard\管理收款银行卡流水.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementBankCard\管理收款银行卡卡新增.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementBankCard\管理收款银行卡卡更新.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementBankCard\管理收款银行卡.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementBankCard\管理出款银行卡卡对卡转移余额.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementBankCard\管理出款银行卡流水.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementBankCard\管理出款银行卡.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementBankCard\管理出款银行卡卡充值.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementBankCard\管理出款银行卡卡新增.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementBankCard\管理出款银行卡卡更新.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementMerchant\商户列表设置信息.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementMerchant\商户列表设置.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementOrder\商户充值记录.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementOrder\商户充值记录状态更新号余额.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementMerchant\商户列表.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementMerchant\商户列表新增.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementMerchant\商户列表设置费率.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementMerchant\商户通知设置.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementMerchant\商户银行卡.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementMerchant\商户银行卡更新.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementMerchant\手续费交易明细.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementMerchant\账户余额交易明细.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementOrder\商户提款记录状态更新冲正.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementOrder\商户提款记录状态更新.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementOrder\商户提款记录详情.aspx" />
+    <Content Include="WebsiteBackstage\L1\Statistics\商户统计充值余额.aspx" />
+    <Content Include="WebsiteBackstage\L1\Statistics\商户统计充值手续费.aspx" />
+    <Content Include="WebsiteBackstage\L1\Statistics\商户统计提款笔数.aspx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="GoogleAuthenticator.aspx.cs">
+      <DependentUpon>GoogleAuthenticator.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="GoogleAuthenticator.aspx.designer.cs">
+      <DependentUpon>GoogleAuthenticator.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WebsiteAgent\L1\DetailedData\商户列表代理端.aspx.cs">
+      <DependentUpon>商户列表代理端.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteAgent\L1\DetailedData\商户列表代理端.aspx.designer.cs">
+      <DependentUpon>商户列表代理端.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteAgent\L1\DetailedData\商户统计充值余额.aspx.cs">
+      <DependentUpon>商户统计充值余额.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteAgent\L1\DetailedData\商户统计充值余额.aspx.designer.cs">
+      <DependentUpon>商户统计充值余额.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteAgent\L1\DetailedData\商户统计充值手续费.aspx.cs">
+      <DependentUpon>商户统计充值手续费.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteAgent\L1\DetailedData\商户统计充值手续费.aspx.designer.cs">
+      <DependentUpon>商户统计充值手续费.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteAgent\L1\DetailedData\商户统计提款笔数.aspx.cs">
+      <DependentUpon>商户统计提款笔数.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteAgent\L1\DetailedData\商户统计提款笔数.aspx.designer.cs">
+      <DependentUpon>商户统计提款笔数.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteAgent\L1\Overview\代理首页L1.aspx.cs">
+      <DependentUpon>代理首页L1.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteAgent\L1\Overview\代理首页L1.aspx.designer.cs">
+      <DependentUpon>代理首页L1.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteAgent\L1\SiteTemplateAgentL1.Master.cs">
+      <DependentUpon>SiteTemplateAgentL1.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteAgent\L1\SiteTemplateAgentL1.Master.designer.cs">
+      <DependentUpon>SiteTemplateAgentL1.Master</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteAgent\L1\Login\登入.aspx.cs">
+      <DependentUpon>登入.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteAgent\L1\Login\登入.aspx.designer.cs">
+      <DependentUpon>登入.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteAgent\L2\DetailedData\商户列表代理端.aspx.cs">
+      <DependentUpon>商户列表代理端.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteAgent\L2\DetailedData\商户列表代理端.aspx.designer.cs">
+      <DependentUpon>商户列表代理端.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteAgent\L2\DetailedData\商户统计充值余额.aspx.cs">
+      <DependentUpon>商户统计充值余额.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteAgent\L2\DetailedData\商户统计充值余额.aspx.designer.cs">
+      <DependentUpon>商户统计充值余额.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteAgent\L2\DetailedData\商户统计充值手续费.aspx.cs">
+      <DependentUpon>商户统计充值手续费.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteAgent\L2\DetailedData\商户统计充值手续费.aspx.designer.cs">
+      <DependentUpon>商户统计充值手续费.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteAgent\L2\DetailedData\商户统计提款笔数.aspx.cs">
+      <DependentUpon>商户统计提款笔数.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteAgent\L2\DetailedData\商户统计提款笔数.aspx.designer.cs">
+      <DependentUpon>商户统计提款笔数.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteAgent\L2\Overview\代理首页L2.aspx.cs">
+      <DependentUpon>代理首页L2.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteAgent\L2\Overview\代理首页L2.aspx.designer.cs">
+      <DependentUpon>代理首页L2.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteAgent\L2\SiteTemplateAgentL2.Master.cs">
+      <DependentUpon>SiteTemplateAgentL2.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteAgent\L2\SiteTemplateAgentL2.Master.designer.cs">
+      <DependentUpon>SiteTemplateAgentL2.Master</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteAgent\L2\Login\登入.aspx.cs">
+      <DependentUpon>登入.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteAgent\L2\Login\登入.aspx.designer.cs">
+      <DependentUpon>登入.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementBackstage\后台账号列表新增.aspx.cs">
+      <DependentUpon>后台账号列表新增.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementBackstage\后台账号列表新增.aspx.designer.cs">
+      <DependentUpon>后台账号列表新增.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementBackstage\后台账号列表设置账号信息.aspx.cs">
+      <DependentUpon>后台账号列表设置账号信息.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementBackstage\后台账号列表设置账号信息.aspx.designer.cs">
+      <DependentUpon>后台账号列表设置账号信息.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementBackstage\后台账号安全白名单.aspx.cs">
+      <DependentUpon>后台账号安全白名单.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementBackstage\后台账号安全白名单.aspx.designer.cs">
+      <DependentUpon>后台账号安全白名单.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementBackstage\后台账号安全白名单新增.aspx.cs">
+      <DependentUpon>后台账号安全白名单新增.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementBackstage\后台账号安全白名单新增.aspx.designer.cs">
+      <DependentUpon>后台账号安全白名单新增.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementBackstage\后台账号安全白名单更新.aspx.cs">
+      <DependentUpon>后台账号安全白名单更新.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementBackstage\后台账号安全白名单更新.aspx.designer.cs">
+      <DependentUpon>后台账号安全白名单更新.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementBackstage\后台账号列表.aspx.cs">
+      <DependentUpon>后台账号列表.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementBackstage\后台账号列表.aspx.designer.cs">
+      <DependentUpon>后台账号列表.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementBackstage\后台账号列表设置.aspx.cs">
+      <DependentUpon>后台账号列表设置.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementBackstage\后台账号列表设置.aspx.designer.cs">
+      <DependentUpon>后台账号列表设置.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementBackstage\后台账号列表设置QR.aspx.cs">
+      <DependentUpon>后台账号列表设置QR.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementBackstage\后台账号列表设置QR.aspx.designer.cs">
+      <DependentUpon>后台账号列表设置QR.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementBackstage\后台账号列表设置密码.aspx.cs">
+      <DependentUpon>后台账号列表设置密码.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementBackstage\后台账号列表设置密码.aspx.designer.cs">
+      <DependentUpon>后台账号列表设置密码.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L2\ControlCenter\管理控制台.aspx.cs">
+      <DependentUpon>管理控制台.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L2\ControlCenter\管理控制台.aspx.designer.cs">
+      <DependentUpon>管理控制台.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L2\Login\登入.aspx.cs">
+      <DependentUpon>登入.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L2\Login\登入.aspx.designer.cs">
+      <DependentUpon>登入.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L2\ManagementOrder\商户充值记录.aspx.cs">
+      <DependentUpon>商户充值记录.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L2\ManagementOrder\商户充值记录.aspx.designer.cs">
+      <DependentUpon>商户充值记录.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L2\ManagementOrder\商户充值记录状态更新判定.aspx.cs">
+      <DependentUpon>商户充值记录状态更新判定.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L2\ManagementOrder\商户充值记录状态更新判定.aspx.designer.cs">
+      <DependentUpon>商户充值记录状态更新判定.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L2\ManagementOrder\商户充值记录状态更新号余额.aspx.cs">
+      <DependentUpon>商户充值记录状态更新号余额.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L2\ManagementOrder\商户充值记录状态更新号余额.aspx.designer.cs">
+      <DependentUpon>商户充值记录状态更新号余额.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L2\ManagementOrder\商户充值记录状态更新手续费.aspx.cs">
+      <DependentUpon>商户充值记录状态更新手续费.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L2\ManagementOrder\商户充值记录状态更新手续费.aspx.designer.cs">
+      <DependentUpon>商户充值记录状态更新手续费.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L2\ManagementOrder\商户提款记录.aspx.cs">
+      <DependentUpon>商户提款记录.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L2\ManagementOrder\商户提款记录.aspx.designer.cs">
+      <DependentUpon>商户提款记录.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L2\ManagementOrder\商户提款记录状态更新.aspx.cs">
+      <DependentUpon>商户提款记录状态更新.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L2\ManagementOrder\商户提款记录状态更新.aspx.designer.cs">
+      <DependentUpon>商户提款记录状态更新.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L2\ManagementOrder\商户提款记录状态更新冲正.aspx.cs">
+      <DependentUpon>商户提款记录状态更新冲正.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L2\ManagementOrder\商户提款记录状态更新冲正.aspx.designer.cs">
+      <DependentUpon>商户提款记录状态更新冲正.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L2\ManagementOrder\商户提款记录详情.aspx.cs">
+      <DependentUpon>商户提款记录详情.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L2\ManagementOrder\商户提款记录详情.aspx.designer.cs">
+      <DependentUpon>商户提款记录详情.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L2\SiteTemplateBackstageL2.Master.cs">
+      <DependentUpon>SiteTemplateBackstageL2.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteMerchant\MerchantOrder\商户提款单笔.aspx.cs">
+      <DependentUpon>商户提款单笔.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteMerchant\MerchantOrder\商户提款单笔.aspx.designer.cs">
+      <DependentUpon>商户提款单笔.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteMerchant\MerchantOrder\商户提款多笔.aspx.cs">
+      <DependentUpon>商户提款多笔.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteMerchant\MerchantOrder\商户提款多笔.aspx.designer.cs">
+      <DependentUpon>商户提款多笔.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteMerchant\MerchantOrder\商户提款记录导出.aspx.cs">
+      <DependentUpon>商户提款记录导出.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteMerchant\MerchantOrder\商户提款记录导出.aspx.designer.cs">
+      <DependentUpon>商户提款记录导出.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteMerchant\MerchantOrder\手续费交易明细.aspx.cs">
+      <DependentUpon>手续费交易明细.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteMerchant\MerchantOrder\手续费交易明细.aspx.designer.cs">
+      <DependentUpon>手续费交易明细.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteMerchant\MerchantOrder\账户余额交易明细.aspx.cs">
+      <DependentUpon>账户余额交易明细.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteMerchant\MerchantOrder\账户余额交易明细.aspx.designer.cs">
+      <DependentUpon>账户余额交易明细.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteMerchant\MerchantAccount\商户账号密码支付.aspx.cs">
+      <DependentUpon>商户账号密码支付.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteMerchant\MerchantAccount\商户账号密码支付.aspx.designer.cs">
+      <DependentUpon>商户账号密码支付.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteMerchant\MerchantAccount\商户账号密码登入API.aspx.cs">
+      <DependentUpon>商户账号密码登入API.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteMerchant\MerchantAccount\商户账号密码登入API.aspx.designer.cs">
+      <DependentUpon>商户账号密码登入API.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteMerchant\MerchantAccount\商户账号绑定邮箱.aspx.cs">
+      <DependentUpon>商户账号绑定邮箱.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteMerchant\MerchantAccount\商户账号绑定邮箱.aspx.designer.cs">
+      <DependentUpon>商户账号绑定邮箱.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteMerchant\MerchantAccount\商户账号密码登入.aspx.cs">
+      <DependentUpon>商户账号密码登入.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteMerchant\MerchantAccount\商户账号密码登入.aspx.designer.cs">
+      <DependentUpon>商户账号密码登入.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteMerchant\MerchantAccount\银行卡管理详情.aspx.cs">
+      <DependentUpon>银行卡管理详情.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteMerchant\MerchantAccount\银行卡管理详情.aspx.designer.cs">
+      <DependentUpon>银行卡管理详情.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteMerchant\MerchantAccount\登出账号.aspx.cs">
+      <DependentUpon>登出账号.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteMerchant\MerchantAccount\登出账号.aspx.designer.cs">
+      <DependentUpon>登出账号.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteMerchant\Login\登入.aspx.cs">
+      <DependentUpon>登入.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteMerchant\Login\登入.aspx.designer.cs">
+      <DependentUpon>登入.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteMerchant\MerchantOverview\商户首页.aspx.cs">
+      <DependentUpon>商户首页.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteMerchant\MerchantOverview\商户首页.aspx.designer.cs">
+      <DependentUpon>商户首页.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteMerchant\SiteTemplateMerchant.Master.cs">
+      <DependentUpon>SiteTemplateMerchant.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteMerchant\MerchantAccount\商户账号.aspx.cs">
+      <DependentUpon>商户账号.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteMerchant\MerchantAccount\商户账号.aspx.designer.cs">
+      <DependentUpon>商户账号.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteMerchant\MerchantAccount\平台公告.aspx.cs">
+      <DependentUpon>平台公告.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteMerchant\MerchantAccount\平台公告.aspx.designer.cs">
+      <DependentUpon>平台公告.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteMerchant\MerchantAccount\平台公告内容.aspx.cs">
+      <DependentUpon>平台公告内容.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteMerchant\MerchantAccount\平台公告内容.aspx.designer.cs">
+      <DependentUpon>平台公告内容.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteMerchant\MerchantAccount\日志管理.aspx.cs">
+      <DependentUpon>日志管理.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteMerchant\MerchantAccount\日志管理.aspx.designer.cs">
+      <DependentUpon>日志管理.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteMerchant\MerchantAccount\银行卡管理.aspx.cs">
+      <DependentUpon>银行卡管理.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteMerchant\MerchantAccount\银行卡管理.aspx.designer.cs">
+      <DependentUpon>银行卡管理.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteMerchant\MerchantAccount\银行卡管理新增.aspx.cs">
+      <DependentUpon>银行卡管理新增.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteMerchant\MerchantAccount\银行卡管理新增.aspx.designer.cs">
+      <DependentUpon>银行卡管理新增.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteMerchant\MerchantOrder\商户充值.aspx.cs">
+      <DependentUpon>商户充值.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteMerchant\MerchantOrder\商户充值.aspx.designer.cs">
+      <DependentUpon>商户充值.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteMerchant\MerchantOrder\商户充值记录.aspx.cs">
+      <DependentUpon>商户充值记录.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteMerchant\MerchantOrder\商户充值记录.aspx.designer.cs">
+      <DependentUpon>商户充值记录.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteMerchant\MerchantOrder\商户提款记录.aspx.cs">
+      <DependentUpon>商户提款记录.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteMerchant\MerchantOrder\商户提款记录.aspx.designer.cs">
+      <DependentUpon>商户提款记录.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\Login\登入.aspx.cs">
+      <DependentUpon>登入.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\Login\登入.aspx.designer.cs">
+      <DependentUpon>登入.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementAgent\SettingL2\代理列表L2新增.aspx.cs">
+      <DependentUpon>代理列表L2新增.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementAgent\SettingL2\代理列表L2新增.aspx.designer.cs">
+      <DependentUpon>代理列表L2新增.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementAgent\SettingL2\代理列表L2设置.aspx.cs">
+      <DependentUpon>代理列表L2设置.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementAgent\SettingL2\代理列表L2设置.aspx.designer.cs">
+      <DependentUpon>代理列表L2设置.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementAgent\SettingL2\代理列表L2设置信息.aspx.cs">
+      <DependentUpon>代理列表L2设置信息.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementAgent\SettingL2\代理列表L2设置信息.aspx.designer.cs">
+      <DependentUpon>代理列表L2设置信息.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementAgent\SettingL2\代理列表L2设置安全.aspx.cs">
+      <DependentUpon>代理列表L2设置安全.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementAgent\SettingL2\代理列表L2设置安全.aspx.designer.cs">
+      <DependentUpon>代理列表L2设置安全.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementAgent\SettingL2\代理列表L2设置安全QR.aspx.cs">
+      <DependentUpon>代理列表L2设置安全QR.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementAgent\SettingL2\代理列表L2设置安全QR.aspx.designer.cs">
+      <DependentUpon>代理列表L2设置安全QR.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementAgent\SettingL2\代理列表L2设置安全密码.aspx.cs">
+      <DependentUpon>代理列表L2设置安全密码.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementAgent\SettingL2\代理列表L2设置安全密码.aspx.designer.cs">
+      <DependentUpon>代理列表L2设置安全密码.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementAgent\SettingL2\代理列表L2设置安全绑定手机.aspx.cs">
+      <DependentUpon>代理列表L2设置安全绑定手机.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementAgent\SettingL2\代理列表L2设置安全绑定手机.aspx.designer.cs">
+      <DependentUpon>代理列表L2设置安全绑定手机.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementAgent\SettingL2\代理列表L2设置安全绑定邮箱.aspx.cs">
+      <DependentUpon>代理列表L2设置安全绑定邮箱.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementAgent\SettingL2\代理列表L2设置安全绑定邮箱.aspx.designer.cs">
+      <DependentUpon>代理列表L2设置安全绑定邮箱.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementAgent\SettingL2\代理列表L2.aspx.cs">
+      <DependentUpon>代理列表L2.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementAgent\SettingL2\代理列表L2.aspx.designer.cs">
+      <DependentUpon>代理列表L2.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementAgent\SettingL1\代理列表L1.aspx.cs">
+      <DependentUpon>代理列表L1.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementAgent\SettingL1\代理列表L1.aspx.designer.cs">
+      <DependentUpon>代理列表L1.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementAgent\SettingL1\代理列表L1新增.aspx.cs">
+      <DependentUpon>代理列表L1新增.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementAgent\SettingL1\代理列表L1新增.aspx.designer.cs">
+      <DependentUpon>代理列表L1新增.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\SiteTemplateBackstageL1.Master.cs">
+      <DependentUpon>SiteTemplateBackstageL1.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementAgent\SettingL1\代理列表L1设置安全QR.aspx.cs">
+      <DependentUpon>代理列表L1设置安全QR.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementAgent\SettingL1\代理列表L1设置安全QR.aspx.designer.cs">
+      <DependentUpon>代理列表L1设置安全QR.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementAgent\SettingL1\代理列表L1设置.aspx.cs">
+      <DependentUpon>代理列表L1设置.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementAgent\SettingL1\代理列表L1设置.aspx.designer.cs">
+      <DependentUpon>代理列表L1设置.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementAgent\SettingL1\代理列表L1设置安全.aspx.cs">
+      <DependentUpon>代理列表L1设置安全.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementAgent\SettingL1\代理列表L1设置安全.aspx.designer.cs">
+      <DependentUpon>代理列表L1设置安全.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementAgent\SettingL1\代理列表L1设置安全绑定手机.aspx.cs">
+      <DependentUpon>代理列表L1设置安全绑定手机.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementAgent\SettingL1\代理列表L1设置安全绑定手机.aspx.designer.cs">
+      <DependentUpon>代理列表L1设置安全绑定手机.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementAgent\SettingL1\代理列表L1设置安全绑定邮箱.aspx.cs">
+      <DependentUpon>代理列表L1设置安全绑定邮箱.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementAgent\SettingL1\代理列表L1设置安全绑定邮箱.aspx.designer.cs">
+      <DependentUpon>代理列表L1设置安全绑定邮箱.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementAgent\SettingL1\代理列表L1设置信息.aspx.cs">
+      <DependentUpon>代理列表L1设置信息.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementAgent\SettingL1\代理列表L1设置信息.aspx.designer.cs">
+      <DependentUpon>代理列表L1设置信息.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementAgent\SettingL1\代理列表L1设置安全密码.aspx.cs">
+      <DependentUpon>代理列表L1设置安全密码.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementAgent\SettingL1\代理列表L1设置安全密码.aspx.designer.cs">
+      <DependentUpon>代理列表L1设置安全密码.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户安全白名单.aspx.cs">
+      <DependentUpon>商户安全白名单.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户安全白名单.aspx.designer.cs">
+      <DependentUpon>商户安全白名单.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户安全白名单新增.aspx.cs">
+      <DependentUpon>商户安全白名单新增.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户安全白名单新增.aspx.designer.cs">
+      <DependentUpon>商户安全白名单新增.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户安全白名单更新.aspx.cs">
+      <DependentUpon>商户安全白名单更新.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户安全白名单更新.aspx.designer.cs">
+      <DependentUpon>商户安全白名单更新.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户列表充值手续费.aspx.cs">
+      <DependentUpon>商户列表充值手续费.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户列表充值手续费.aspx.designer.cs">
+      <DependentUpon>商户列表充值手续费.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户列表设置安全.aspx.cs">
+      <DependentUpon>商户列表设置安全.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户列表设置安全.aspx.designer.cs">
+      <DependentUpon>商户列表设置安全.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户列表设置安全绑定手机.aspx.cs">
+      <DependentUpon>商户列表设置安全绑定手机.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户列表设置安全绑定手机.aspx.designer.cs">
+      <DependentUpon>商户列表设置安全绑定手机.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户列表设置安全绑定邮箱.aspx.cs">
+      <DependentUpon>商户列表设置安全绑定邮箱.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户列表设置安全绑定邮箱.aspx.designer.cs">
+      <DependentUpon>商户列表设置安全绑定邮箱.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户列表设置安全密码.aspx.cs">
+      <DependentUpon>商户列表设置安全密码.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户列表设置安全密码.aspx.designer.cs">
+      <DependentUpon>商户列表设置安全密码.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户列表设置安全QR.aspx.cs">
+      <DependentUpon>商户列表设置安全QR.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户列表设置安全QR.aspx.designer.cs">
+      <DependentUpon>商户列表设置安全QR.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ControlCenter\管理控制台.aspx.cs">
+      <DependentUpon>管理控制台.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ControlCenter\管理控制台.aspx.designer.cs">
+      <DependentUpon>管理控制台.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ControlCenter\编号标识.aspx.cs">
+      <DependentUpon>编号标识.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ControlCenter\编号标识.aspx.designer.cs">
+      <DependentUpon>编号标识.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementOrder\商户提款记录.aspx.cs">
+      <DependentUpon>商户提款记录.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementOrder\商户提款记录.aspx.designer.cs">
+      <DependentUpon>商户提款记录.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementOrder\商户充值记录状态更新判定.aspx.cs">
+      <DependentUpon>商户充值记录状态更新判定.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementOrder\商户充值记录状态更新判定.aspx.designer.cs">
+      <DependentUpon>商户充值记录状态更新判定.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementOrder\商户充值记录状态更新手续费.aspx.cs">
+      <DependentUpon>商户充值记录状态更新手续费.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementOrder\商户充值记录状态更新手续费.aspx.designer.cs">
+      <DependentUpon>商户充值记录状态更新手续费.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\管理出款银行卡统计.aspx.cs">
+      <DependentUpon>管理出款银行卡统计.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\管理出款银行卡统计.aspx.designer.cs">
+      <DependentUpon>管理出款银行卡统计.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\管理收款银行卡统计.aspx.cs">
+      <DependentUpon>管理收款银行卡统计.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\管理收款银行卡统计.aspx.designer.cs">
+      <DependentUpon>管理收款银行卡统计.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\管理收款银行卡流水.aspx.cs">
+      <DependentUpon>管理收款银行卡流水.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\管理收款银行卡流水.aspx.designer.cs">
+      <DependentUpon>管理收款银行卡流水.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\管理收款银行卡卡新增.aspx.cs">
+      <DependentUpon>管理收款银行卡卡新增.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\管理收款银行卡卡新增.aspx.designer.cs">
+      <DependentUpon>管理收款银行卡卡新增.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\管理收款银行卡卡更新.aspx.cs">
+      <DependentUpon>管理收款银行卡卡更新.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\管理收款银行卡卡更新.aspx.designer.cs">
+      <DependentUpon>管理收款银行卡卡更新.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\管理收款银行卡.aspx.cs">
+      <DependentUpon>管理收款银行卡.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\管理收款银行卡.aspx.designer.cs">
+      <DependentUpon>管理收款银行卡.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\管理出款银行卡卡对卡转移余额.aspx.cs">
+      <DependentUpon>管理出款银行卡卡对卡转移余额.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\管理出款银行卡卡对卡转移余额.aspx.designer.cs">
+      <DependentUpon>管理出款银行卡卡对卡转移余额.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\管理出款银行卡流水.aspx.cs">
+      <DependentUpon>管理出款银行卡流水.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\管理出款银行卡流水.aspx.designer.cs">
+      <DependentUpon>管理出款银行卡流水.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\管理出款银行卡.aspx.cs">
+      <DependentUpon>管理出款银行卡.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\管理出款银行卡.aspx.designer.cs">
+      <DependentUpon>管理出款银行卡.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\管理出款银行卡卡充值.aspx.cs">
+      <DependentUpon>管理出款银行卡卡充值.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\管理出款银行卡卡充值.aspx.designer.cs">
+      <DependentUpon>管理出款银行卡卡充值.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\管理出款银行卡卡新增.aspx.cs">
+      <DependentUpon>管理出款银行卡卡新增.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\管理出款银行卡卡新增.aspx.designer.cs">
+      <DependentUpon>管理出款银行卡卡新增.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\管理出款银行卡卡更新.aspx.cs">
+      <DependentUpon>管理出款银行卡卡更新.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\管理出款银行卡卡更新.aspx.designer.cs">
+      <DependentUpon>管理出款银行卡卡更新.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户列表设置信息.aspx.cs">
+      <DependentUpon>商户列表设置信息.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户列表设置信息.aspx.designer.cs">
+      <DependentUpon>商户列表设置信息.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户列表设置.aspx.cs">
+      <DependentUpon>商户列表设置.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户列表设置.aspx.designer.cs">
+      <DependentUpon>商户列表设置.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementOrder\商户充值记录.aspx.cs">
+      <DependentUpon>商户充值记录.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementOrder\商户充值记录.aspx.designer.cs">
+      <DependentUpon>商户充值记录.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementOrder\商户充值记录状态更新号余额.aspx.cs">
+      <DependentUpon>商户充值记录状态更新号余额.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementOrder\商户充值记录状态更新号余额.aspx.designer.cs">
+      <DependentUpon>商户充值记录状态更新号余额.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户列表.aspx.cs">
+      <DependentUpon>商户列表.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户列表.aspx.designer.cs">
+      <DependentUpon>商户列表.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户列表新增.aspx.cs">
+      <DependentUpon>商户列表新增.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户列表新增.aspx.designer.cs">
+      <DependentUpon>商户列表新增.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户列表设置费率.aspx.cs">
+      <DependentUpon>商户列表设置费率.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户列表设置费率.aspx.designer.cs">
+      <DependentUpon>商户列表设置费率.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户通知设置.aspx.cs">
+      <DependentUpon>商户通知设置.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户通知设置.aspx.designer.cs">
+      <DependentUpon>商户通知设置.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户银行卡.aspx.cs">
+      <DependentUpon>商户银行卡.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户银行卡.aspx.designer.cs">
+      <DependentUpon>商户银行卡.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户银行卡更新.aspx.cs">
+      <DependentUpon>商户银行卡更新.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户银行卡更新.aspx.designer.cs">
+      <DependentUpon>商户银行卡更新.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\手续费交易明细.aspx.cs">
+      <DependentUpon>手续费交易明细.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\手续费交易明细.aspx.designer.cs">
+      <DependentUpon>手续费交易明细.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\账户余额交易明细.aspx.cs">
+      <DependentUpon>账户余额交易明细.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\账户余额交易明细.aspx.designer.cs">
+      <DependentUpon>账户余额交易明细.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementOrder\商户提款记录状态更新冲正.aspx.cs">
+      <DependentUpon>商户提款记录状态更新冲正.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementOrder\商户提款记录状态更新冲正.aspx.designer.cs">
+      <DependentUpon>商户提款记录状态更新冲正.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementOrder\商户提款记录状态更新.aspx.cs">
+      <DependentUpon>商户提款记录状态更新.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementOrder\商户提款记录状态更新.aspx.designer.cs">
+      <DependentUpon>商户提款记录状态更新.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementOrder\商户提款记录详情.aspx.cs">
+      <DependentUpon>商户提款记录详情.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementOrder\商户提款记录详情.aspx.designer.cs">
+      <DependentUpon>商户提款记录详情.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\Statistics\商户统计充值余额.aspx.cs">
+      <DependentUpon>商户统计充值余额.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\Statistics\商户统计充值余额.aspx.designer.cs">
+      <DependentUpon>商户统计充值余额.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\Statistics\商户统计充值手续费.aspx.cs">
+      <DependentUpon>商户统计充值手续费.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\Statistics\商户统计充值手续费.aspx.designer.cs">
+      <DependentUpon>商户统计充值手续费.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\Statistics\商户统计提款笔数.aspx.cs">
+      <DependentUpon>商户统计提款笔数.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\Statistics\商户统计提款笔数.aspx.designer.cs">
+      <DependentUpon>商户统计提款笔数.aspx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <Content Include="WebsiteMerchant\SiteTemplateMerchant.Master" />
+    <Content Include="WebsiteBackstage\L1\SiteTemplateBackstageL1.Master" />
+    <Content Include="WebsiteAgent\L2\SiteTemplateAgentL2.Master" />
+    <Content Include="WebsiteAgent\L1\SiteTemplateAgentL1.Master" />
+    <Content Include="WebsiteBackstage\L2\SiteTemplateBackstageL2.Master" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Google.Authenticator\Google.Authenticator.csproj">
+      <Project>{3d92de47-0ab8-466f-9083-af65d865e4be}</Project>
+      <Name>Google.Authenticator</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ClassLibrary1\ClassLibrary1.csproj">
+      <Project>{c39207d9-bdf2-4e9a-999a-0682c5ff021d}</Project>
+      <Name>ClassLibrary1</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="stdole">
+      <Guid>{00020430-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>60080</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:59681/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>此專案參考這部電腦上所缺少的 NuGet 套件。請啟用 NuGet 套件還原，以下載該套件。如需詳細資訊，請參閱 http://go.microsoft.com/fwlink/?LinkID=322105。缺少的檔案是 {0}。</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

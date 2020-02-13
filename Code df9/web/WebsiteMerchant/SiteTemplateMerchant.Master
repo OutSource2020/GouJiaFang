@@ -1,0 +1,103 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="SiteSiteTemplateMerchant.Master.cs" Inherits="web1.WebsiteMerchant.SiteTemplateMerchant" %>
+
+<!DOCTYPE html>
+
+<html>
+<head runat="server">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title><%: Page.Title %> - PPM</title>
+
+
+<asp:ContentPlaceHolder ID="ContentPlaceHolder_NR1" runat="server">  
+          
+</asp:ContentPlaceHolder>  
+
+<link rel="stylesheet" type="text/css" href="/css/yuanguan.css" >
+<link rel="stylesheet" type="text/css" href="/css/biao.css" >
+<link rel="stylesheet" type="text/css" href="/css/shoucard.css" >
+<link rel="stylesheet" type="text/css" href="/css/anniu.css" >
+
+
+
+    <style type="text/css">
+        .auto-style1 {
+            width: 100%;
+        }
+    </style>
+
+
+
+</head>
+<body>
+    <form id="form1" runat="server">
+        <div>
+
+
+<div class="navbar">
+  <a href="#">PP代付</a>
+  
+  <div class="dropdown">
+    <button class="dropbtn">商戶首頁 
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content">
+      <a href="../MerchantOverview/商户首页.aspx">商戶首頁</a>
+    </div>
+  </div> 
+  
+  <div class="dropdown">
+    <button class="dropbtn">商户订单 
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content">
+      <a href="../MerchantOrder/商户充值.aspx">商户充值</a>
+      <a href="../MerchantOrder/商户充值记录.aspx">商户充值记录</a>
+      <%--<a href="../MerchantOrder/商户提款单笔.aspx">商户提款单笔</a>--%>
+      <a href="../MerchantOrder/商户提款多笔.aspx">商户提款</a>
+      <%--<a href="../MerchantOrder/商户提款导入.aspx">商户提款导入</a>--%>
+      <a href="../MerchantOrder/商户提款记录.aspx">商户提款记录</a>
+      <a href="../MerchantOrder/商户提款记录导出.aspx">商户提款记录导出</a>
+      <a href="../MerchantOrder/手续费交易明细.aspx">手续费交易明细</a>
+      <a href="../MerchantOrder/账户余额交易明细.aspx">账户余额交易明细</a>
+    </div>
+  </div> 
+  
+  <div class="dropdown">
+    <button class="dropbtn">商户账号 
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content">
+      <a href="../MerchantAccount/商户账号.aspx">商户账号</a>
+      <a href="../MerchantAccount/平台公告.aspx">平台公告</a>
+      <a href="../MerchantAccount/日志管理.aspx">日志管理</a>
+      <%--<a href="../MerchantAccount/通知管理.aspx">通知管理</a>--%>
+      <a href="../MerchantAccount/银行卡管理.aspx">银行卡管理</a>
+      <a href="../MerchantAccount/登出账号.aspx">登出账号</a>
+    </div>
+  </div> 
+
+
+<div class="topnav-right">
+    <a href="#search">欢迎 
+        <asp:Label ID="Label_商户ID" runat="server" Text="商户ID"></asp:Label>
+
+    </a>
+  </div>  
+
+</div>
+
+
+
+
+        </div>
+
+    <div>
+
+        <asp:ContentPlaceHolder id="ContentPlaceHolder_NR2" runat="server">
+        
+        </asp:ContentPlaceHolder>
+    </div>
+    </form>
+</body>
+</html>
