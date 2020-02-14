@@ -1,5 +1,5 @@
 ﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="SiteSiteTemplateMerchant.Master.cs" Inherits="web1.WebsiteMerchant.SiteTemplateMerchant" %>
-
+<%@ Import NameSpace="web1" %>
 <!DOCTYPE html>
 
 <html>
@@ -54,7 +54,26 @@
       <a href="../MerchantOrder/商户充值.aspx">商户充值</a>
       <a href="../MerchantOrder/商户充值记录.aspx">商户充值记录</a>
       <%--<a href="../MerchantOrder/商户提款单笔.aspx">商户提款单笔</a>--%>
-      <a href="../MerchantOrder/商户提款多笔.aspx">商户提款</a>
+        <%
+          
+                string Cookie_UserName=null;
+      //檢測cookie
+      if (System.Web.HttpContext.Current.Request.Cookies["PPusernameMerchant"] != null)
+        Cookie_UserName = ClassLibrary1.ClassAccount.cookie解密(System.Web.HttpContext.Current.Request.Cookies["PPusernameMerchant"]["username"]);
+      if (Cookie_UserName != null)
+        using (var db = (new DBClient()).GetClient())
+        {
+          var data = db.Queryable<Sugar.Enties.table_商户账号>().Where(it => it.商户ID == Cookie_UserName).First();
+          if (data.手动提款状态 == true)
+          {
+          %>
+        <a href="../MerchantOrder/商户提款多笔.aspx">商户提款</a>
+        <%
+          
+          }
+        }
+          %>
+      
       <%--<a href="../MerchantOrder/商户提款导入.aspx">商户提款导入</a>--%>
       <a href="../MerchantOrder/商户提款记录.aspx">商户提款记录</a>
       <a href="../MerchantOrder/商户提款记录导出.aspx">商户提款记录导出</a>

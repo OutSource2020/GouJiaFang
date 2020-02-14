@@ -4,9 +4,10 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-
 using System.Data;
 using MySql.Data.MySqlClient;
+using Google.Authenticator;
+using System.Threading;
 
 namespace web1.WebsiteMerchant.商户订单
 {
@@ -14,6 +15,7 @@ namespace web1.WebsiteMerchant.商户订单
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+
             if (!Page.IsPostBack)
             {
                 Response.Cache.SetCacheability(HttpCacheability.NoCache);
@@ -22,9 +24,29 @@ namespace web1.WebsiteMerchant.商户订单
                 SetInitialRow();
             }
             查询账户信息();
+
+
+    
+      string Cookie_UserName=null;
+      //檢測cookie
+      if (System.Web.HttpContext.Current.Request.Cookies["PPusernameMerchant"] != null)
+        Cookie_UserName = ClassLibrary1.ClassAccount.cookie解密(System.Web.HttpContext.Current.Request.Cookies["PPusernameMerchant"]["username"]);
+      if (Cookie_UserName != null)
+        using (var db = (new DBClient()).GetClient())
+        {
+          var data = db.Queryable<Sugar.Enties.table_商户账号>().Where(it => it.商户ID == Cookie_UserName).First();
+          if (data.手动提款状态 == false)
+          {
+            ClassLibrary1.ClassMessage.HinXi(Page, "你没有手动提款的权限,请找管理员核实");
+            Thread.Sleep(1000*3);
+            System.Web.HttpContext.Current.Response.Redirect("/WebsiteMerchant/MerchantOverview/商户首页.aspx");
+          }
         }
 
-        protected void TextBox_交易方卡号_TextChanged(object sender, EventArgs e)
+    }
+
+
+      protected void TextBox_交易方卡号_TextChanged(object sender, EventArgs e)
         {
             for (int i = 0; i < Gridview1.Rows.Count; i++)
             {
@@ -308,8 +330,11 @@ namespace web1.WebsiteMerchant.商户订单
         protected void Button_批量发起提款订单_Click(object sender, EventArgs e)
         {
 
-            //检查支付密码是否正确
-            string Cookie_UserName = ClassLibrary1.ClassAccount.检查商户端cookie2();
+      if (!ValidateGoogleCode())
+        return ;
+
+      //检查支付密码是否正确
+      string Cookie_UserName = ClassLibrary1.ClassAccount.检查商户端cookie2();
             using (MySqlConnection con11 = new MySqlConnection(ClassLibrary1.ClassDataControl.conStr1))
             {
                 using (MySqlCommand cmd11 = new MySqlCommand("SELECT 商户ID,keyga,支付密码,支付错误累计 FROM table_商户账号 WHERE 商户ID=@商户ID", con11))
@@ -374,7 +399,9 @@ namespace web1.WebsiteMerchant.商户订单
             Button_批量发起提款订单.Enabled = false;//防止重复操作
 
 
-            for (int i = 0; i < Gridview1.Rows.Count; i++)
+    
+
+      for (int i = 0; i < Gridview1.Rows.Count; i++)
             {
                 string 交易方卡号 = ((TextBox)Gridview1.Rows[i].Cells[1].FindControl("TextBox1")).Text;
                 string 交易方姓名 = ((TextBox)Gridview1.Rows[i].Cells[2].FindControl("TextBox2")).Text;
@@ -587,5 +614,35 @@ namespace web1.WebsiteMerchant.商户订单
                 }
             }
         }
+
+
+      private bool ValidateGoogleCode(){ 
+       // 验证google  验证码
+      string UserName = null;
+      //檢測cookie
+      if (System.Web.HttpContext.Current.Request.Cookies["PPusernameMerchant"] != null)
+        UserName = ClassLibrary1.ClassAccount.cookie解密(System.Web.HttpContext.Current.Request.Cookies["PPusernameMerchant"]["username"]);
+      if (UserName != null)
+        using (var db = (new DBClient()).GetClient())
+        {
+          var data = db.Queryable<Sugar.Enties.table_商户账号>().Where(it => it.商户ID == UserName).First();
+          if (!data.二步验证状态 == true)
+          {
+            if (TextGoogleValidate.Text.Length != 6)
+            {
+              ClassLibrary1.ClassMessage.HinXi(Page, "验证码不和规范");
+              return false;
+            }
+            TwoFactorAuthenticator tfa = new TwoFactorAuthenticator();
+            var result = tfa.ValidateTwoFactorPIN(data.keyga, TextGoogleValidate.Text);
+            if (!result)
+            {
+              ClassLibrary1.ClassMessage.HinXi(Page, "验证码错误");
+              return false;
+            }
+          }
+        }
+      return true;
+}
     }
 }

@@ -1,5 +1,9 @@
 ﻿<%@ Page Title="商户提款多笔" Language="C#" MasterPageFile="~/WebsiteMerchant/SiteTemplateMerchant.Master" AutoEventWireup="true" CodeBehind="商户提款多笔.aspx.cs" Inherits="web1.WebsiteMerchant.商户订单.商户提款多笔" %>
 
+<%@ Import NameSpace="System.Data.SqlClient" %>
+<%@ Import NameSpace="System.Data" %>
+
+<%@ Import NameSpace="web1" %>
 <asp:Content ID="Content_NR1" ContentPlaceHolderID="ContentPlaceHolder_NR1" runat="server">
 
 </asp:Content>
@@ -119,6 +123,33 @@
                         <asp:Button ID="Button_刷新预估" runat="server" Text="刷新预估(检查)" class="btn btn-info btn-fw" OnClick="Button_刷新预估_Click" UseSubmitBehavior="false" OnClientClick="this.disabled=true;this.value='处理中...';" />
                     </td>
                 </tr>
+
+                <%
+                  string Cookie_UserName=null;
+                  //檢測cookie
+                  if (System.Web.HttpContext.Current.Request.Cookies["PPusernameMerchant"] != null)
+                      Cookie_UserName = ClassLibrary1.ClassAccount.cookie解密(System.Web.HttpContext.Current.Request.Cookies["PPusernameMerchant"]["username"]);
+                  if(Cookie_UserName!=null)
+                      using (var db = (new DBClient()).GetClient())
+                      {
+                          var data = db.Queryable<Sugar.Enties.table_商户账号>().Where(it => it.商户ID == Cookie_UserName).First();
+                          if( !data.二步验证状态 == true){ 
+                 %>
+                 <tr>
+                    <td colspan="5">
+                        输入google验证密码 :
+                        <asp:TextBox ID="TextGoogleValidate" runat="server"></asp:TextBox>
+                    </td>
+                </tr>
+                
+                <%
+                          }
+
+                      }
+
+
+                  %>
+
                 <tr>
                     <td colspan="5">
                         输入支付密码 :
