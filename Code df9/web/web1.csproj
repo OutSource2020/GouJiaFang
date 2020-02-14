@@ -101,6 +101,8 @@
     <Content Include="WebsiteBackstage\L1\ManagementBackstage\后台账号列表设置.aspx" />
     <Content Include="WebsiteBackstage\L1\ManagementBackstage\后台账号列表设置QR.aspx" />
     <Content Include="WebsiteBackstage\L1\ManagementBackstage\后台账号列表设置密码.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementMerchant\商户删除.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementMerchant\商户余额扣除.aspx" />
     <Content Include="WebsiteBackstage\L2\ControlCenter\管理控制台.aspx" />
     <Content Include="WebsiteBackstage\L2\Login\登入.aspx" />
     <Content Include="WebsiteBackstage\L2\ManagementOrder\商户充值记录.aspx" />
@@ -366,6 +368,20 @@
     </Compile>
     <Compile Include="WebsiteBackstage\L1\ManagementBackstage\后台账号列表设置密码.aspx.designer.cs">
       <DependentUpon>后台账号列表设置密码.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户删除.aspx.cs">
+      <DependentUpon>商户删除.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户删除.aspx.designer.cs">
+      <DependentUpon>商户删除.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户余额扣除.aspx.cs">
+      <DependentUpon>商户余额扣除.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户余额扣除.aspx.designer.cs">
+      <DependentUpon>商户余额扣除.aspx</DependentUpon>
     </Compile>
     <Compile Include="WebsiteBackstage\L2\ControlCenter\管理控制台.aspx.cs">
       <DependentUpon>管理控制台.aspx</DependentUpon>

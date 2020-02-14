@@ -153,6 +153,12 @@ namespace web1.WebsiteBackstage.L1.ManagementMerchant
             Response.Redirect("商户列表设置信息.aspx?Bianhao="+ 编号 + "");
         }
 
+        protected void Button_删除商户_Click(object sender, EventArgs e)
+        {
+            string 编号 = 从URL获取值();
+            Response.Redirect("商户删除.aspx?Bianhao=" + 编号 + "");
+        }
+
         protected void Button_设置商户费率_Click(object sender, EventArgs e)
         {
             string 编号 = 从URL获取值();
@@ -169,6 +175,12 @@ namespace web1.WebsiteBackstage.L1.ManagementMerchant
         {
             string 编号 = 从URL获取值();
             Response.Redirect("商户列表充值手续费.aspx?Bianhao=" + 编号 + "");
+        }
+
+        protected void Button_商户余额扣除_Click(object sender, EventArgs e)
+        {
+            string 编号 = 从URL获取值();
+            Response.Redirect("商户余额扣除.aspx?Bianhao=" + 编号 + "");
         }
 
         protected void Button_设置商户账户安全_Click(object sender, EventArgs e)
