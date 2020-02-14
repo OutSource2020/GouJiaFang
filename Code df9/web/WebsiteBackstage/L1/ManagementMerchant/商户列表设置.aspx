@@ -21,6 +21,7 @@
                 <td style="width: 30%">&nbsp;</td>
                 <td>
                     <asp:Button ID="Button_设置商户信息" runat="server" Text="设置商户信息" class="btn btn-info btn-fw" OnClick="Button_设置商户信息_Click" />
+                    <asp:Button ID="Button_删除商户" runat="server" Text="删除商户" class="btn btn-info btn-fw" OnClick="Button_删除商户_Click" />
                 </td>
             </tr>
             <tr>
@@ -83,6 +84,7 @@
                 <td style="width: 30%">&nbsp;</td>
                 <td>
                     <asp:Button ID="Button_充值商户手续费" runat="server" class="btn btn-info btn-fw" OnClick="Button_充值商户手续费_Click" Text="充值商户手续费" />
+                    <asp:Button ID="Button_商户余额扣除" runat="server" class="btn btn-info btn-fw" OnClick="Button_商户余额扣除_Click" Text="商户余额扣除" />
                 </td>
             </tr>
             <tr>
