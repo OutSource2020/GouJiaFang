@@ -49,6 +49,12 @@ namespace web1.WebsiteBackstage.L1.Login
                             {
                                 DataTable images11 = new DataTable();
                                 da11.Fill(images11);
+
+                                 if (images11.Rows.Count<1)
+                                 {
+                                        ClassLibrary1.ClassMessage.HinXi(Page, "账号不存在!");
+                                        return;
+                                 }
                                 foreach (DataRow dr11 in images11.Rows)
                                 {
                                     string 查询管理ID = dr11["后台ID"].ToString();
