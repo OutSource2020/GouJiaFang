@@ -287,21 +287,21 @@ namespace Sugar.Enties
            /// Default:b'0'
            /// Nullable:True
            /// </summary>           
-           public bool? 手动提款状态 {get;set;}
+           public bool 手动提款状态 {get;set;}
 
            /// <summary>
            /// Desc:
            /// Default:b'0'
            /// Nullable:True
            /// </summary>           
-           public bool? api提款状态 {get;set;}
+           public bool api提款状态 {get;set;}
 
            /// <summary>
            /// Desc:
            /// Default:b'0'
            /// Nullable:True
            /// </summary>           
-           public bool? 二步验证状态{ get;set;}
+           public bool  二步验证状态{ get;set;}
 
     }
 }
