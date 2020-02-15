@@ -21,7 +21,30 @@ namespace web1.WebsiteBackstage.L1.ManagementMerchant
             }
             
             this.GetCustomer2();
+      using (var db = (new DBClient()).GetClient())
+      {
+        string 编号 = 从URL获取值();
+        var data = db.Queryable<Sugar.Enties.table_商户账号>().Where(it => it.商户ID == 编号).First();
+
+        if (data.二步验证状态)
+        {
+          Button_二步验证状态.Text = "开启";
         }
+        else
+        {
+          Button_二步验证状态.Text = "关闭";
+        }
+
+        if (data.手动提款状态)
+        {
+          Button_手动提款状态.Text = "开启";
+        }
+        else
+        {
+          Button_手动提款状态.Text = "关闭";
+        }
+      }
+    }
 
         private string 从URL获取值()//获得URL传来的地址
         {
@@ -150,5 +173,57 @@ namespace web1.WebsiteBackstage.L1.ManagementMerchant
             string 编号 = 从URL获取值();
             Response.Redirect("商户列表设置.aspx?Bianhao=" + 编号 + "");
         }
+
+    protected void Button_手动提款状态_Click(object sender, EventArgs e)
+    {
+      using (var db = (new DBClient()).GetClient())
+      {
+        string 编号 = 从URL获取值();
+     
+        if (Button_手动提款状态.Text == "开启")
+        {
+          db.Updateable<Sugar.Enties.table_商户账号>()
+            .SetColumns(it => new Sugar.Enties.table_商户账号() { 手动提款状态 = false })
+            .Where(it => it.商户ID == 编号).ExecuteCommand();
+          Button_手动提款状态.Text = "关闭";
+        }
+        else
+        {
+          db.Updateable<Sugar.Enties.table_商户账号>()
+           .SetColumns(it => new Sugar.Enties.table_商户账号() { 手动提款状态 = true })
+           .Where(it => it.商户ID == 编号).ExecuteCommand();
+          Button_手动提款状态.Text = "开启";
+        }
+
+      }
+
+     
+
     }
+
+    protected void Button_二步验证状态_Click(object sender, EventArgs e)
+    {
+      using (var db = (new DBClient()).GetClient())
+      {
+        string 编号 = 从URL获取值();
+
+        if (Button_二步验证状态.Text == "开启")
+        {
+          db.Updateable<Sugar.Enties.table_商户账号>()
+            .SetColumns(it => new Sugar.Enties.table_商户账号() { 二步验证状态 = false })
+            .Where(it => it.商户ID == 编号).ExecuteCommand();
+          Button_二步验证状态.Text = "关闭";
+        }
+        else
+        {
+          db.Updateable<Sugar.Enties.table_商户账号>()
+           .SetColumns(it => new Sugar.Enties.table_商户账号() { 二步验证状态 = true })
+           .Where(it => it.商户ID == 编号).ExecuteCommand();
+          Button_二步验证状态.Text = "开启";
+        }
+      }
+
+
+    }
+  }
 }

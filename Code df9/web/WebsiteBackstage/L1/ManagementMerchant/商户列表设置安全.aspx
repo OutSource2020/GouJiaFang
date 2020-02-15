@@ -55,6 +55,18 @@
                     <asp:Button ID="Button_设置安全QR码" runat="server" Text="设置商户安全QR码" class="btn btn-info btn-fw" OnClick="Button_设置安全QR码_Click" UseSubmitBehavior="false" OnClientClick="this.disabled=true;this.value='处理中...';" />
                 </td>
             </tr>
+                    <tr>
+                <td style="width: 30%">手动提款状态</td>
+                <td>
+                    <asp:Button ID="Button_手动提款状态" runat="server" Text="手动提款状态" class="btn btn-info btn-fw" OnClick="Button_手动提款状态_Click" UseSubmitBehavior="false" OnClientClick="this.disabled=true;this.value='处理中...';" />
+                </td>
+            </tr>
+                    <tr>
+                <td style="width: 30%">二步验证状态</td>
+                <td>
+                    <asp:Button ID="Button_二步验证状态" runat="server" Text="二步验证状态" class="btn btn-info btn-fw" OnClick="Button_二步验证状态_Click" UseSubmitBehavior="false" OnClientClick="this.disabled=true;this.value='处理中...';" />
+                </td>
+            </tr>
     </table>
 
 
