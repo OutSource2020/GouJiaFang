@@ -55,6 +55,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\MySql.Data.dll</HintPath>
     </Reference>
+    <Reference Include="SqlSugar, Version=5.0.0.12, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\sqlSugar.5.0.0.12\lib\SqlSugar.dll</HintPath>
+    </Reference>
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -79,6 +82,7 @@
   <ItemGroup>
     <Content Include="GoogleAuthenticator.aspx" />
     <Content Include="t1.txt" />
+    <Content Include="TestForm.aspx" />
     <Content Include="Web.config" />
     <Content Include="WebsiteAgent\L1\DetailedData\商户列表代理端.aspx" />
     <Content Include="WebsiteAgent\L1\DetailedData\商户统计充值余额.aspx" />
@@ -200,6 +204,26 @@
     <Content Include="WebsiteBackstage\L1\Statistics\商户统计提款笔数.aspx" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Sugar.Enties\table_代理日志管理等级1.cs" />
+    <Compile Include="Sugar.Enties\table_代理日志管理等级2.cs" />
+    <Compile Include="Sugar.Enties\table_代理账号等级1.cs" />
+    <Compile Include="Sugar.Enties\table_代理账号等级2.cs" />
+    <Compile Include="Sugar.Enties\table_后台出款银行卡流水.cs" />
+    <Compile Include="Sugar.Enties\table_后台出款银行卡管理.cs" />
+    <Compile Include="Sugar.Enties\table_后台收款银行卡流水.cs" />
+    <Compile Include="Sugar.Enties\table_后台收款银行卡管理.cs" />
+    <Compile Include="Sugar.Enties\table_后台日志管理.cs" />
+    <Compile Include="Sugar.Enties\table_后台白名单管理.cs" />
+    <Compile Include="Sugar.Enties\table_后台账号.cs" />
+    <Compile Include="Sugar.Enties\table_商户平台公告.cs" />
+    <Compile Include="Sugar.Enties\table_商户日志管理.cs" />
+    <Compile Include="Sugar.Enties\table_商户明细余额.cs" />
+    <Compile Include="Sugar.Enties\table_商户明细充值.cs" />
+    <Compile Include="Sugar.Enties\table_商户明细手续费.cs" />
+    <Compile Include="Sugar.Enties\table_商户明细提款.cs" />
+    <Compile Include="Sugar.Enties\table_商户白名单管理.cs" />
+    <Compile Include="Sugar.Enties\table_商户账号.cs" />
+    <Compile Include="Sugar.Enties\table_商户银行卡.cs" />
     <Compile Include="GoogleAuthenticator.aspx.cs">
       <DependentUpon>GoogleAuthenticator.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -208,6 +232,14 @@
       <DependentUpon>GoogleAuthenticator.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="DBClient.cs" />
+    <Compile Include="TestForm.aspx.cs">
+      <DependentUpon>TestForm.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="TestForm.aspx.designer.cs">
+      <DependentUpon>TestForm.aspx</DependentUpon>
+    </Compile>
     <Compile Include="WebsiteAgent\L1\DetailedData\商户列表代理端.aspx.cs">
       <DependentUpon>商户列表代理端.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

@@ -36,9 +36,46 @@
                         <asp:ListItem Text="启用" Value="启用" />
                         <asp:ListItem Text="停用" Value="停用" />
                         </asp:DropDownList>
-                    </td>
+                        商户启用状态</td>
                 </tr>
                 </table>
+
+
+
+      <table class="auto-style1">
+             <tr>
+                    <td style="width: 20%">手动提款启用状态</td>
+                    <td>
+                        <asp:DropDownList ID="DropDownList_手动提款启用状态" runat="server">
+                        <asp:ListItem Text="未选择" Value="未选择" />
+                        <asp:ListItem Text="启用" Value="启用" />
+                        <asp:ListItem Text="停用" Value="停用" />
+                        </asp:DropDownList>
+                        手动提款启用状态</td>
+                </tr>
+             <tr>
+                    <td style="width: 20%">API提款启用状态</td>
+                    <td>
+                        <asp:DropDownList ID="DropDownList_API提款启用状态" runat="server">
+                        <asp:ListItem Text="未选择" Value="未选择" />
+                        <asp:ListItem Text="启用" Value="启用" />
+                        <asp:ListItem Text="停用" Value="停用" />
+                        </asp:DropDownList>
+                        商户使用api权限</td>
+                </tr>
+             <tr>
+                    <td style="width: 20%">二步验证</td>
+                    <td>
+                        <asp:DropDownList ID="DropDownList_二步验证" runat="server">
+                        <asp:ListItem Text="未选择" Value="未选择" />
+                        <asp:ListItem Text="启用" Value="启用" />
+                        <asp:ListItem Text="停用" Value="停用" />
+                        </asp:DropDownList>
+                        提款页面是否需要二步验证</td>
+                </tr>
+      </table>
+
+
 
              <table class="auto-style1">
                 <tr>

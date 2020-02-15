@@ -102,16 +102,17 @@
 .container .info span .fa {
   color: #EF3B3A;
 }
-body {
-  background: #FFFFF2; /* fallback for old browsers */
-  background: -webkit-linear-gradient(right, #FFFFF2, #1ec0ff);
-  background: -moz-linear-gradient(right, #FFFFF2, #1ec0ff);
-  background: -o-linear-gradient(right, #FFFFF2, #1ec0ff);
-  background: linear-gradient(to left, #FFFFF2, #1ec0ff);
-  font-family: "Roboto", sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;      
-}
+    body {
+        background-image: url(/css/tianjixian.jpg);
+        font-family: "Roboto", sans-serif;
+        /*background: #FFFFF2; /* fallback for old browsers */
+        /*background: -webkit-linear-gradient(right, #FFFFF2, #1ec0ff);*/
+        /*background: -moz-linear-gradient(right, #FFFFF2, #1ec0ff);*/
+        /*background: -o-linear-gradient(right, #FFFFF2, #1ec0ff);*/
+        /*background: linear-gradient(to left, #FFFFF2, #1ec0ff);*/
+        /*-webkit-font-smoothing: antialiased;*/
+        /*-moz-osx-font-smoothing: grayscale;*/
+    }
 
 </style>
 
@@ -188,7 +189,7 @@ a {
 </head>
 <body>
     <form id="form1" runat="server">
-        <div>
+        <div style="margin-top: 10%;">
 
 
 <%--<div class="login-page">
@@ -238,10 +239,10 @@ a {
   <div>
     
 
-    <div class="container">
-    <h1>登入</h1>
+    <div class="container"style="filter: alpha(opacity=50);-moz-opacity: 0.5;-khtml-opacity: 0.5;opacity: 0.8; background: border-box;">
+  <%--  <h1 style="color:white;text-align:center">登入</h1>--%>
     <%--<p>Please fill in this form to create an account.</p>--%>
-    <hr>
+<%--    <hr>--%>
 
     <%--<label for="email"><b>账号</b></label>--%>
     <%--<input type="text" name="email" required>--%>
@@ -255,11 +256,11 @@ a {
     <%--<input type="password" placeholder="Repeat Password" name="psw-repeat" required>--%>
     <asp:TextBox ID="TextBox_回答" runat="server" placeholder="KEY" MaxLength="30"></asp:TextBox>
 
-    <hr>
+<%--    <hr>--%>
 
     <%--<p>By creating an account you agree to our <a href="#">Terms & Privacy</a>.</p>--%>
 
-    <asp:CheckBox ID="CheckBox_保存验证" runat="server" Text="保存验证" />
+   <span style="color:white"> <asp:CheckBox ID="CheckBox_保存验证" runat="server" Text="保存验证" /></span>
     <asp:Button ID="Button_登入" runat="server" OnClick="Button_登入_Click" Text="登入" class="registerbtn" UseSubmitBehavior="false" OnClientClick="this.disabled=true;this.value='正在登入...';" />
   </div>
 

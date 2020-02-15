@@ -111,9 +111,20 @@ namespace web1.WebsiteBackstage.L1.ManagementMerchant
 
         private void 操作新增()
         {
-            //Button_新增商户.Enabled = false;
+      //Button_新增商户.Enabled = false;
+      using (var db = (new DBClient()).GetClient())
+      {
+        var data = db.Queryable<Sugar.Enties.table_商户账号>().Where(it => it.商户ID == TextBox_账号信息_商户ID.Text).First();
+        if(data==null)
+        {
+          ClassLibrary1.ClassMessage.HinXi(Page, "商户账号重名请更改");
+           return;
+        }
+      }
 
-            string 生成编号 = DateTime.Now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999));
+      
+
+      string 生成编号 = DateTime.Now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999));
 
             string RegisterTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
 
@@ -237,7 +248,17 @@ namespace web1.WebsiteBackstage.L1.ManagementMerchant
                 }
             }
 
-        }
+            
+            using( var db = (new DBClient()).GetClient())
+            {
+                var data = db.Queryable<Sugar.Enties.table_商户账号>().Where(it => it.商户ID == TextBox_账号信息_商户ID.Text).First();
+               data.二步验证状态 = (DropDownList_二步验证.SelectedValue)== "启用" ? true:false;
+               data.api提款状态 = (DropDownList_API提款启用状态.SelectedItem.Value== "启用") ? true : false;
+               data.手动提款状态 = (DropDownList_手动提款启用状态.SelectedItem.Value== "启用")? true : false;
+          }
+     
+
+    }
 
         protected void Button_随机生成商户ID_Click(object sender, EventArgs e)
         {

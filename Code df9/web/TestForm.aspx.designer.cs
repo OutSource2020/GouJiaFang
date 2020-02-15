@@ -7,11 +7,11 @@
 // </自动生成>
 //------------------------------------------------------------------------------
 
-namespace web1.WebsiteMerchant.Login
+namespace web1
 {
 
 
-  public partial class 登入
+  public partial class TestForm
   {
 
     /// <summary>
@@ -24,48 +24,39 @@ namespace web1.WebsiteMerchant.Login
     protected global::System.Web.UI.HtmlControls.HtmlForm form1;
 
     /// <summary>
-    /// TextBox_账号 控件。
+    /// TextBox1 控件。
     /// </summary>
     /// <remarks>
     /// 自动生成的字段。
     /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     /// </remarks>
-    protected global::System.Web.UI.WebControls.TextBox TextBox_账号;
+    protected global::System.Web.UI.WebControls.TextBox TextBox1;
 
     /// <summary>
-    /// TextBox_密码 控件。
+    /// TextBox2 控件。
     /// </summary>
     /// <remarks>
     /// 自动生成的字段。
     /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     /// </remarks>
-    protected global::System.Web.UI.WebControls.TextBox TextBox_密码;
+    protected global::System.Web.UI.WebControls.TextBox TextBox2;
 
     /// <summary>
-    /// TextBox_回答 控件。
+    /// TextBox3 控件。
     /// </summary>
     /// <remarks>
     /// 自动生成的字段。
     /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     /// </remarks>
-    protected global::System.Web.UI.WebControls.TextBox TextBox_回答;
+    protected global::System.Web.UI.WebControls.TextBox TextBox3;
 
     /// <summary>
-    /// CheckBox_保存验证 控件。
+    /// Button2 控件。
     /// </summary>
     /// <remarks>
     /// 自动生成的字段。
     /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     /// </remarks>
-    protected global::System.Web.UI.WebControls.CheckBox CheckBox_保存验证;
-
-    /// <summary>
-    /// Button_登入 控件。
-    /// </summary>
-    /// <remarks>
-    /// 自动生成的字段。
-    /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.Button Button_登入;
+    protected global::System.Web.UI.WebControls.Button Button2;
   }
 }
