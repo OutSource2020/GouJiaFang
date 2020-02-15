@@ -11,13 +11,18 @@ using System.Net.Mail;
 
 namespace web1.WebsiteBackstage.L1.ManagementMerchant
 {
+
+    /*
+    邮箱账号 huijupay168@163.com  
+    密码 zxc23456
+     */
     public partial class 商户列表设置安全密码 : System.Web.UI.Page
     {
-        string 邮箱主机地址 = "smtp.gmail.com";
-        string 邮箱主机地址端口 = "443";
-        string 邮箱用户名 = "@gmail.com";
-        string 邮箱密码 = "password";
-        string 邮箱发件人 = "@gmail.com";
+        string 邮箱主机地址 = "smtp.163.com";
+        string 邮箱主机地址端口 = "25";
+        string 邮箱用户名 = "huijupay168@163.com";
+        string 邮箱密码 = "zxc1234567";
+        string 邮箱发件人 = "huijupay168@163.com";
 
 
         protected void Page_Load(object sender, EventArgs e)
