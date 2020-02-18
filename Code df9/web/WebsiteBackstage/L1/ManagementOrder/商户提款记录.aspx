@@ -239,8 +239,7 @@
                 <asp:RadioButton ID="RadioButton_创建方式API" runat="server" GroupName="LoDenXi" Text="API" type="radio" value="API" AutoPostBack="True" OnCheckedChanged="RadioButton_创建方式API_CheckedChanged" />
                 <asp:RadioButton ID="RadioButton_创建方式文本导入" runat="server" GroupName="LoDenXi" Text="文本导入" type="radio" value="文本导入" AutoPostBack="True" OnCheckedChanged="RadioButton_创建方式文本导入_CheckedChanged" />
                 <asp:RadioButton ID="RadioButton_创建方式文档导入" runat="server" GroupName="LoDenXi" Text="文档导入" type="radio" value="文档导入" AutoPostBack="True" OnCheckedChanged="RadioButton_创建方式文档导入_CheckedChanged" />
-                <asp:RadioButton ID="RadioButton_创建方式文本输入" runat="server" GroupName="LoDenXi" Text="文本输入" type="radio" value="文本输入" AutoPostBack="True" OnCheckedChanged="RadioButton_创建方式文本输入_CheckedChanged" />
-
+                
             
             </td>
             <td>

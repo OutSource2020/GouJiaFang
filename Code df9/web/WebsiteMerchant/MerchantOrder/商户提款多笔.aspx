@@ -144,7 +144,7 @@
                       using (var db = (new DBClient()).GetClient())
                       {
                           var data = db.Queryable<Sugar.Enties.table_商户账号>().Where(it => it.商户ID == Cookie_UserName).First();
-                          if( !data.二步验证状态 == true){ 
+                          if(data.二步验证状态 == true){ 
                  %>
                  <tr>
                     <td colspan="5">
@@ -180,7 +180,10 @@
 
     </div>
     
-
+    <div class="__web-inspector-hide-shortcut__"><p hidden>
+    <asp:TextBox ID="创建方式_Text"  runat="server" Text="手动"></asp:TextBox></p>
+     </div>
+        
 </asp:Content>
 
 
