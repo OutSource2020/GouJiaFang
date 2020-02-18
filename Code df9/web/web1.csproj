@@ -112,8 +112,8 @@
     <Content Include="WebsiteBackstage\L1\ManagementBackstage\后台账号列表设置.aspx" />
     <Content Include="WebsiteBackstage\L1\ManagementBackstage\后台账号列表设置QR.aspx" />
     <Content Include="WebsiteBackstage\L1\ManagementBackstage\后台账号列表设置密码.aspx" />
-    <Content Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户删除.aspx" />
-    <Content Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户余额扣除.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementMerchant\商户删除.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementMerchant\商户余额扣除.aspx" />
     <Content Include="WebsiteBackstage\L2\ControlCenter\管理控制台.aspx" />
     <Content Include="WebsiteBackstage\L2\Login\登入.aspx" />
     <Content Include="WebsiteBackstage\L2\ManagementOrder\商户充值记录.aspx" />
@@ -165,15 +165,15 @@
     <Content Include="WebsiteBackstage\L1\ManagementAgent\SettingL1\代理列表L1设置安全绑定邮箱.aspx" />
     <Content Include="WebsiteBackstage\L1\ManagementAgent\SettingL1\代理列表L1设置信息.aspx" />
     <Content Include="WebsiteBackstage\L1\ManagementAgent\SettingL1\代理列表L1设置安全密码.aspx" />
-    <Content Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户安全白名单.aspx" />
-    <Content Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户安全白名单新增.aspx" />
-    <Content Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户安全白名单更新.aspx" />
-    <Content Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户列表充值手续费.aspx" />
-    <Content Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户列表设置安全.aspx" />
-    <Content Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户列表设置安全绑定手机.aspx" />
-    <Content Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户列表设置安全绑定邮箱.aspx" />
-    <Content Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户列表设置安全密码.aspx" />
-    <Content Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户列表设置安全QR.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementMerchant\商户安全白名单.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementMerchant\商户安全白名单新增.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementMerchant\商户安全白名单更新.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementMerchant\商户列表充值手续费.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementMerchant\商户列表设置安全.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementMerchant\商户列表设置安全绑定手机.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementMerchant\商户列表设置安全绑定邮箱.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementMerchant\商户列表设置安全密码.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementMerchant\商户列表设置安全QR.aspx" />
     <Content Include="WebsiteBackstage\L1\ControlCenter\管理控制台.aspx" />
     <Content Include="WebsiteBackstage\L1\ControlCenter\编号标识.aspx" />
     <Content Include="WebsiteBackstage\L1\ManagementOrder\商户提款记录.aspx" />
@@ -191,18 +191,18 @@
     <Content Include="WebsiteBackstage\L1\ManagementBankCard\管理出款银行卡卡充值.aspx" />
     <Content Include="WebsiteBackstage\L1\ManagementBankCard\管理出款银行卡卡新增.aspx" />
     <Content Include="WebsiteBackstage\L1\ManagementBankCard\管理出款银行卡卡更新.aspx" />
-    <Content Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户列表设置信息.aspx" />
-    <Content Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户列表设置.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementMerchant\商户列表设置信息.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementMerchant\商户列表设置.aspx" />
     <Content Include="WebsiteBackstage\L1\ManagementOrder\商户充值记录.aspx" />
     <Content Include="WebsiteBackstage\L1\ManagementOrder\商户充值记录状态更新号余额.aspx" />
-    <Content Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户列表.aspx" />
-    <Content Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户列表新增.aspx" />
-    <Content Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户列表设置费率.aspx" />
-    <Content Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户通知设置.aspx" />
-    <Content Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户银行卡.aspx" />
-    <Content Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户银行卡更新.aspx" />
-    <Content Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\手续费交易明细.aspx" />
-    <Content Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\账户余额交易明细.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementMerchant\商户列表.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementMerchant\商户列表新增.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementMerchant\商户列表设置费率.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementMerchant\商户通知设置.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementMerchant\商户银行卡.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementMerchant\商户银行卡更新.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementMerchant\手续费交易明细.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementMerchant\账户余额交易明细.aspx" />
     <Content Include="WebsiteBackstage\L1\ManagementOrder\商户提款记录状态更新冲正.aspx" />
     <Content Include="WebsiteBackstage\L1\ManagementOrder\商户提款记录状态更新.aspx" />
     <Content Include="WebsiteBackstage\L1\ManagementOrder\商户提款记录详情.aspx" />
@@ -408,18 +408,18 @@
     <Compile Include="WebsiteBackstage\L1\ManagementBackstage\后台账号列表设置密码.aspx.designer.cs">
       <DependentUpon>后台账号列表设置密码.aspx</DependentUpon>
     </Compile>
-    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户删除.aspx.cs">
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户删除.aspx.cs">
       <DependentUpon>商户删除.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户删除.aspx.designer.cs">
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户删除.aspx.designer.cs">
       <DependentUpon>商户删除.aspx</DependentUpon>
     </Compile>
-    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户余额扣除.aspx.cs">
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户余额扣除.aspx.cs">
       <DependentUpon>商户余额扣除.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户余额扣除.aspx.designer.cs">
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户余额扣除.aspx.designer.cs">
       <DependentUpon>商户余额扣除.aspx</DependentUpon>
     </Compile>
     <Compile Include="WebsiteBackstage\L2\ControlCenter\管理控制台.aspx.cs">
@@ -791,67 +791,67 @@
     <Compile Include="WebsiteBackstage\L1\ManagementAgent\SettingL1\代理列表L1设置安全密码.aspx.designer.cs">
       <DependentUpon>代理列表L1设置安全密码.aspx</DependentUpon>
     </Compile>
-    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户安全白名单.aspx.cs">
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户安全白名单.aspx.cs">
       <DependentUpon>商户安全白名单.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户安全白名单.aspx.designer.cs">
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户安全白名单.aspx.designer.cs">
       <DependentUpon>商户安全白名单.aspx</DependentUpon>
     </Compile>
-    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户安全白名单新增.aspx.cs">
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户安全白名单新增.aspx.cs">
       <DependentUpon>商户安全白名单新增.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户安全白名单新增.aspx.designer.cs">
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户安全白名单新增.aspx.designer.cs">
       <DependentUpon>商户安全白名单新增.aspx</DependentUpon>
     </Compile>
-    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户安全白名单更新.aspx.cs">
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户安全白名单更新.aspx.cs">
       <DependentUpon>商户安全白名单更新.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户安全白名单更新.aspx.designer.cs">
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户安全白名单更新.aspx.designer.cs">
       <DependentUpon>商户安全白名单更新.aspx</DependentUpon>
     </Compile>
-    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户列表充值手续费.aspx.cs">
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户列表充值手续费.aspx.cs">
       <DependentUpon>商户列表充值手续费.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户列表充值手续费.aspx.designer.cs">
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户列表充值手续费.aspx.designer.cs">
       <DependentUpon>商户列表充值手续费.aspx</DependentUpon>
     </Compile>
-    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户列表设置安全.aspx.cs">
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户列表设置安全.aspx.cs">
       <DependentUpon>商户列表设置安全.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户列表设置安全.aspx.designer.cs">
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户列表设置安全.aspx.designer.cs">
       <DependentUpon>商户列表设置安全.aspx</DependentUpon>
     </Compile>
-    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户列表设置安全绑定手机.aspx.cs">
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户列表设置安全绑定手机.aspx.cs">
       <DependentUpon>商户列表设置安全绑定手机.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户列表设置安全绑定手机.aspx.designer.cs">
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户列表设置安全绑定手机.aspx.designer.cs">
       <DependentUpon>商户列表设置安全绑定手机.aspx</DependentUpon>
     </Compile>
-    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户列表设置安全绑定邮箱.aspx.cs">
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户列表设置安全绑定邮箱.aspx.cs">
       <DependentUpon>商户列表设置安全绑定邮箱.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户列表设置安全绑定邮箱.aspx.designer.cs">
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户列表设置安全绑定邮箱.aspx.designer.cs">
       <DependentUpon>商户列表设置安全绑定邮箱.aspx</DependentUpon>
     </Compile>
-    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户列表设置安全密码.aspx.cs">
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户列表设置安全密码.aspx.cs">
       <DependentUpon>商户列表设置安全密码.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户列表设置安全密码.aspx.designer.cs">
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户列表设置安全密码.aspx.designer.cs">
       <DependentUpon>商户列表设置安全密码.aspx</DependentUpon>
     </Compile>
-    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户列表设置安全QR.aspx.cs">
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户列表设置安全QR.aspx.cs">
       <DependentUpon>商户列表设置安全QR.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户列表设置安全QR.aspx.designer.cs">
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户列表设置安全QR.aspx.designer.cs">
       <DependentUpon>商户列表设置安全QR.aspx</DependentUpon>
     </Compile>
     <Compile Include="WebsiteBackstage\L1\ControlCenter\管理控制台.aspx.cs">
@@ -973,18 +973,18 @@
     <Compile Include="WebsiteBackstage\L1\ManagementBankCard\管理出款银行卡卡更新.aspx.designer.cs">
       <DependentUpon>管理出款银行卡卡更新.aspx</DependentUpon>
     </Compile>
-    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户列表设置信息.aspx.cs">
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户列表设置信息.aspx.cs">
       <DependentUpon>商户列表设置信息.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户列表设置信息.aspx.designer.cs">
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户列表设置信息.aspx.designer.cs">
       <DependentUpon>商户列表设置信息.aspx</DependentUpon>
     </Compile>
-    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户列表设置.aspx.cs">
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户列表设置.aspx.cs">
       <DependentUpon>商户列表设置.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户列表设置.aspx.designer.cs">
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户列表设置.aspx.designer.cs">
       <DependentUpon>商户列表设置.aspx</DependentUpon>
     </Compile>
     <Compile Include="WebsiteBackstage\L1\ManagementOrder\商户充值记录.aspx.cs">
@@ -1001,60 +1001,60 @@
     <Compile Include="WebsiteBackstage\L1\ManagementOrder\商户充值记录状态更新号余额.aspx.designer.cs">
       <DependentUpon>商户充值记录状态更新号余额.aspx</DependentUpon>
     </Compile>
-    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户列表.aspx.cs">
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户列表.aspx.cs">
       <DependentUpon>商户列表.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户列表.aspx.designer.cs">
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户列表.aspx.designer.cs">
       <DependentUpon>商户列表.aspx</DependentUpon>
     </Compile>
-    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户列表新增.aspx.cs">
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户列表新增.aspx.cs">
       <DependentUpon>商户列表新增.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户列表新增.aspx.designer.cs">
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户列表新增.aspx.designer.cs">
       <DependentUpon>商户列表新增.aspx</DependentUpon>
     </Compile>
-    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户列表设置费率.aspx.cs">
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户列表设置费率.aspx.cs">
       <DependentUpon>商户列表设置费率.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户列表设置费率.aspx.designer.cs">
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户列表设置费率.aspx.designer.cs">
       <DependentUpon>商户列表设置费率.aspx</DependentUpon>
     </Compile>
-    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户通知设置.aspx.cs">
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户通知设置.aspx.cs">
       <DependentUpon>商户通知设置.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户通知设置.aspx.designer.cs">
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户通知设置.aspx.designer.cs">
       <DependentUpon>商户通知设置.aspx</DependentUpon>
     </Compile>
-    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户银行卡.aspx.cs">
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户银行卡.aspx.cs">
       <DependentUpon>商户银行卡.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户银行卡.aspx.designer.cs">
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户银行卡.aspx.designer.cs">
       <DependentUpon>商户银行卡.aspx</DependentUpon>
     </Compile>
-    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户银行卡更新.aspx.cs">
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户银行卡更新.aspx.cs">
       <DependentUpon>商户银行卡更新.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\商户银行卡更新.aspx.designer.cs">
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户银行卡更新.aspx.designer.cs">
       <DependentUpon>商户银行卡更新.aspx</DependentUpon>
     </Compile>
-    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\手续费交易明细.aspx.cs">
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\手续费交易明细.aspx.cs">
       <DependentUpon>手续费交易明细.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\手续费交易明细.aspx.designer.cs">
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\手续费交易明细.aspx.designer.cs">
       <DependentUpon>手续费交易明细.aspx</DependentUpon>
     </Compile>
-    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\账户余额交易明细.aspx.cs">
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\账户余额交易明细.aspx.cs">
       <DependentUpon>账户余额交易明细.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="WebsiteBackstage\L1\ManagementBankCard\ManagementMerchant\账户余额交易明细.aspx.designer.cs">
+    <Compile Include="WebsiteBackstage\L1\ManagementMerchant\账户余额交易明细.aspx.designer.cs">
       <DependentUpon>账户余额交易明细.aspx</DependentUpon>
     </Compile>
     <Compile Include="WebsiteBackstage\L1\ManagementOrder\商户提款记录状态更新冲正.aspx.cs">
