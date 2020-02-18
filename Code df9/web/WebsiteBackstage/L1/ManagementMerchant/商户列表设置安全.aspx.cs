@@ -126,7 +126,7 @@ namespace web1.WebsiteBackstage.L1.ManagementMerchant
 
             using (MySqlConnection con = new MySqlConnection(ClassLibrary1.ClassDataControl.conStr1))
             {
-                using (MySqlCommand cmd = new MySqlCommand("UPDATE table_商户账号 SET 登入错误累计='0' WHERE 商户ID=@商户ID ", con))
+                using (MySqlCommand cmd = new MySqlCommand("UPDATE table_商户账号 SET 登入错误累计='0', 签名错误累计='0' WHERE 商户ID=@商户ID ", con))
                 {
                     cmd.Parameters.AddWithValue("@商户ID", 从URL传来值);
 

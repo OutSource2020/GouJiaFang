@@ -121,8 +121,8 @@ namespace web1.WebsiteBackstage.L1.ManagementMerchant
                             string 邮件标题 = "平台通知";
                             // string 邮件内容 = "你的ID=" + 从URL传来值 + "" + 换行 + " 登入密码=" + 商户密码 + "" + 换行 + " 支付密码=" + 支付密码 + "" + 换行 + "  尽快登录修改密码!";
                             string 邮件内容 = string.Format(
-                                "【{0}用户】您已在平台成功获取支付密码，登录后请尽快更换密码。。{1}账户名为：{2}{3}初始登录密码为：{4}{5}初始支付密码为：{4}{5}操作后台登录网址：",
-                                商户名称, 换行 + 换行, 换行 + 换行, 从URL传来值, 换行 + 换行, 商户密码, 换行 + 换行, 支付密码)
+                                "【{0}用户】您已在平台成功获取支付密码，登录后请尽快更换密码。{1}{1}账户名为：{1}{1}{2}{1}初始登录密码为：{1}{1}{3}{1}初始支付密码为：{1}{1}{4}{1}操作后台登录网址：",
+                                商户名称, 换行, 从URL传来值, 商户密码, 支付密码)
                                 + " http://39.109.17.95/" + 换行 + 换行 + "此信息非常重要，请妥善保存，不要向任何人透露。如需要重置，请联系客服。";
                             string 从哪发 = 邮箱发件人;
 
@@ -189,8 +189,8 @@ namespace web1.WebsiteBackstage.L1.ManagementMerchant
 
                             // string 邮件内容 = "你的ID=" + 从URL传来值 + "" + 换行 + " 登入密码=" + 生成登入密码 + "" + 换行 + " 支付密码=" + 生成支付密码 + "" + 换行 + "  尽快登录修改密码!";
                             string 邮件内容 = string.Format(
-                                "【{0}用户】您已在平台成功重置账号密码和支付密码，登录后请尽快更换密码。{1}账户名为：{2}{3}初始登录密码为：{4}{5}初始支付密码为：{4}{5}操作后台登录网址：",
-                                商户名称, 换行 + 换行, 换行 + 换行, 从URL传来值, 换行 + 换行, 生成登入密码, 换行 + 换行, 生成支付密码)
+                                "【{0}用户】您已在平台成功重置支付密码，登录后请尽快更换密码。{1}{1}账户名为：{1}{1}{2}{1}初始登录密码为：{1}{1}{3}{1}初始支付密码为：{1}{1}{4}{1}操作后台登录网址：",
+                                商户名称, 换行, 从URL传来值, 生成登入密码, 生成支付密码)
                                 + " http://39.109.17.95/" + 换行 + 换行 + "此信息非常重要，请妥善保存，不要向任何人透露。如需要重置，请联系客服。";
 
 
@@ -247,7 +247,7 @@ namespace web1.WebsiteBackstage.L1.ManagementMerchant
             //查找数据库中的密码
             using (MySqlConnection con = new MySqlConnection(ClassLibrary1.ClassDataControl.conStr1))
             {
-                using (MySqlCommand cmd = new MySqlCommand("SELECT 商户ID,绑定邮箱,商户密码API,商户名称 FROM table_商户账号 WHERE 商户ID=@商户ID ", con))
+                using (MySqlCommand cmd = new MySqlCommand("SELECT 绑定邮箱,商户密码API,商户名称,公共密匙 FROM table_商户账号 WHERE 商户ID=@商户ID ", con))
                 {
                     cmd.Parameters.AddWithValue("@商户ID", 从URL传来值);
 
@@ -257,18 +257,18 @@ namespace web1.WebsiteBackstage.L1.ManagementMerchant
                         da.Fill(images);
                         foreach (DataRow dr in images.Rows)
                         {
-                            string 商户ID = dr["商户ID"].ToString();
                             string 发给谁 = dr["绑定邮箱"].ToString();
                             string 商户密码 = dr["商户密码API"].ToString();
                             string 商户名称 = dr["商户名称"].ToString();
+                            string 商户密匙 = dr["公共密匙"].ToString();
 
                             string 换行 = System.Environment.NewLine + "<br>";
 
                             string 邮件标题 = "平台通知";
                             // string 邮件内容 = "你的ID=" + 从URL传来值 + "" + 换行 + " 商户密码API=" + 商户密码 + "  尽快登录修改 API密码!";
                             string 邮件内容 = string.Format(
-                                "【{0}用户】您已在平台成功开户，登录后请尽快更换密码。{1}账户名为：{2}{3}初始登录密码为：{4}{5}操作后台登录网址：",
-                                商户名称, 换行 + 换行, 换行 + 换行, 从URL传来值, 换行 + 换行, 商户密码)
+                                "【{0}用户】您已在平台获取账户密码API，登录后请尽快更换密码。{1}账户名为：{1}{1}{2}{1}商户密码API为：{1}{1}{3}{1}商户密匙API为：{1}{1}{4}{1}操作后台登录网址：",
+                                商户名称, 换行, 从URL传来值, 商户密码, 商户密匙)
                                 + " http://39.109.17.95/" + 换行 + 换行 + "此信息非常重要，请妥善保存，不要向任何人透露。如需要重置，请联系客服。";
 
                             string 从哪发 = 邮箱发件人;
@@ -327,6 +327,7 @@ namespace web1.WebsiteBackstage.L1.ManagementMerchant
                             //重置密码
                             //随机生成
                             string 生成商户密码API = Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 100000, 999999));
+                            string 生成商户密匙 = Guid.NewGuid().ToString("N");
 
                             string 换行 = System.Environment.NewLine + "<br>";
 
@@ -337,17 +338,18 @@ namespace web1.WebsiteBackstage.L1.ManagementMerchant
 
                             // string 邮件内容 = "你的ID=" + 从URL传来值 + "" + 换行 + " 商户密码API=" + 生成商户密码API + "  尽快登录修改 API密码!";
                             string 邮件内容 = string.Format(
-                                "【{0}用户】您已在平台重置账户密码API，登录后请尽快更换密码。{1}账户名为：{2}{3}商户密码API为：{4}{5}操作后台登录网址：",
-                                商户名称, 换行 + 换行, 换行 + 换行, 从URL传来值, 换行 + 换行, 生成商户密码API)
+                                "【{0}用户】您已在平台重置账户密码API，登录后请尽快更换密码。{1}账户名为：{1}{1}{2}{1}商户密码API为：{1}{1}{3}{1}商户密匙API为：{1}{1}{4}{1}操作后台登录网址：",
+                                商户名称, 换行, 从URL传来值, 生成商户密码API, 生成商户密匙)
                                 + " http://39.109.17.95/" + 换行 + 换行 + "此信息非常重要，请妥善保存，不要向任何人透露。如需要重置，请联系客服。";
 
                             //更新 重置密码
                             using (MySqlConnection con12 = new MySqlConnection(ClassLibrary1.ClassDataControl.conStr1))
                             {
-                                using (MySqlCommand cmd12 = new MySqlCommand("UPDATE table_商户账号 SET 商户密码API=@商户密码API  WHERE 商户ID=@商户ID ", con12))
+                                using (MySqlCommand cmd12 = new MySqlCommand("UPDATE table_商户账号 SET 商户密码API=@商户密码API, 公共密匙=@商户密匙 WHERE 商户ID=@商户ID ", con12))
                                 {
                                     cmd12.Parameters.AddWithValue("@商户密码API", 生成商户密码API);
                                     cmd12.Parameters.AddWithValue("@商户ID", 从URL传来值);
+                                    cmd12.Parameters.AddWithValue("@商户密匙", 生成商户密匙);
 
                                     con12.Open();
                                     cmd12.ExecuteNonQuery();

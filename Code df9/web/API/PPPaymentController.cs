@@ -67,7 +67,8 @@ namespace web1.API
                 orderInquireResponse.OrderNumberMerchant = request.OrderNumberMerchant;
                 orderInquireResponse.OrderNumberSite = getByWhere[0].订单号;
                 orderInquireResponse.OrderTimeCreation = getByWhere[0].时间创建.Value.ToString("yyyy-MM-dd HH:mm:ss");
-                orderInquireResponse.OrderTimeEnd = getByWhere[0].时间完成.Value.ToString("yyyy-MM-dd HH:mm:ss");
+                if (getByWhere[0].时间完成.HasValue)
+                    orderInquireResponse.OrderTimeEnd = getByWhere[0].时间完成.Value.ToString("yyyy-MM-dd HH:mm:ss");
                 orderInquireResponse.OrderType = getByWhere[0].类型;
                 orderInquireResponse.OrderStatus = getByWhere[0].状态;
                 orderInquireResponse.Username = request.UserName;
@@ -100,7 +101,7 @@ namespace web1.API
             {
                 return GetStandardError(BaseErrors.ERROR_NUMBER.LX1012, request.UserName, request.UserPassword);
             }
-            if (account.提款余额.Value - Convert.ToDouble(request.AimsMoney) > 0)
+            if (account.提款余额.Value - Convert.ToDouble(request.AimsMoney) < 0)
             {
                 return GetStandardError(BaseErrors.ERROR_NUMBER.LX1013, request.UserName, request.UserPassword);
             }
@@ -147,6 +148,7 @@ namespace web1.API
             detail.交易方卡号 = request.AimsCardNumber;
             detail.交易方姓名 = request.AimsCardName;
             detail.交易方银行 = request.AimsCardBank;
+            detail.商户API订单号 = request.OrderNumberMerchant;
             detail.交易金额 = Convert.ToDouble(request.AimsMoney);
             detail.手续费 = account.单笔手续费;
             detail.创建方式 = "接口";
