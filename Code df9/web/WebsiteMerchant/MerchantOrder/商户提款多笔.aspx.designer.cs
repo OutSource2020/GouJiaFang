@@ -24,6 +24,42 @@ namespace web1.WebsiteMerchant.商户订单
     protected global::System.Web.UI.WebControls.GridView Gridview1;
 
     /// <summary>
+    /// UploadExcel 控件。
+    /// </summary>
+    /// <remarks>
+    /// 自动生成的字段。
+    /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.FileUpload UploadExcel;
+
+    /// <summary>
+    /// Upload_提款订单文档 控件。
+    /// </summary>
+    /// <remarks>
+    /// 自动生成的字段。
+    /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Button Upload_提款订单文档;
+
+    /// <summary>
+    /// UploadTxt 控件。
+    /// </summary>
+    /// <remarks>
+    /// 自动生成的字段。
+    /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.FileUpload UploadTxt;
+
+    /// <summary>
+    /// Upload_提款订单文本 控件。
+    /// </summary>
+    /// <remarks>
+    /// 自动生成的字段。
+    /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Button Upload_提款订单文本;
+
+    /// <summary>
     /// Label_提款余额 控件。
     /// </summary>
     /// <remarks>

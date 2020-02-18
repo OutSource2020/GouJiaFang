@@ -115,7 +115,7 @@ namespace web1.WebsiteBackstage.L1.ManagementMerchant
       using (var db = (new DBClient()).GetClient())
       {
         var data = db.Queryable<Sugar.Enties.table_商户账号>().Where(it => it.商户ID == TextBox_账号信息_商户ID.Text).ToList();
-        if(data.Count()>1)
+        if(data.Count()>0)
         {
           ClassLibrary1.ClassMessage.HinXi(Page, "商户账号重名请更改");
            return;

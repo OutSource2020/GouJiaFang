@@ -71,6 +71,17 @@
                     </td>
                 </tr>
                 <tr>
+                               <p></p>
+  <asp:fileupload ID="UploadExcel" runat="server"></asp:fileupload>
+         <asp:Button ID="Upload_提款订单文档" runat="server" Text="导入提款订单文档" class="btn btn-info btn-fw" OnClick="Button_提款订单文档导入_Click" UseSubmitBehavior="false" OnClientClick="this.disabled=true;this.value='处理中...';" />
+        <br>
+                    <p></p>
+  <asp:fileupload ID="UploadTxt" runat="server"></asp:fileupload>
+         <asp:Button ID="Upload_提款订单文本" runat="server" Text="导入提款订单文本" class="btn btn-info btn-fw" OnClick="Button_提款订单文本导入_Click" UseSubmitBehavior="false" OnClientClick="this.disabled=true;this.value='处理中...';" />
+
+        
+                    </tr>
+                <tr>
                     <td style="width: 20%">&nbsp;</td>
                     <td style="width: 20%">金额</td>
                     <td>手续费</td>
@@ -165,5 +176,11 @@
 
 
 </div>
+     <div>
+
+    </div>
+    
 
 </asp:Content>
+
+

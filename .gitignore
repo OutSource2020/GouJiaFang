@@ -535,3 +535,8 @@ Code df9/ORM/DatabaseModel/table_商户白名单管理.cs
 Code df9/ORM/DatabaseModel/table_商户账号.cs
 Code df9/ORM/DatabaseModel/table_商户银行卡.cs
 Code df9/ORM/DataModel.csproj
+Code df9/ConsoleApp1/App.config
+Code df9/ConsoleApp1/ConsoleApp1.csproj
+Code df9/ConsoleApp1/packages.config
+Code df9/ConsoleApp1/Program.cs
+Code df9/ConsoleApp1/Properties/AssemblyInfo.cs
