@@ -8,11 +8,16 @@ using System.Data;
 using MySql.Data.MySqlClient;
 using Google.Authenticator;
 using System.Threading;
+using System.Data.OleDb;
+using System.IO;
+using ExcelDataReader;
+using System.Text.RegularExpressions;
 
 namespace web1.WebsiteMerchant.商户订单
 {
     public partial class 商户提款多笔 : System.Web.UI.Page
     {
+     private   string 创建方式1 = "手动";
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -223,6 +228,8 @@ namespace web1.WebsiteMerchant.商户订单
             //Set Previous Data on Postbacks
             SetPreviousData();
         }
+
+
         private void SetPreviousData()
         {
             int rowIndex = 0;
@@ -382,16 +389,10 @@ namespace web1.WebsiteMerchant.商户订单
                             {
                                 ClassLibrary1.ClassMessage.HinXi(Page, "需使用白名单IP下单 或者联系客服处理 你现在的前IP>> " + ClassLibrary1.ClassAccount.来源IP() + " (-S1003)");
                             }
-
-
-
-
                         }
                     }
                 }
             }
-
-
         }
 
         private void 开始执行()
@@ -537,7 +538,7 @@ namespace web1.WebsiteMerchant.商户订单
                                                     {
                                                         string 生成编号 = "MST" + DateTime.Now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999));
 
-                                                        string 创建方式 = "手动";
+                                                        string 创建方式 = 创建方式1;
                                                         string 状态 = "待处理";
                                                         string 类型 = "提款";
                                                         string 时间创建 = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
@@ -634,6 +635,7 @@ namespace web1.WebsiteMerchant.商户订单
               return false;
             }
             TwoFactorAuthenticator tfa = new TwoFactorAuthenticator();
+
             var result = tfa.ValidateTwoFactorPIN(data.keyga, TextGoogleValidate.Text);
             if (!result)
             {
@@ -644,5 +646,297 @@ namespace web1.WebsiteMerchant.商户订单
         }
       return true;
 }
+
+    protected void Button_提款订单文本导入_Click(object sender, EventArgs e)
+    {
+      if (UploadTxt.FileName == "")
+      {
+        ClassLibrary1.ClassMessage.HinXi(Page, "文本文件导入不存在");
+        return;
+      }
+
+      var a = Path.GetExtension(UploadTxt.FileName);
+
+      if (Path.GetExtension(UploadTxt.FileName) != ".txt" ){ 
+        ClassLibrary1.ClassMessage.HinXi(Page, "文本格式不对");
+        return;
     }
+
+   
+      if (UploadTxt.PostedFile.ContentLength > (4 * 1024 * 1024))
+      {
+        ClassLibrary1.ClassMessage.HinXi(Page, "文本文件过大不能导入,小于4m");
+        return;
+      }
+      else
+      {
+      
+        //string rootPath2 = Request.ApplicationPath;
+        //string rootPath1 = Server.MapPath("~/");
+        string rootPath = Path.Combine(HttpRuntime.AppDomainAppPath.ToString(), "UploadFile");
+
+        if (!Directory.Exists(rootPath))
+          Directory.CreateDirectory(rootPath);
+
+        try
+        {
+          var path = Path.Combine(rootPath, UploadTxt.FileName);
+          UploadTxt.SaveAs(path);
+
+          var ExcelData = TXTToDS(path);
+          if (ExcelData == null)
+          {
+            ClassLibrary1.ClassMessage.HinXi(Page, "文本导入失败");
+            return;
+          }
+          // 操作数据源
+
+          for (int index = 0; index < ExcelData["交易方卡号"].Count(); index++)
+          {
+            AddNewRowToGrid2(
+              ExcelData["交易方卡号"][index],
+              ExcelData["交易方姓名"][index],
+              ExcelData["交易方银行"][index],
+              ExcelData["交易金额"][index],
+              ExcelData["备注"][index]);
+
+          }
+          
+        }
+        catch (Exception ex)
+        {
+
+          ClassLibrary1.ClassMessage.HinXi(Page, "文本导入失败,请你的文本 文档符合本页面表格排版要求(相同),并且必须符合表格所要求的,头行列 交易方卡号	交易方姓名	交易方银行	交易金额，	备注 字段必须有");
+          System.IO.File.Delete(Path.Combine(rootPath, UploadTxt.FileName));
+        }
+
+        创建方式1 = "文本导入";
+        System.IO.File.Delete(Path.Combine(rootPath, UploadTxt.FileName));
+
+        ClassLibrary1.ClassMessage.HinXi(Page, "文本导入成功");
+
+      }
+    }
+
+
+    protected void Button_提款订单文档导入_Click(object sender, EventArgs e)
+    {
+   
+      if (UploadExcel.FileName == "")
+      {
+     
+        ClassLibrary1.ClassMessage.HinXi(Page, "excel文件导入不存在");
+        return;
+      }
+
+      var a = Path.GetExtension(UploadExcel.FileName);
+
+      if (Path.GetExtension(UploadExcel.FileName) != ".xlsx" && Path.GetExtension(UploadExcel.FileName) != ".xls")
+        ClassLibrary1.ClassMessage.HinXi(Page, "excel格式不对");
+
+      //选择上传的图片
+      if (UploadExcel.PostedFile.ContentLength > (4 * 1024 * 1024))
+      {
+        ClassLibrary1.ClassMessage.HinXi(Page, "excel文件过大不能导入");
+      }
+      else
+      {
+        //string rootPath2 = Request.ApplicationPath;
+        //string rootPath1 = Server.MapPath("~/");
+        string rootPath =Path.Combine( HttpRuntime.AppDomainAppPath.ToString() , "UploadFile");
+        
+        if(!Directory.Exists(rootPath))
+        Directory .CreateDirectory(rootPath);
+
+        try
+        {
+          var path =Path.Combine(rootPath , UploadExcel.FileName);
+          UploadExcel.SaveAs(path);
+         
+          var ExcelData=ExcelToDS(path);
+          if(ExcelData==null)
+          {
+            ClassLibrary1.ClassMessage.HinXi(Page, "excel导入失败");
+            return;
+          }
+          // 操作数据源
+          
+          for (int index = 0; index < ExcelData["交易方卡号"].Count();index++)
+          { 
+          AddNewRowToGrid2(
+            ExcelData["交易方卡号"][index], 
+            ExcelData["交易方姓名"][index], 
+            ExcelData["交易方银行"][index],
+            ExcelData["交易金额"][index], 
+            ExcelData["备注"][index]);
+         
+          }
+         
+        }
+        catch (Exception ex)
+        {
+          ClassLibrary1.ClassMessage.HinXi(Page, "excel导入失败,请你的excel 文档符合本页面表格排版要求(相同),并且必须符合表格所要求的,头行列 交易方卡号	交易方姓名	交易方银行	交易金额，	备注 字段必须有");
+          System.IO.File.Delete(Path.Combine(rootPath, UploadExcel.FileName));
+        }
+        创建方式1 = "文档导入";
+        System.IO.File.Delete(Path.Combine(rootPath, UploadExcel.FileName));
+        ClassLibrary1.ClassMessage.HinXi(Page, "excel导入成功");
+      }
+    }
+
+    private void AddNewRowToGrid2(string 交易方卡号,string 交易方姓名, string 交易方银行,string 交易金额,string 备注)
+    {
+      int rowIndex = 0;
+
+      if (ViewState["CurrentTable"] != null)
+      {
+        DataTable dtCurrentTable = (DataTable)ViewState["CurrentTable"];
+        DataRow drCurrentRow = null;
+        if (dtCurrentTable.Rows.Count > 0)
+        {
+          for (int i = 1; i <= dtCurrentTable.Rows.Count; i++)
+          {
+            //extract the TextBox values
+            TextBox box1 = (TextBox)Gridview1.Rows[rowIndex].Cells[1].FindControl("TextBox1");
+            TextBox box2 = (TextBox)Gridview1.Rows[rowIndex].Cells[2].FindControl("TextBox2");
+            TextBox box3 = (TextBox)Gridview1.Rows[rowIndex].Cells[3].FindControl("TextBox3");
+            TextBox box4 = (TextBox)Gridview1.Rows[rowIndex].Cells[4].FindControl("TextBox4");
+            TextBox box5 = (TextBox)Gridview1.Rows[rowIndex].Cells[5].FindControl("TextBox5");
+
+            drCurrentRow = dtCurrentTable.NewRow();
+            //drCurrentRow["RowNumber"] = i + 1;
+
+            dtCurrentTable.Rows[i - 1]["Column1"] = 交易方卡号;
+            dtCurrentTable.Rows[i - 1]["Column2"] = 交易方姓名;
+            dtCurrentTable.Rows[i - 1]["Column3"] = 交易方银行;
+            dtCurrentTable.Rows[i - 1]["Column4"] = 交易金额;
+            dtCurrentTable.Rows[i - 1]["Column5"] = 备注;
+
+            rowIndex++;
+          }
+          dtCurrentTable.Rows.Add(drCurrentRow);
+          ViewState["CurrentTable"] = dtCurrentTable;
+
+          Gridview1.DataSource = dtCurrentTable;
+          Gridview1.DataBind();
+        }
+      }
+      else
+      {
+        Response.Write("ViewState is null");
+      }
+
+      //Set Previous Data on Postbacks
+      SetPreviousData();
+    }
+
+
+    public Dictionary<string, List<string>> ExcelToDS(string path)
+    {
+      Dictionary<string, List<string>> DataTable = null;
+     
+        
+      using (var stream = File.Open(path, FileMode.Open, FileAccess.Read))
+        {
+          // Auto-detect format, supports:
+          //  - Binary Excel files (2.0-2003 format; *.xls)
+          //  - OpenXml Excel files (2007 format; *.xlsx)
+          using (var reader = ExcelReaderFactory.CreateReader(stream))
+          {
+            var s = reader.Name;
+            do { while (reader.Read()) { } } while (reader.NextResult());
+
+            var headers = new List<string>();
+            DataTable = new Dictionary<string, List<string>>();
+            
+            var ds = reader.AsDataSet(new ExcelDataSetConfiguration()
+            {
+              ConfigureDataTable = (tableReader) => new ExcelDataTableConfiguration()
+              {
+                UseHeaderRow = true,
+
+                ReadHeaderRow = rowReader =>
+                {
+                  for (var i = 0; i < rowReader.FieldCount; i++)
+                  {
+                    headers.Add(Convert.ToString(rowReader.GetValue(i)));
+                    DataTable.Add(headers[i], new List<string>());
+                  }
+                },
+                FilterRow = (rowReader) =>
+                {
+                  for (var i = 0; i < rowReader.FieldCount; i++)
+                    DataTable[headers[i]].Add(Convert.ToString(rowReader.GetValue(i)));
+                  return true;
+                },
+                FilterColumn = (columnReader, columnIndex) =>
+                {
+                  return true;
+                }
+              }
+            });
+           }
+          }
+      return DataTable;
+    }
+
+    public static Dictionary<string, List<string>> TXTToDS(string path)
+    {
+      Dictionary<string, List<string>> DataTable = null;
+      string[] headArr = null;
+      string strReadLine = null;
+      DataTable = new Dictionary<string, List<string>>();
+      try
+      {
+        StreamReader srReadFile = new StreamReader(path);
+        int i = 0;
+        // 读取流直至文件末尾结束
+        while (!srReadFile.EndOfStream)
+        {
+          if (i == 0)
+          {
+            i++;
+            var headReadLine = srReadFile.ReadLine();
+            headReadLine = Regex.Replace(headReadLine, @"\t+", @" ");
+            headReadLine = Regex.Replace(headReadLine, @"\s+", @" ");
+
+            //string[] striparr = modified.Split(new string[] { "\\s" }, StringSplitOptions.None);
+
+            headArr = headReadLine.Split(' ');
+            foreach (string ele in headArr)
+            {
+              DataTable.Add(ele, new List<string>());
+            }
+          }
+          else
+          {
+            strReadLine = srReadFile.ReadLine(); //读取每行数据
+            strReadLine = Regex.Replace(strReadLine, @"\t+", @" ");
+            strReadLine = Regex.Replace(strReadLine, @"\s+", @" ");
+            var strArr = strReadLine.Split(' ');
+
+            int index = 0;
+            foreach (string ele in strArr)
+            {
+              DataTable[headArr[index]].Add(ele);
+              index++;
+            }
+
+          }
+
+        }
+
+        // 关闭读取流文件
+        srReadFile.Close();
+
+      }
+      catch (Exception e)
+      {
+        DataTable = null;
+      }
+
+      return DataTable;
+    }
+
+  }
 }

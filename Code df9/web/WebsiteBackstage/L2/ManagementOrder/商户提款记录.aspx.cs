@@ -450,8 +450,20 @@ namespace web1.WebsiteBackstage.L2.ManagementOrder
                 条件4 = "  创建方式='API' ";
             }
 
+      if (RadioButton_创建方式文档导入.Checked)
+      {
+        条件4 = "  创建方式='文档导入' ";
+      }
+      if (RadioButton_创建方式文本导入.Checked)
+      {
+        条件4 = "  创建方式='文本导入' ";
+      }
+      if (RadioButton_创建方式文本输入.Checked)
+      {
+        条件4 = "  创建方式='文本输入' ";
+      }
 
-            if (条件4 == null)
+      if (条件4 == null)
             {
 
             }
@@ -678,22 +690,7 @@ namespace web1.WebsiteBackstage.L2.ManagementOrder
 
         //====================================================================================================
 
-        //====================================================================================================
 
-        protected void RadioButton_创建方式全部_CheckedChanged(object sender, EventArgs e)
-        {
-            BindGrid("where " + 查看勾选了哪些() + " ");
-        }
-
-        protected void RadioButton_创建方式手动_CheckedChanged(object sender, EventArgs e)
-        {
-            BindGrid("where " + 查看勾选了哪些() + " ");
-        }
-
-        protected void RadioButton_创建方式API_CheckedChanged(object sender, EventArgs e)
-        {
-            BindGrid("where " + 查看勾选了哪些() + " ");
-        }
 
         //====================================================================================================
 
@@ -2027,8 +2024,37 @@ namespace web1.WebsiteBackstage.L2.ManagementOrder
             }
         }
 
+    //====================================================================================================
 
+    protected void RadioButton_创建方式全部_CheckedChanged(object sender, EventArgs e)
+    {
+      BindGrid("where " + 查看勾选了哪些() + " ");
     }
+
+    protected void RadioButton_创建方式手动_CheckedChanged(object sender, EventArgs e)
+    {
+      BindGrid("where " + 查看勾选了哪些() + " ");
+    }
+
+    protected void RadioButton_创建方式API_CheckedChanged(object sender, EventArgs e)
+    {
+      BindGrid("where " + 查看勾选了哪些() + " ");
+    }
+    protected void RadioButton_创建方式文本导入_CheckedChanged(object sender, EventArgs e)
+    {
+      BindGrid("where " + 查看勾选了哪些() + " ");
+    }
+
+    protected void RadioButton_创建方式文档导入_CheckedChanged(object sender, EventArgs e)
+    {
+      BindGrid("where " + 查看勾选了哪些() + " ");
+    }
+
+    protected void RadioButton_创建方式文本输入_CheckedChanged(object sender, EventArgs e)
+    {
+      BindGrid("where " + 查看勾选了哪些() + " ");
+    }
+  }
 }
 
 //========== 原 勾选不掉 ==========
