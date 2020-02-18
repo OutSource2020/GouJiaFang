@@ -17,7 +17,8 @@ namespace web1.WebsiteMerchant.商户订单
 {
     public partial class 商户提款多笔 : System.Web.UI.Page
     {
-     private   string 创建方式1 = "手动";
+    
+    
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -25,13 +26,9 @@ namespace web1.WebsiteMerchant.商户订单
             {
                 Response.Cache.SetCacheability(HttpCacheability.NoCache);
                 ClassLibrary1.ClassAccount.验证账号商户端();
-
                 SetInitialRow();
             }
             查询账户信息();
-
-
-    
       string Cookie_UserName=null;
       //檢測cookie
       if (System.Web.HttpContext.Current.Request.Cookies["PPusernameMerchant"] != null)
@@ -47,11 +44,10 @@ namespace web1.WebsiteMerchant.商户订单
             System.Web.HttpContext.Current.Response.Redirect("/WebsiteMerchant/MerchantOverview/商户首页.aspx");
           }
         }
-
     }
 
 
-      protected void TextBox_交易方卡号_TextChanged(object sender, EventArgs e)
+    protected void TextBox_交易方卡号_TextChanged(object sender, EventArgs e)
         {
             for (int i = 0; i < Gridview1.Rows.Count; i++)
             {
@@ -538,7 +534,8 @@ namespace web1.WebsiteMerchant.商户订单
                                                     {
                                                         string 生成编号 = "MST" + DateTime.Now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999));
 
-                                                        string 创建方式 = 创建方式1;
+                                                        string 创建方式 = 创建方式_Text.Text;
+                            
                                                         string 状态 = "待处理";
                                                         string 类型 = "提款";
                                                         string 时间创建 = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
@@ -627,7 +624,7 @@ namespace web1.WebsiteMerchant.商户订单
         using (var db = (new DBClient()).GetClient())
         {
           var data = db.Queryable<Sugar.Enties.table_商户账号>().Where(it => it.商户ID == UserName).First();
-          if (!data.二步验证状态 == true)
+          if (data.二步验证状态 == true)
           {
             if (TextGoogleValidate.Text.Length != 6)
             {
@@ -710,7 +707,7 @@ namespace web1.WebsiteMerchant.商户订单
           System.IO.File.Delete(Path.Combine(rootPath, UploadTxt.FileName));
         }
 
-        创建方式1 = "文本导入";
+        创建方式_Text.Text = "文本导入";
         System.IO.File.Delete(Path.Combine(rootPath, UploadTxt.FileName));
 
         ClassLibrary1.ClassMessage.HinXi(Page, "文本导入成功");
@@ -778,7 +775,8 @@ namespace web1.WebsiteMerchant.商户订单
           ClassLibrary1.ClassMessage.HinXi(Page, "excel导入失败,请你的excel 文档符合本页面表格排版要求(相同),并且必须符合表格所要求的,头行列 交易方卡号	交易方姓名	交易方银行	交易金额，	备注 字段必须有");
           System.IO.File.Delete(Path.Combine(rootPath, UploadExcel.FileName));
         }
-        创建方式1 = "文档导入";
+        创建方式_Text.Text = "文档导入";
+
         System.IO.File.Delete(Path.Combine(rootPath, UploadExcel.FileName));
         ClassLibrary1.ClassMessage.HinXi(Page, "excel导入成功");
       }

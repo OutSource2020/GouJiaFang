@@ -41,12 +41,14 @@
             </td>
         </tr>
         <tr>
-            <td>
+            
+            <td hidden>
                 创建方式筛选:
                 <asp:RadioButton ID="RadioButton_创建方式全部" runat="server" GroupName="LoDenXi" Text="全部" type="radio" value="全部" AutoPostBack="True" OnCheckedChanged="RadioButton_创建方式全部_CheckedChanged" Checked="True" />
                 <asp:RadioButton ID="RadioButton_创建方式手动" runat="server" GroupName="LoDenXi" Text="手动" type="radio" value="手动" AutoPostBack="True" OnCheckedChanged="RadioButton_创建方式手动_CheckedChanged" />
                 <asp:RadioButton ID="RadioButton_创建方式API" runat="server" GroupName="LoDenXi" Text="API" type="radio" value="API" AutoPostBack="True" OnCheckedChanged="RadioButton_创建方式API_CheckedChanged" />
-            </td>
+            
+                </td>
             <td>
                 按关键词筛选:
                 <asp:DropDownList ID="DropDownList1" runat="server" Width="100px">

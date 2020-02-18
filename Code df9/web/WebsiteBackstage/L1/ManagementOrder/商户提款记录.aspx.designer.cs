@@ -195,15 +195,6 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
     protected global::System.Web.UI.WebControls.RadioButton RadioButton_创建方式文档导入;
 
     /// <summary>
-    /// RadioButton_创建方式文本输入 控件。
-    /// </summary>
-    /// <remarks>
-    /// 自动生成的字段。
-    /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
-    /// </remarks>
-    protected global::System.Web.UI.WebControls.RadioButton RadioButton_创建方式文本输入;
-
-    /// <summary>
     /// DropDownList1 控件。
     /// </summary>
     /// <remarks>
