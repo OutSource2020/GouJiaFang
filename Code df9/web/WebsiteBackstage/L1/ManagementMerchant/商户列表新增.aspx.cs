@@ -142,17 +142,19 @@ namespace web1.WebsiteBackstage.L1.ManagementMerchant
             string 商户密码API第一次 = Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 100000, 999999));
             string 支付密码第一次 = Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 100000, 999999));
             string 验证器google = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 10);
+            string 商户密匙第一次 = Guid.NewGuid().ToString("N");
 
-            string 账号信息列名 = "商户ID,商户密码,商户密码API,支付密码,手续费收款方式,状态,时间注册";
-            string 账号信息数据 = "@商户ID,@商户密码,@商户密码API,@支付密码,@手续费收款方式,@状态,@时间注册";
+            string 账号信息列名 = "商户ID,商户密码,商户密码API,支付密码,手续费收款方式,状态,时间注册,公共密匙";
+            string 账号信息数据 = "@商户ID,@商户密码,@商户密码API,@支付密码,@手续费收款方式,@状态,@时间注册,@公共密匙";
 
             string 联系人信息列名 = "," + "商户名称,绑定手机,keyga,绑定邮箱";
             string 联系人信息数据 = "," + "@商户名称,@绑定手机,@keyga,@绑定邮箱";
 
             string 登入错误累计 = "0";
+            string 签名错误累计 = "0";
             string 支付错误累计 = "0";
-            string 账户安全列名 = "," + "登入错误累计,支付错误累计";
-            string 账户安全数据 = "," + "@登入错误累计,@支付错误累计";
+            string 账户安全列名 = "," + "登入错误累计,支付错误累计,签名错误累计";
+            string 账户安全数据 = "," + "@登入错误累计,@支付错误累计,@签名错误累计";
 
             string 提款余额 = "0";
             string 手续费余额 = "0";
@@ -193,6 +195,7 @@ namespace web1.WebsiteBackstage.L1.ManagementMerchant
                     comm.Parameters.AddWithValue("@商户ID", TextBox_账号信息_商户ID.Text);
                     comm.Parameters.AddWithValue("@商户密码", 商户密码第一次);
                     comm.Parameters.AddWithValue("@商户密码API", 商户密码API第一次);
+                    comm.Parameters.AddWithValue("@公共密匙", 商户密匙第一次);
                     comm.Parameters.AddWithValue("@支付密码", 支付密码第一次);
                     comm.Parameters.AddWithValue("@手续费收款方式", 获得选择手续费收款方式);
                     comm.Parameters.AddWithValue("@状态", DropDownList_下拉框1.SelectedItem.Value);
@@ -205,6 +208,7 @@ namespace web1.WebsiteBackstage.L1.ManagementMerchant
 
                     comm.Parameters.AddWithValue("@登入错误累计", 登入错误累计);
                     comm.Parameters.AddWithValue("@支付错误累计", 支付错误累计);
+                    comm.Parameters.AddWithValue("@签名错误累计", 签名错误累计);
 
                     comm.Parameters.AddWithValue("@提款余额", 提款余额);
                     comm.Parameters.AddWithValue("@手续费余额", 手续费余额);

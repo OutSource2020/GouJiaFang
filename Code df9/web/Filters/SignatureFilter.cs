@@ -110,13 +110,13 @@ namespace web1.Filters
                 {
                     if (dbAccount.签名错误累计 > MAX_ERROR_COUNT)
                     {
-                        filterContext.Result = GetStandardError(BaseErrors.ERROR_NUMBER.LX1004, dbAccount.商户ID);
+                        filterContext.Result = GetStandardError(BaseErrors.ERROR_NUMBER.LX1002, dbAccount.商户ID);
                     }
                     else
                     {
                         dbAccount.签名错误累计++;
                         sqlSugarClient.Updateable(dbAccount).UpdateColumns(it => new { it.签名错误累计 }).ExecuteCommand(); ;
-                        filterContext.Result = GetStandardError(BaseErrors.ERROR_NUMBER.LX1002, dbAccount.商户ID);
+                        filterContext.Result = GetStandardError(BaseErrors.ERROR_NUMBER.LX1004, dbAccount.商户ID);
                     }
                 }
             }
@@ -142,7 +142,7 @@ namespace web1.Filters
             }
 
             // 验证IP白名单
-            if (ClassLibrary1.ClassAccount.验证管理L1白名单IP(account.UserName, ClassLibrary1.ClassAccount.来源IP()))
+            if (!ClassLibrary1.ClassAccount.验证管理L1白名单IP(account.UserName, ClassLibrary1.ClassAccount.来源IP()))
             {
                 filterContext.Result = GetStandardError(BaseErrors.ERROR_NUMBER.LX1003, account.UserName);
                 return;

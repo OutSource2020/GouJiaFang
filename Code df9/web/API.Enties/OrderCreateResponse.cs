@@ -5,7 +5,7 @@ using System.Web;
 
 namespace web1.API.Enties
 {
-    public class OrderCreateResponse : AccountResponse
+    public class OrderCreateResponse : BaseResponse
     {
         public string OrderNumberSite { get; set; }
         public string OrderNumberMerchant { get; set; }
