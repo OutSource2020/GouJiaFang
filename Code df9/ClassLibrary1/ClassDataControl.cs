@@ -49,7 +49,8 @@ namespace ClassLibrary1
             return strs;
         }
 
-        public static string conStr1 = ("data source = 127.0.0.1; port=3306;charset= utf8; Initial Catalog = web; user id = root;  password = ldqZ070C8CxTZXXf; SslMode = none; Connect Timeout = 60; max pool size=10000");
+        // public static string conStr1 = ("data source = 127.0.0.1; port=3306;charset= utf8; Initial Catalog = web; user id = root;  password = ldqZ070C8CxTZXXf; SslMode = none; Connect Timeout = 60; max pool size=10000");
+        public static string conStr1 = ("data source = 127.0.0.1; port=3306;charset= utf8; Initial Catalog = web; user id = root;  password = root; SslMode = none; Connect Timeout = 60; max pool size=10000");
 
         public static MySqlConnection con1 = new MySqlConnection();
         public static MySqlCommand scmd1 = new MySqlCommand();
