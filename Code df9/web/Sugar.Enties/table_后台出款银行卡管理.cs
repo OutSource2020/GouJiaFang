@@ -107,5 +107,9 @@ namespace Sugar.Enties
            /// </summary>           
            public DateTime? 时间创建 {get;set;}
 
-    }
+           public string 手续卡 { get; set; }
+
+           public string 金额卡 { get; set; }
+
+  }
 }

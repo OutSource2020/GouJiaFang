@@ -100,9 +100,9 @@
 金额卡收款卡
     <asp:GridView ID="GridView_收金额卡" runat="server" AutoGenerateColumns="False" OnRowCreated="GridView2_RowCreated" >
             <Columns>
-            <asp:BoundField DataField="收款银行名称" HeaderText="银行名称" />
-            <asp:BoundField DataField="收款银行卡主姓名" HeaderText="卡主姓名" />
-            <asp:BoundField DataField="收款银行卡卡号" HeaderText="目标充值金额卡" />
+            <asp:BoundField DataField="出款银行名称" HeaderText="银行名称" />
+            <asp:BoundField DataField="出款银行卡主姓名" HeaderText="卡主姓名" />
+            <asp:BoundField DataField="出款银行卡卡号" HeaderText="目标充值金额卡" />
 
                  <asp:TemplateField HeaderText="Select">
                             <ItemTemplate>

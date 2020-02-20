@@ -7,7 +7,8 @@ using System.Web.UI.WebControls;
 
 using System.Data;
 using MySql.Data.MySqlClient;
-
+using SqlSugar;
+using Sugar.Enties;
 
 namespace web1.WebsiteBackstage.L1.ManagementBankCard
 {
@@ -77,7 +78,7 @@ namespace web1.WebsiteBackstage.L1.ManagementBankCard
 
             using (MySqlConnection con = new MySqlConnection(ClassLibrary1.ClassDataControl.conStr1))
             {
-                using (MySqlCommand cmd = new MySqlCommand("SELECT 编号,出款银行卡名称,出款银行卡卡号,出款银行名称,出款银行卡余额,出款银行卡主姓名,出款银行卡主电话,出款银行卡每日限额,出款银行卡最小交易金额,显示标记,状态 FROM table_后台出款银行卡管理 WHERE 出款银行卡卡号=@出款银行卡卡号", con))
+                using (MySqlCommand cmd = new MySqlCommand("SELECT 编号,出款银行卡名称,出款银行卡卡号,出款银行名称,出款银行卡余额,出款银行卡主姓名,出款银行卡主电话,出款银行卡每日限额,出款银行卡最小交易金额,显示标记,状态,手续卡,金额卡 FROM table_后台出款银行卡管理 WHERE 出款银行卡卡号=@出款银行卡卡号", con))
                 {
                     cmd.Parameters.AddWithValue("@出款银行卡卡号", 从URL传来值);
                     using (MySqlDataAdapter da = new MySqlDataAdapter(cmd))
@@ -97,7 +98,9 @@ namespace web1.WebsiteBackstage.L1.ManagementBankCard
                             this.TextBox_出款银行卡最小交易金额.Text = dr["出款银行卡最小交易金额"].ToString();
                             this.DropDownList_显示标记.SelectedValue = dr["显示标记"].ToString();
                             this.DropDownList_下拉框1.SelectedValue = dr["状态"].ToString();
-                        }
+              this.DropDownList_手续卡.Text = dr["手续卡"].ToString();
+              this.DropDownList_金额卡.Text = dr["金额卡"].ToString();
+            }
                     }
                 }
             }
@@ -117,7 +120,7 @@ namespace web1.WebsiteBackstage.L1.ManagementBankCard
                 string 出款银行卡每日限额 = TextBox_出款银行卡每日限额.Text;
                 string 出款银行卡最小交易金额 = TextBox_出款银行卡最小交易金额.Text;
 
-                using (MySqlCommand cmd = new MySqlCommand("UPDATE table_后台出款银行卡管理 SET 出款银行名称=@出款银行名称 , 出款银行卡主姓名=@出款银行卡主姓名 ,出款银行卡主电话=@出款银行卡主电话 ,出款银行卡每日限额=@出款银行卡每日限额 ,出款银行卡最小交易金额=@出款银行卡最小交易金额 ,显示标记=@显示标记,状态=@状态 WHERE 出款银行卡卡号=@出款银行卡卡号 ", con))
+                using (MySqlCommand cmd = new MySqlCommand("UPDATE table_后台出款银行卡管理 SET 出款银行名称=@出款银行名称 , 出款银行卡主姓名=@出款银行卡主姓名 ,出款银行卡主电话=@出款银行卡主电话 ,出款银行卡每日限额=@出款银行卡每日限额 ,出款银行卡最小交易金额=@出款银行卡最小交易金额 ,显示标记=@显示标记,状态=@状态,手续卡=@手续卡,金额卡=@金额卡 WHERE 出款银行卡卡号=@出款银行卡卡号 ", con))
                 {
                     cmd.Parameters.AddWithValue("@出款银行卡卡号", 从URL传来值);
 
@@ -129,8 +132,11 @@ namespace web1.WebsiteBackstage.L1.ManagementBankCard
                     cmd.Parameters.AddWithValue("@显示标记", DropDownList_显示标记.SelectedItem.Value);
                     cmd.Parameters.AddWithValue("@状态", DropDownList_下拉框1.SelectedItem.Value);
 
+          cmd.Parameters.AddWithValue("@手续卡", DropDownList_手续卡.SelectedValue);
+          cmd.Parameters.AddWithValue("@金额卡", DropDownList_金额卡.SelectedValue);
 
-                    con.Open();
+
+          con.Open();
                     cmd.ExecuteNonQuery();
                     con.Close();
                     //this.SaveImage(filePath);
@@ -148,5 +154,22 @@ namespace web1.WebsiteBackstage.L1.ManagementBankCard
         {
             TextBox_出款银行名称.Text = ClassLibrary1.ClassBankInfo3a2.BankUtil.getNameOfBank(Label_出款银行卡卡号.Text);
         }
+
+    protected void Button_删除_Click(object sender, EventArgs e)
+    {
+      using (SqlSugarClient sqlSugarClient = new DBClient().GetClient()) {
+        
+      if( sqlSugarClient.Deleteable<table_后台出款银行卡管理>().With(SqlWith.RowLock).Where(it => it.编号 == lblCustomerID.Text).ExecuteCommand()>0)
+        {
+          ClassLibrary1.ClassMessage.HinXi(Page, "删除成功");
+          Response.Redirect("./管理出款银行卡.aspx");
+        }
+        else{
+          ClassLibrary1.ClassMessage.HinXi(Page, "删除失败");
+        }
+      }
+     
+
     }
+  }
 }

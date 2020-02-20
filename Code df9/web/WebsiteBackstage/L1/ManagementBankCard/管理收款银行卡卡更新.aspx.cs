@@ -77,7 +77,7 @@ namespace web1.WebsiteBackstage.L1.ManagementBankCard
 
             using (MySqlConnection con = new MySqlConnection(ClassLibrary1.ClassDataControl.conStr1))
             {
-                using (MySqlCommand cmd = new MySqlCommand("SELECT 编号,收款银行卡名称,收款银行卡卡号,收款银行名称,收款银行卡余额,收款银行卡主姓名,收款银行卡主电话,显示标记,状态 FROM table_后台收款银行卡管理 WHERE 收款银行卡卡号=@收款银行卡卡号", con))
+                using (MySqlCommand cmd = new MySqlCommand("SELECT 编号,收款银行卡名称,收款银行卡卡号,收款银行名称,收款银行卡余额,收款银行卡主姓名,收款银行卡主电话,显示标记,状态,手续卡,金额卡 FROM table_后台收款银行卡管理 WHERE 收款银行卡卡号=@收款银行卡卡号", con))
                 {
                     cmd.Parameters.AddWithValue("@收款银行卡卡号", 从URL传来值);
                     using (MySqlDataAdapter da = new MySqlDataAdapter(cmd))
@@ -95,7 +95,10 @@ namespace web1.WebsiteBackstage.L1.ManagementBankCard
                             this.TextBox_收款银行卡主电话.Text = dr["收款银行卡主电话"].ToString();
                             this.DropDownList_显示标记.SelectedValue = dr["显示标记"].ToString();
                             this.DropDownList_下拉框1.SelectedValue = dr["状态"].ToString();
-        
+                            this.DropDownList_手续卡.Text= dr["手续卡"].ToString();
+                            this.DropDownList_金额卡.Text = dr["金额卡"].ToString();
+
+
             }
                     }
                 }

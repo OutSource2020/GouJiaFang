@@ -72,6 +72,24 @@
                             </asp:DropDownList>
                         </td>
             </tr>
+                            <tr>
+            <td style="width: 30%">用作手续卡</td>
+            <td>
+                            <asp:DropDownList ID="DropDownList_手续卡" runat="server">
+                                <asp:ListItem>启用</asp:ListItem>
+                                <asp:ListItem>停用</asp:ListItem>
+                            </asp:DropDownList>
+                        </td>
+        </tr>
+                        <tr>
+            <td style="width: 30%">用作金额卡</td>
+            <td>
+                            <asp:DropDownList ID="DropDownList_金额卡" runat="server">
+                                <asp:ListItem>启用</asp:ListItem>
+                                <asp:ListItem>停用</asp:ListItem>
+                            </asp:DropDownList>
+                        </td>
+        </tr>
             <tr>
                 <td colspan="2">
                             <asp:Button ID="Button_返回" runat="server" Text="返回" class="btn btn-info btn-fw" OnClick="Button_返回_Click1" />

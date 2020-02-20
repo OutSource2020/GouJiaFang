@@ -12,7 +12,10 @@
 <asp:Content ID="Content_NR2" ContentPlaceHolderID="ContentPlaceHolder_NR2" runat="server">
        <style>
         td {text-align:center}
-         table,table tr th, table tr td { border:3px solid #0094ff; }
+         table,table tr th, table tr td {  border-collapse:collapse;;border:3px solid black; }
+           td {
+               height:100px
+           }
     </style>
     <div style="margin-right: 10%;margin-left: 10%;">  
         <h1>商户提款引导</h1>
