@@ -68,7 +68,7 @@
           if (data.手动提款状态 == true)
           {
           %>
-        <a href="../MerchantOrder/商户提款多笔.aspx">商户提款</a>
+        <a href="../MerchantOrder/商户提款引导.aspx">商户提款</a>
         <%
           
           }

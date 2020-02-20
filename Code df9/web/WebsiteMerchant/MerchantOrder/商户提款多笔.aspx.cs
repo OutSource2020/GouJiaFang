@@ -555,7 +555,7 @@ namespace web1.WebsiteMerchant.商户订单
 
                                                         scon3.Close();
 
-                                                        //Response.Redirect("./商户提款记录.aspx");
+                                                        Response.Redirect("./商户提款记录.aspx");
                                                     }
 
                                                 }
@@ -592,7 +592,7 @@ namespace web1.WebsiteMerchant.商户订单
 
             }
 
-            Response.Redirect("./商户提款记录.aspx");
+            //Response.Redirect("./商户提款记录.aspx");
         }
 
 
