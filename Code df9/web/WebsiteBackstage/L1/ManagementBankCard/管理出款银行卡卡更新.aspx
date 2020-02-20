@@ -97,14 +97,38 @@
                 </asp:DropDownList>
             </td>
         </tr>
+
+          <tr>
+            <td style="width: 30%">用作手续卡</td>
+            <td>
+                            <asp:DropDownList ID="DropDownList_手续卡" runat="server">
+                                <asp:ListItem>启用</asp:ListItem>
+                                <asp:ListItem>停用</asp:ListItem>
+                            </asp:DropDownList>
+                        </td>
+        </tr>
+                        <tr>
+            <td style="width: 30%">用作金额卡</td>
+            <td>
+                            <asp:DropDownList ID="DropDownList_金额卡" runat="server">
+                                <asp:ListItem>启用</asp:ListItem>
+                                <asp:ListItem>停用</asp:ListItem>
+                            </asp:DropDownList>
+                        </td>
+        </tr>
+
         <tr>
-            <td colspan="2">
+            <td colspan="1">
                 <asp:Button ID="Button_返回" runat="server" Text="返回" class="btn btn-info btn-fw" OnClick="Button_返回_Click" />
                 <asp:Button ID="Button_更新作业" runat="server" Text="更新作业" class="btn btn-info btn-fw" OnClick="Button_更新作业_Click" UseSubmitBehavior="false" OnClientClick="this.disabled=true;this.value='处理中...';" />
+            </td>
+            <td>
+                <asp:Button ID="Button_删除" runat="server" Text="删除" class="btn btn-info btn-fw" OnClick="Button_删除_Click" />
             </td>
         </tr>
         <tr>
             <td colspan="2" style="text-align: center">
+
                 &nbsp;</td>
         </tr>
     </table>

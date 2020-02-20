@@ -35,7 +35,7 @@ namespace web1.WebsiteMerchant.商户订单
 
         private void 收手续费卡()
         {
-            string strQuery = "select 收款银行名称,收款银行卡主姓名,收款银行卡卡号 from table_后台收款银行卡管理 where 状态 = '启用' and 显示标记='启用' and 手续卡= '启用'  ";
+            string strQuery = "select 收款银行名称,收款银行卡主姓名,收款银行卡卡号 from table_后台收款银行卡管理 where 状态 = '启用' and 显示标记='启用'   ";
             DataTable dt = new DataTable();
             String strConnString = ClassLibrary1.ClassDataControl.conStr1;
             MySqlConnection con = new MySqlConnection(strConnString);
@@ -65,7 +65,7 @@ namespace web1.WebsiteMerchant.商户订单
 
         private void 收金额卡()
         {
-            string strQuery = "select 收款银行名称,收款银行卡主姓名,收款银行卡卡号 from table_后台收款银行卡管理 where 状态 = '启用' and 显示标记='启用' and 金额卡= '启用'  ";
+            string strQuery = "select 出款银行名称,出款银行卡主姓名,出款银行卡卡号 from table_后台出款银行卡管理 where 状态 = '启用' and 显示标记='启用'";
             DataTable dt = new DataTable();
             String strConnString = ClassLibrary1.ClassDataControl.conStr1;
             MySqlConnection con = new MySqlConnection(strConnString);

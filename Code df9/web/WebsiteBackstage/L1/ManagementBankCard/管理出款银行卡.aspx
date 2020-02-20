@@ -125,6 +125,8 @@
                     <asp:BoundField DataField="显示标记" HeaderText="显示标记" />
                     <asp:BoundField DataField="状态" HeaderText="状态" />
                     <asp:BoundField DataField="时间创建" HeaderText="创建时间" />
+        <asp:BoundField DataField="手续卡" HeaderText="手续卡" />
+    <asp:BoundField DataField="金额卡" HeaderText="金额卡" />
                     <%----%>
         <asp:HyperLinkField Text="操作" DataNavigateUrlFields="出款银行卡卡号" DataNavigateUrlFormatString="管理出款银行卡卡更新.aspx?Bianhao={0}" />
         <asp:HyperLinkField Text="充值余额" DataNavigateUrlFields="出款银行卡卡号" DataNavigateUrlFormatString="管理出款银行卡卡充值.aspx?Bianhao={0}" />
