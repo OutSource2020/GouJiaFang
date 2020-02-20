@@ -68,7 +68,11 @@ namespace web1.WebsiteMerchant.Login
 
                                                 TwoFactorAuthenticator tfa = new TwoFactorAuthenticator();
                                                 var result = tfa.ValidateTwoFactorPIN(密匙, TextBox_回答.Text);
-                        // 为测试添加
+
+                                                #if DEBUG
+                                                result = true;
+                                                #endif
+
                                                 if (result)
                                                 {
                                                     //this.lblValidationResult.Text = this.txtCode.Text + " 是UTC时间内有效PIN码 " + DateTime.UtcNow.ToString();

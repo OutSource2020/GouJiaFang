@@ -169,6 +169,9 @@
     <Content Include="WebsiteBackstage\L2\ManagementOrder\商户提款记录状态更新冲正.aspx" />
     <Content Include="WebsiteBackstage\L2\ManagementOrder\商户提款记录详情.aspx" />
     <Content Include="WebsiteMerchant\MerchantOrder\商户提款单笔.aspx" />
+    <Content Include="WebsiteMerchant\MerchantOrder\商户提款.aspx" />
+    <Content Include="WebsiteMerchant\MerchantOrder\商户提款导入TXT.aspx" />
+    <Content Include="WebsiteMerchant\MerchantOrder\商户提款导入Excel.aspx" />
     <Content Include="WebsiteMerchant\MerchantOrder\商户提款多笔.aspx" />
     <Content Include="WebsiteMerchant\MerchantOrder\商户提款记录导出.aspx" />
     <Content Include="WebsiteMerchant\MerchantOrder\手续费交易明细.aspx" />
@@ -563,6 +566,27 @@
     </Compile>
     <Compile Include="WebsiteMerchant\MerchantOrder\商户提款单笔.aspx.designer.cs">
       <DependentUpon>商户提款单笔.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteMerchant\MerchantOrder\商户提款.aspx.cs">
+      <DependentUpon>商户提款.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteMerchant\MerchantOrder\商户提款.aspx.designer.cs">
+      <DependentUpon>商户提款.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteMerchant\MerchantOrder\商户提款导入TXT.aspx.cs">
+      <DependentUpon>商户提款导入TXT.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteMerchant\MerchantOrder\商户提款导入TXT.aspx.designer.cs">
+      <DependentUpon>商户提款导入TXT.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteMerchant\MerchantOrder\商户提款导入Excel.aspx.cs">
+      <DependentUpon>商户提款导入Excel.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteMerchant\MerchantOrder\商户提款导入Excel.aspx.designer.cs">
+      <DependentUpon>商户提款导入Excel.aspx</DependentUpon>
     </Compile>
     <Compile Include="WebsiteMerchant\MerchantOrder\商户提款多笔.aspx.cs">
       <DependentUpon>商户提款多笔.aspx</DependentUpon>

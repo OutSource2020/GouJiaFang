@@ -49,8 +49,11 @@ namespace ClassLibrary1
             return strs;
         }
 
+        #if DEBUG
+        public static string conStr1 = ("data source = 127.0.0.1; port=3306;charset= utf8; Initial Catalog = web; user id = root;  password = root; SslMode = none; Connect Timeout = 60; max pool size=10000");
+        #else
         public static string conStr1 = ("data source = 127.0.0.1; port=3306;charset= utf8; Initial Catalog = web; user id = root;  password = ldqZ070C8CxTZXXf; SslMode = none; Connect Timeout = 60; max pool size=10000");
-        // public static string conStr1 = ("data source = 127.0.0.1; port=3306;charset= utf8; Initial Catalog = web; user id = root;  password = root; SslMode = none; Connect Timeout = 60; max pool size=10000");
+        #endif
 
         public static MySqlConnection con1 = new MySqlConnection();
         public static MySqlCommand scmd1 = new MySqlCommand();
@@ -123,7 +126,7 @@ namespace ClassLibrary1
         }
 
 
-        #region 执行存储过程
+#region 执行存储过程
         /// <summary>
         /// 执行存储过程
         /// </summary>
@@ -152,8 +155,8 @@ namespace ClassLibrary1
                 CloseConnection1();
             }
         }
-        #endregion
-        #region 执行存储过程并返回数据集
+#endregion
+#region 执行存储过程并返回数据集
         /// <summary>
         /// 执行存储过程并返回数据集
         /// </summary>
@@ -185,9 +188,9 @@ namespace ClassLibrary1
                 CloseConnection1();
             }
         }
-        #endregion
+#endregion
 
-        #region 执行Sql查询语句并返回第一行的第一条记录,返回值为object 使用时需要拆箱操作 -> Unbox
+#region 执行Sql查询语句并返回第一行的第一条记录,返回值为object 使用时需要拆箱操作 -> Unbox
         /// <summary>
         /// 执行Sql查询语句并返回第一行的第一条记录,返回值为object 使用时需要拆箱操作 -> Unbox
         /// </summary>
@@ -213,9 +216,9 @@ namespace ClassLibrary1
             }
             return obj;
         }
-        #endregion
+#endregion
 
-        #region 执行Sql查询语句,同时进行事务处理
+#region 执行Sql查询语句,同时进行事务处理
         /// <summary>
         /// 执行Sql查询语句,同时进行事务处理
         /// </summary>
@@ -242,9 +245,9 @@ namespace ClassLibrary1
                 CloseConnection1();
             }
         }
-        #endregion
+#endregion
 
-        #region 返回指定Sql语句的SqlDataReader , 请注意 , 在使用后请关闭本对象 , 同时将自动调用closeConnection()来关闭数据库连接方法关闭数据库连接
+#region 返回指定Sql语句的SqlDataReader , 请注意 , 在使用后请关闭本对象 , 同时将自动调用closeConnection()来关闭数据库连接方法关闭数据库连接
         /// <summary>
         /// 返回指定Sql语句的SqlDataReader , 请注意 , 在使用后请关闭本对象 , 同时将自动调用closeConnection()来关闭数据库连接
         /// 方法关闭数据库连接
@@ -274,9 +277,9 @@ namespace ClassLibrary1
             }
             return dr;
         }
-        #endregion
+#endregion
 
-        #region (ref)返回指定Sql语句的SqlDataReader , 请注意 , 在使用后请关闭本对象 , 同时将自动调用closeConnection()来关闭数据库连接方法关闭数据库连接
+#region (ref)返回指定Sql语句的SqlDataReader , 请注意 , 在使用后请关闭本对象 , 同时将自动调用closeConnection()来关闭数据库连接方法关闭数据库连接
         /// <summary>
         /// 返回指定Sql语句的SqlDataReader , 请注意 , 在使用后请关闭本对象 , 同时将自动调用closeConnection()来关闭数据库连接
         /// 方法关闭数据库连接
@@ -308,8 +311,8 @@ namespace ClassLibrary1
                 }
             }
         }
-        #endregion
-        #region 返回指定Sql语句的DataSet
+#endregion
+#region 返回指定Sql语句的DataSet
         /// <summary>
         /// 返回指定Sql语句的DataSet
         /// </summary>
@@ -368,8 +371,8 @@ namespace ClassLibrary1
             return ds;
         }
 
-        #endregion
-        #region (ref)返回指定Sql语句的DataSet
+#endregion
+#region (ref)返回指定Sql语句的DataSet
         /// <summary>
         /// 返回指定Sql语句的DataSet
         /// </summary>
@@ -395,8 +398,8 @@ namespace ClassLibrary1
                 CloseConnection1();
             }
         }
-        #endregion
-        #region 返回指定Sql语句的DataTable
+#endregion
+#region 返回指定Sql语句的DataTable
         /// <summary>
         /// 返回指定Sql语句的DataTable
         /// </summary>
@@ -424,8 +427,8 @@ namespace ClassLibrary1
             }
             return datatable;
         }
-        #endregion
-        #region 执行指定Sql语句,同时给传入DataTable进行赋值
+#endregion
+#region 执行指定Sql语句,同时给传入DataTable进行赋值
         /// <summary>
         /// 执行指定Sql语句,同时给传入DataTable进行赋值
         /// </summary>
@@ -451,8 +454,8 @@ namespace ClassLibrary1
                 CloseConnection1();
             }
         }
-        #endregion
-        #region 执行带参数存储过程并返回数据集合
+#endregion
+#region 执行带参数存储过程并返回数据集合
         /// <summary>
         /// 执行带参数存储过程并返回数据集合
         /// </summary>
@@ -487,8 +490,8 @@ namespace ClassLibrary1
             }
             return datatable;
         }
-        #endregion
-        #region 返回指定sql语句的 DataView
+#endregion
+#region 返回指定sql语句的 DataView
         public static DataView dataView(string sqlstr)
         {
             MySqlDataAdapter da = new MySqlDataAdapter();
@@ -513,7 +516,7 @@ namespace ClassLibrary1
             }
             return dv;
         }
-        #endregion
+#endregion
 
 
 
