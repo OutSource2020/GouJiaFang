@@ -89,11 +89,13 @@ namespace web1.WebsiteBackstage.L1.ManagementBankCard
 
                 string 显示标记 = DropDownList_显示标记.SelectedItem.Value;
                 string 状态 = DropDownList_收款银行卡状态.SelectedItem.Value;
-                string 时间创建 = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
+        string 手续卡 = DropDownList_手续卡.SelectedItem.Value;
+        string 金额卡 = DropDownList_金额卡.SelectedItem.Value;
+        string 时间创建 = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
 
                 string 写表 = "table_后台收款银行卡管理";
-                string 写头 = "编号,收款银行卡名称,收款银行卡卡号,收款银行名称,收款银行卡余额,收款银行卡主姓名,收款银行卡主电话,显示标记,状态,时间创建";
-                string 写值 = "@编号,@收款银行卡名称,@收款银行卡卡号,@收款银行名称,@收款银行卡余额,@收款银行卡主姓名,@收款银行卡主电话,@显示标记,@状态,@时间创建";
+                string 写头 = "编号,收款银行卡名称,收款银行卡卡号,收款银行名称,收款银行卡余额,收款银行卡主姓名,收款银行卡主电话,显示标记,状态,时间创建,手续卡,金额卡";
+                string 写值 = "@编号,@收款银行卡名称,@收款银行卡卡号,@收款银行名称,@收款银行卡余额,@收款银行卡主姓名,@收款银行卡主电话,@显示标记,@状态,@时间创建,@手续卡,@金额卡";
 
                 string _query = "INSERT INTO " + 写表 + "(" + 写头 + ") values (" + 写值 + ")";
                 using (MySqlConnection conn = new MySqlConnection(ClassLibrary1.ClassDataControl.conStr1))
@@ -113,7 +115,9 @@ namespace web1.WebsiteBackstage.L1.ManagementBankCard
                         comm.Parameters.AddWithValue("@显示标记", 显示标记);
                         comm.Parameters.AddWithValue("@状态", 状态);
                         comm.Parameters.AddWithValue("@时间创建", 时间创建);
-                        try
+                        comm.Parameters.AddWithValue("@手续卡", 手续卡);
+                        comm.Parameters.AddWithValue("@金额卡", 金额卡);
+            try
                         {
                             conn.Open();
                             comm.ExecuteNonQuery();

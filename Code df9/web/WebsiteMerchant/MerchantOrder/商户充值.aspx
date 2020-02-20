@@ -1,4 +1,9 @@
-﻿<%@ Page Title="商户充值" Language="C#" MasterPageFile="~/WebsiteMerchant/SiteTemplateMerchant.Master" AutoEventWireup="true" CodeBehind="商户充值.aspx.cs" Inherits="web1.WebsiteMerchant.商户订单.商户充值" %>
+﻿<%@ Page Title="商户充值" Language="C#" 
+    MasterPageFile="~/WebsiteMerchant/SiteTemplateMerchant.Master" 
+    AutoEventWireup="true"
+    CodeBehind="商户充值.aspx.cs" 
+    EnableEventValidation="false"
+    Inherits="web1.WebsiteMerchant.商户订单.商户充值" %>
 
 <asp:Content ID="Content_NR1" ContentPlaceHolderID="ContentPlaceHolder_NR1" runat="server">
 
@@ -6,9 +11,16 @@
 
 <asp:Content ID="Content_NR2" ContentPlaceHolderID="ContentPlaceHolder_NR2" runat="server">
 
-<h3>商户充值</h3>
+
 
 <div  class="auto-style1" >
+    <h3>商户充值</h3>
+    <div style="border:5px solid black;margin-bottom:10px;margin-top:10px;padding:20px">
+        1.注意你要用来充值的银行卡有充足的余额<br>
+        2.点击选择来快速输入目标卡号<br>
+        3.充值手续费使用目标手续费卡号<br>
+        4.充值余额使用目标金额卡号<br>
+        </div>
         <table style="width: 100%">
         <tr>
             <td style="width: 20%">发起卡号</td>
@@ -45,8 +57,8 @@
         <tr>
             <td style="width: 20%">类型</td>
             <td>
-                <asp:RadioButton ID="RadioButton_充值提款手续费" runat="server" GroupName="DenXiGan" Text="充值提款手续费" type="radio" value="充值提款手续费" AutoPostBack="True" />
-                <asp:RadioButton ID="RadioButton_充值提款余额" runat="server" GroupName="DenXiGan" Text="充值提款余额" type="radio" value="充值提款余额" AutoPostBack="True" Checked="True" />
+                <asp:RadioButton ID="RadioButton_充值提款手续费" runat="server" GroupName="DenXiGan" Text="充值手续费" type="radio" value="充值提款手续费" AutoPostBack="True" />
+                <asp:RadioButton ID="RadioButton_充值提款余额" runat="server" GroupName="DenXiGan" Text="充值余额" type="radio" value="充值提款余额" AutoPostBack="True" Checked="True" />
                  </td>
         </tr>
         <tr>
@@ -68,11 +80,16 @@
         <tr>
             <td>
 手续费收款卡
-    <asp:GridView ID="GridView_收手续费卡" runat="server" AutoGenerateColumns="False">
+    <asp:GridView ID="GridView_收手续费卡" runat="server" AutoGenerateColumns="False" OnRowCreated="GridView1_RowCreated">
         <Columns>
             <asp:BoundField DataField="收款银行名称" HeaderText="银行名称" />
             <asp:BoundField DataField="收款银行卡主姓名" HeaderText="卡主姓名" />
-            <asp:BoundField DataField="收款银行卡卡号" HeaderText="目标充值手续费卡" />        
+            <asp:BoundField DataField="收款银行卡卡号" HeaderText="目标充值手续费卡" />    
+                           <asp:TemplateField HeaderText="Select">
+                            <ItemTemplate>
+                                <asp:Button ID="ButtonS_收手续卡" runat="server" Text="选择"  />
+                            </ItemTemplate>
+                        </asp:TemplateField>
         </Columns>
     </asp:GridView>
 
@@ -81,11 +98,17 @@
         <tr>
             <td>
 金额卡收款卡
-    <asp:GridView ID="GridView_收金额卡" runat="server" AutoGenerateColumns="False">
+    <asp:GridView ID="GridView_收金额卡" runat="server" AutoGenerateColumns="False" OnRowCreated="GridView2_RowCreated" >
             <Columns>
-            <asp:BoundField DataField="出款银行名称" HeaderText="银行名称" />
-            <asp:BoundField DataField="出款银行卡主姓名" HeaderText="卡主姓名" />
-            <asp:BoundField DataField="出款银行卡卡号" HeaderText="目标充值金额卡" />
+            <asp:BoundField DataField="收款银行名称" HeaderText="银行名称" />
+            <asp:BoundField DataField="收款银行卡主姓名" HeaderText="卡主姓名" />
+            <asp:BoundField DataField="收款银行卡卡号" HeaderText="目标充值金额卡" />
+
+                 <asp:TemplateField HeaderText="Select">
+                            <ItemTemplate>
+                                <asp:Button ID="ButtonS_收金额卡" runat="server" Text="选择"  />
+                            </ItemTemplate>
+                        </asp:TemplateField>
         </Columns>
     </asp:GridView>
 

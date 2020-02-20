@@ -72,7 +72,7 @@ namespace web1.WebsiteBackstage.L1.Login
                                             var result = tfa.ValidateTwoFactorPIN(查询密匙, TextBox_输入员工号.Text);
 
                                            ////为测试添加
-                                           //result = true;  
+                                         result = true;  
                                             if (result)
                                             {
                                                 //this.lblValidationResult.Text = this.txtCode.Text + " 是UTC时间内有效PIN码 " + DateTime.UtcNow.ToString();
