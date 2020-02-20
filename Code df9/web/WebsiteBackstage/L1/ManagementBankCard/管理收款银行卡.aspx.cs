@@ -306,7 +306,7 @@ namespace web1.WebsiteBackstage.L1.ManagementBankCard
 
         private void BindGrid(string 时间导入绑定)
         {
-            string strQuery = "select 编号,收款银行卡名称,收款银行卡卡号,收款银行名称,收款银行卡余额,收款银行卡主姓名,收款银行卡主电话,显示标记,状态,时间创建 from table_后台收款银行卡管理 " + 时间导入绑定 + " order by 时间创建 desc";
+            string strQuery = "select 编号,收款银行卡名称,收款银行卡卡号,收款银行名称,收款银行卡余额,收款银行卡主姓名,收款银行卡主电话,显示标记,状态,时间创建,手续卡,金额卡 from table_后台收款银行卡管理 " + 时间导入绑定 + " order by 时间创建 desc";
             DataTable dt = new DataTable();
             String strConnString = ClassLibrary1.ClassDataControl.conStr1;
             MySqlConnection con = new MySqlConnection(strConnString);

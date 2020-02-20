@@ -95,7 +95,8 @@ namespace web1.WebsiteBackstage.L1.ManagementBankCard
                             this.TextBox_收款银行卡主电话.Text = dr["收款银行卡主电话"].ToString();
                             this.DropDownList_显示标记.SelectedValue = dr["显示标记"].ToString();
                             this.DropDownList_下拉框1.SelectedValue = dr["状态"].ToString();
-                        }
+        
+            }
                     }
                 }
             }
@@ -111,7 +112,7 @@ namespace web1.WebsiteBackstage.L1.ManagementBankCard
             {
                 string 收款银行卡名称 = TextBox_收款银行名称.Text;
 
-                using (MySqlCommand cmd = new MySqlCommand("UPDATE table_后台收款银行卡管理 SET 收款银行名称=@收款银行名称 , 收款银行卡主姓名=@收款银行卡主姓名 , 收款银行卡主电话=@收款银行卡主电话 , 显示标记=@显示标记 , 状态=@状态 WHERE 收款银行卡卡号=@收款银行卡卡号 ", con))
+                using (MySqlCommand cmd = new MySqlCommand("UPDATE table_后台收款银行卡管理 SET 收款银行名称=@收款银行名称 , 收款银行卡主姓名=@收款银行卡主姓名 , 收款银行卡主电话=@收款银行卡主电话 , 显示标记=@显示标记 , 状态=@状态,手续卡=@手续卡,金额卡=@金额卡 WHERE 收款银行卡卡号=@收款银行卡卡号 ", con))
                 {
                     cmd.Parameters.AddWithValue("@收款银行名称", 收款银行卡名称);
                     cmd.Parameters.AddWithValue("@收款银行卡主姓名", TextBox_收款银行卡主姓名.Text);
@@ -119,8 +120,10 @@ namespace web1.WebsiteBackstage.L1.ManagementBankCard
                     cmd.Parameters.AddWithValue("@显示标记", DropDownList_显示标记.SelectedItem.Value);
                     cmd.Parameters.AddWithValue("@状态", DropDownList_下拉框1.SelectedItem.Value);
                     cmd.Parameters.AddWithValue("@收款银行卡卡号", 从URL传来值);
+                    cmd.Parameters.AddWithValue("@手续卡", DropDownList_手续卡.SelectedValue);
+                    cmd.Parameters.AddWithValue("@金额卡", DropDownList_金额卡.SelectedValue);
 
-                    con.Open();
+          con.Open();
                     cmd.ExecuteNonQuery();
                     con.Close();
                     //this.SaveImage(filePath);

@@ -87,7 +87,7 @@
 
     <div>
             <br />
-            <asp:GridView ID="GridView1" runat="server" class="auto-style1" AutoGenerateColumns="False" AllowPaging="True" OnPageIndexChanging="GridView1_PageIndexChanging" ShowHeaderWhenEmpty="true" PageSize="50">
+            <asp:GridView ID="GridView1" runat="server" class="auto-style1" AutoGenerateColumns="False" AllowPaging="True" OnPageIndexChanging="GridView1_PageIndexChanging" ShowHeaderWhenEmpty="true" PageSize="50" >
             <%--OnPageIndexChanging = "OnPaging" AutoGenerateColumns="False" ShowHeaderWhenEmpty="true"--%>
 <Columns>
                     <asp:BoundField DataField="编号" HeaderText="编号" />
@@ -100,6 +100,8 @@
                     <asp:BoundField DataField="显示标记" HeaderText="显示标记" />
                     <asp:BoundField DataField="状态" HeaderText="状态" />
                     <asp:BoundField DataField="时间创建" HeaderText="创建时间" />
+    <asp:BoundField DataField="手续卡" HeaderText="手续卡" />
+    <asp:BoundField DataField="金额卡" HeaderText="金额卡" />
                     <%----%>
         <asp:HyperLinkField Text="操作" DataNavigateUrlFields="收款银行卡卡号" DataNavigateUrlFormatString="管理收款银行卡卡更新.aspx?Bianhao={0}" />
     </Columns>

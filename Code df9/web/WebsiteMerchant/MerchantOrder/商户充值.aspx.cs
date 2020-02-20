@@ -26,14 +26,16 @@ namespace web1.WebsiteMerchant.商户订单
 
         }
 
-        protected void Button_返回_Click(object sender, EventArgs e)
+
+
+    protected void Button_返回_Click(object sender, EventArgs e)
         {
             Response.Redirect("商户充值记录.aspx");
         }
 
         private void 收手续费卡()
         {
-            string strQuery = "select 收款银行名称,收款银行卡主姓名,收款银行卡卡号 from table_后台收款银行卡管理 where 状态 = '启用' and 显示标记='启用' ";
+            string strQuery = "select 收款银行名称,收款银行卡主姓名,收款银行卡卡号 from table_后台收款银行卡管理 where 状态 = '启用' and 显示标记='启用' and 手续卡= '启用'  ";
             DataTable dt = new DataTable();
             String strConnString = ClassLibrary1.ClassDataControl.conStr1;
             MySqlConnection con = new MySqlConnection(strConnString);
@@ -63,7 +65,7 @@ namespace web1.WebsiteMerchant.商户订单
 
         private void 收金额卡()
         {
-            string strQuery = "select 出款银行名称,出款银行卡主姓名,出款银行卡卡号 from table_后台出款银行卡管理 where 状态 = '启用' and 显示标记='启用' ";
+            string strQuery = "select 收款银行名称,收款银行卡主姓名,收款银行卡卡号 from table_后台收款银行卡管理 where 状态 = '启用' and 显示标记='启用' and 金额卡= '启用'  ";
             DataTable dt = new DataTable();
             String strConnString = ClassLibrary1.ClassDataControl.conStr1;
             MySqlConnection con = new MySqlConnection(strConnString);
@@ -444,9 +446,79 @@ namespace web1.WebsiteMerchant.商户订单
                 }
             }
         }
-        
+
+    protected void GridView_收金额卡_SelectedIndexChanged(object sender, EventArgs e)
+    {
+      Button button = (Button)sender;
+      GridViewRow gvr = (GridViewRow)button.Parent.Parent;
+      string pk = GridView_收金额卡.DataKeys[gvr.RowIndex].Value.ToString();
 
     }
+
+
+  
+
+    protected void GridView_收手续费卡_SelectedIndexChanged(object sender, EventArgs e)
+    {
+      Button button = (Button)sender;
+      GridViewRow gvr = (GridViewRow)button.Parent.Parent;
+      string pk = GridView_收金额卡.DataKeys[gvr.RowIndex].Value.ToString();
+
+    }
+
+    protected void GridView1_RowCreated(object sender, GridViewRowEventArgs e)
+    {
+      if (e.Row.RowType != DataControlRowType.DataRow) return;
+
+      if (e.Row.FindControl("ButtonS_收手续卡") != null)
+      {
+        Button CtlButton = (Button)e.Row.FindControl("ButtonS_收手续卡");
+        CtlButton.Click += new EventHandler(Select_收手续费卡);
+      }
+    }
+
+    protected void GridView2_RowCreated(object sender, GridViewRowEventArgs e)
+    {
+      if (e.Row.RowType != DataControlRowType.DataRow) return;
+
+      if (e.Row.FindControl("ButtonS_收金额卡") != null)
+      {
+        Button CtlButton = (Button)e.Row.FindControl("ButtonS_收金额卡");
+        CtlButton.Click += new EventHandler(Select_收金额卡);
+      }
+
+    }
+
+    private void Select_收手续费卡(object sender, EventArgs e)
+    {
+      Button button = (Button)sender;
+      GridViewRow gvr = (GridViewRow)button.Parent.Parent;
+      int index = gvr.RowIndex;
+      var bank= GridView_收手续费卡.Rows[index].Cells[0].Text;
+      var userNmae = GridView_收手续费卡.Rows[index].Cells[1].Text;
+      var cardNumber = GridView_收手续费卡.Rows[index].Cells[2].Text;
+      TextBox_目标姓名.Text = userNmae;
+      TextBox_目标银行名称.Text = bank;
+      TextBox_目标卡号.Text = cardNumber;
+
+    }
+
+    private void Select_收金额卡(object sender, EventArgs e)
+    {
+      Button button = (Button)sender;
+      GridViewRow gvr = (GridViewRow)button.Parent.Parent;
+      int index = gvr.RowIndex;
+
+      var bank = GridView_收手续费卡.Rows[index].Cells[0].Text;
+      var userNmae = GridView_收手续费卡.Rows[index].Cells[1].Text;
+      var cardNumber = GridView_收手续费卡.Rows[index].Cells[2].Text;
+      TextBox_目标姓名.Text = userNmae;
+      TextBox_目标银行名称.Text = bank;
+      TextBox_目标卡号.Text = cardNumber;
+    }
+
+
+  }
 
 
 
