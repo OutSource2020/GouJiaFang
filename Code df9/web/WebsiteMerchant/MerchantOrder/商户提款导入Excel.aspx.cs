@@ -484,22 +484,26 @@ namespace web1.WebsiteMerchant.商户订单
                                                 else
                                                 {
                                                     ClassLibrary1.ClassMessage.HinXi(Page, "手续费余额不足");
-                                                }
+                          return;
+                        }
                                             }
                                             else
                                             {
                                                 ClassLibrary1.ClassMessage.HinXi(Page, "目标提款金额 小于账户提款金额限制");
-                                            }
+                        return;
+                      }
                                         }
                                         else
                                         {
                                             ClassLibrary1.ClassMessage.HinXi(Page, "目标提款金额 大于账户提款金额限制");
-                                        }
+                      return;
+                    }
                                     }
                                     else
                                     {
                                         ClassLibrary1.ClassMessage.HinXi(Page, "目标提款金额 账户提款余额不足支付");
-                                    }
+                    return;
+                  }
                                 }
                             }
                         }
@@ -509,6 +513,7 @@ namespace web1.WebsiteMerchant.商户订单
                 else
                 {
                     ClassLibrary1.ClassMessage.HinXi(Page, "金额 不是数字或者小数");
+          return;
                 }
             }
             Response.Redirect("./商户提款记录.aspx");

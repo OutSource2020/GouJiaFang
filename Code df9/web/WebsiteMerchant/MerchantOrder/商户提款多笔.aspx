@@ -70,7 +70,8 @@
                         </ul>
                     </td>
                 </tr>
-                <tr>
+                <tr >
+                    <div hidden>
                                <p></p>
   <asp:fileupload ID="UploadExcel" runat="server"></asp:fileupload>
          <asp:Button ID="Upload_提款订单文档" runat="server" Text="导入提款订单文档" class="btn btn-info btn-fw" OnClick="Button_提款订单文档导入_Click" UseSubmitBehavior="false" OnClientClick="this.disabled=true;this.value='处理中...';" />
@@ -78,7 +79,7 @@
                     <p></p>
   <asp:fileupload ID="UploadTxt" runat="server"></asp:fileupload>
          <asp:Button ID="Upload_提款订单文本" runat="server" Text="导入提款订单文本" class="btn btn-info btn-fw" OnClick="Button_提款订单文本导入_Click" UseSubmitBehavior="false" OnClientClick="this.disabled=true;this.value='处理中...';" />
-
+                        </div>
         
                     </tr>
                 <tr>

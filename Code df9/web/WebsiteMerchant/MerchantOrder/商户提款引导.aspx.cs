@@ -11,20 +11,24 @@ namespace web1.WebsiteMerchant.MerchantOrder
   {
     protected void Page_Load(object sender, EventArgs e)
     {
+      if (!Page.IsPostBack)
+      {
 
+    
+      }
     }
 
     protected void Button_文本导入_Click(object sender, EventArgs e)
     {
-      Response.Redirect("商户充值记录.aspx");
+      Response.Redirect("商户提款导入TXT.aspx");
     }
     protected void Button_文档导入_Click(object sender, EventArgs e)
     {
-      Response.Redirect("商户充值记录.aspx");
+      Response.Redirect("商户提款导入Excel.aspx");
     }
     protected void Button_手动输入_Click(object sender, EventArgs e)
     {
-      Response.Redirect("商户充值记录.aspx");
+      Response.Redirect("商户提款多笔.aspx");
     }
   }
 }

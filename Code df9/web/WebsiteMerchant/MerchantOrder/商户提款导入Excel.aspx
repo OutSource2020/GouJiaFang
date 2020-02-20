@@ -161,7 +161,7 @@
                                 }
                         %>
                         <p>输入支付密码 :<asp:TextBox ID="TextBox_输入支付密码" runat="server"></asp:TextBox></p>
-                        <p>输入KEY密码 :<asp:TextBox ID="TextBox_输入KEY密码" runat="server"></asp:TextBox></p>
+                      
                     </td>
                 </tr>
                 <tr>
