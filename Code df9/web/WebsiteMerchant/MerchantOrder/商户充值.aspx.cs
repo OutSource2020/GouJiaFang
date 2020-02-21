@@ -509,9 +509,9 @@ namespace web1.WebsiteMerchant.商户订单
       GridViewRow gvr = (GridViewRow)button.Parent.Parent;
       int index = gvr.RowIndex;
 
-      var bank = GridView_收手续费卡.Rows[index].Cells[0].Text;
-      var userNmae = GridView_收手续费卡.Rows[index].Cells[1].Text;
-      var cardNumber = GridView_收手续费卡.Rows[index].Cells[2].Text;
+      var bank = GridView_收金额卡.Rows[index].Cells[0].Text;
+      var userNmae = GridView_收金额卡.Rows[index].Cells[1].Text;
+      var cardNumber = GridView_收金额卡.Rows[index].Cells[2].Text;
       TextBox_目标姓名.Text = userNmae;
       TextBox_目标银行名称.Text = bank;
       TextBox_目标卡号.Text = cardNumber;
