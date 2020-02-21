@@ -7,13 +7,14 @@ using System.Web.UI.WebControls;
 
 using System.Data;
 using MySql.Data.MySqlClient;
-
+using SqlSugar;
+using Sugar.Enties;
 
 namespace web1.WebsiteBackstage.L1.ManagementBankCard
 {
     public partial class 管理收款银行卡卡更新 : System.Web.UI.Page
     {
-        
+
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -29,10 +30,10 @@ namespace web1.WebsiteBackstage.L1.ManagementBankCard
         {
             Response.Redirect("管理收款银行卡.aspx");
         }
-        
+
         protected void Button_更新作业_Click(object sender, EventArgs e)
         {
-            if (TextBox_收款银行名称.Text.Length > 0 )
+            if (TextBox_收款银行名称.Text.Length > 0)
             {
                 操作更新();
             }
@@ -95,11 +96,11 @@ namespace web1.WebsiteBackstage.L1.ManagementBankCard
                             this.TextBox_收款银行卡主电话.Text = dr["收款银行卡主电话"].ToString();
                             this.DropDownList_显示标记.SelectedValue = dr["显示标记"].ToString();
                             this.DropDownList_下拉框1.SelectedValue = dr["状态"].ToString();
-                            this.DropDownList_手续卡.Text= dr["手续卡"].ToString();
+                            this.DropDownList_手续卡.Text = dr["手续卡"].ToString();
                             this.DropDownList_金额卡.Text = dr["金额卡"].ToString();
 
 
-            }
+                        }
                     }
                 }
             }
@@ -126,7 +127,7 @@ namespace web1.WebsiteBackstage.L1.ManagementBankCard
                     cmd.Parameters.AddWithValue("@手续卡", DropDownList_手续卡.SelectedValue);
                     cmd.Parameters.AddWithValue("@金额卡", DropDownList_金额卡.SelectedValue);
 
-          con.Open();
+                    con.Open();
                     cmd.ExecuteNonQuery();
                     con.Close();
                     //this.SaveImage(filePath);
@@ -143,6 +144,22 @@ namespace web1.WebsiteBackstage.L1.ManagementBankCard
         protected void Button_识别收款银行名称_Click(object sender, EventArgs e)
         {
             TextBox_收款银行名称.Text = ClassLibrary1.ClassBankInfo3a2.BankUtil.getNameOfBank(Label_收款银行卡卡号.Text);
+        }
+
+        protected void Button_删除_Click(object sender, EventArgs e)
+        {
+            using (SqlSugarClient sqlSugarClient = new DBClient().GetClient())
+            {
+                if (sqlSugarClient.Deleteable<table_后台收款银行卡管理>().With(SqlWith.RowLock).Where(it => it.编号 == lblCustomerID.Text).ExecuteCommand() > 0)
+                {
+                    ClassLibrary1.ClassMessage.HinXi(Page, "删除成功");
+                    Response.Redirect("./管理收款银行卡.aspx");
+                }
+                else
+                {
+                    ClassLibrary1.ClassMessage.HinXi(Page, "删除失败");
+                }
+            }
         }
     }
 }

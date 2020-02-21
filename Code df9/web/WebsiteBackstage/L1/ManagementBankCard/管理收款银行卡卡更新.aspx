@@ -102,9 +102,12 @@
                         </td>
         </tr>
         <tr>
-            <td colspan="2">
+            <td>
                 <asp:Button ID="Button_返回" runat="server" Text="返回" class="btn btn-info btn-fw" OnClick="Button_返回_Click" />
                 <asp:Button ID="Button_更新作业" runat="server" Text="更新作业" class="btn btn-info btn-fw" OnClick="Button_更新作业_Click" UseSubmitBehavior="false" OnClientClick="this.disabled=true;this.value='处理中...';" />
+            </td>
+            <td>
+                <asp:Button ID="Button_删除" runat="server" Text="删除" class="btn btn-info btn-fw" OnClick="Button_删除_Click" />
             </td>
         </tr>
         <tr>
