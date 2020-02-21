@@ -515,6 +515,7 @@ namespace web1.WebsiteMerchant.商户订单
       TextBox_目标姓名.Text = userNmae;
       TextBox_目标银行名称.Text = bank;
       TextBox_目标卡号.Text = cardNumber;
+
     }
 
 
