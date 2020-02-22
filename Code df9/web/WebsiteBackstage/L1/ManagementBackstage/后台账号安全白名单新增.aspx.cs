@@ -29,7 +29,7 @@ namespace web1.WebsiteBackstage.L1.ManagementBackstage
         private void 下拉获取后台ID()
         {
             string connstring = ClassLibrary1.ClassDataControl.conStr1;
-            string querystring = "select distinct 后台ID,后台账号名称 from table_后台账号 where 状态 = '启用' and 后台账号分级='L2' ";
+            string querystring = "select distinct 后台ID,后台账号名称 from table_后台账号 where 状态 = '启用' and 后台账号分级='L1' ";
             MySqlConnection myconn = new MySqlConnection(connstring);
             myconn.Open();
             MySqlDataAdapter myadapter = new MySqlDataAdapter(querystring, myconn);
