@@ -394,7 +394,7 @@ namespace web1.WebsiteMerchant.商户订单
         private void 开始执行()
         {
             Button_批量发起提款订单.Enabled = false;//防止重复操作
-            for (int i = 0; i < Gridview1.Rows.Count; i++)
+            for (int i = (Gridview1.Rows.Count - 1); i >= 0 ; i--)
             {
                 string 交易方卡号 = ((TextBox)Gridview1.Rows[i].Cells[1].FindControl("TextBox1")).Text;
                 string 交易方姓名 = ((TextBox)Gridview1.Rows[i].Cells[2].FindControl("TextBox2")).Text;
@@ -551,7 +551,7 @@ namespace web1.WebsiteMerchant.商户订单
 
                                                         scon3.Close();
 
-                                                        if (i == Gridview1.Rows.Count - 1)
+                                                        if (i == 0)
                                                             Response.Redirect("./商户提款记录.aspx");
                                                     }
 

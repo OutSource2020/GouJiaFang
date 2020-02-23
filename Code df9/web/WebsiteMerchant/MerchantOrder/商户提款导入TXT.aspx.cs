@@ -323,7 +323,7 @@ namespace web1.WebsiteMerchant.商户订单
         private void 开始执行()
         {
             Button_确认订单发起.Enabled = false;//防止重复操作
-            for (int i = 0; i < Gridview1.Rows.Count; i++)
+            for (int i = (Gridview1.Rows.Count - 1); i >= 0 ; i--)
             {
                 string 交易方卡号 = ((TextBox)Gridview1.Rows[i].Cells[1].FindControl("TextBox1")).Text;
                 string 交易方姓名 = ((TextBox)Gridview1.Rows[i].Cells[2].FindControl("TextBox2")).Text;
@@ -477,7 +477,8 @@ namespace web1.WebsiteMerchant.商户订单
 
                                                         scon3.Close();
 
-                                                        Response.Redirect("./商户提款记录.aspx");
+                                                        if (i == 0)
+                                                            Response.Redirect("./商户提款记录.aspx");
                                                     }
 
                                                 }
@@ -674,6 +675,7 @@ namespace web1.WebsiteMerchant.商户订单
                 StreamReader srReadFile = new StreamReader(path);
                 int i = 0;
                 // 读取流直至文件末尾结束
+                int col = 0;
                 while (!srReadFile.EndOfStream)
                 {
                     if (i == 0)
@@ -686,6 +688,7 @@ namespace web1.WebsiteMerchant.商户订单
                         foreach (string ele in headArr)
                         {
                             DataTable.Add(ele, new List<string>());
+                            col++;
                         }
                     }
                     else
@@ -695,13 +698,13 @@ namespace web1.WebsiteMerchant.商户订单
                         strReadLine = Regex.Replace(strReadLine, @"\s", @"|");
                         var strArr = strReadLine.Split('|');
 
-                        int index = 0;
-                        foreach (string ele in strArr)
+                        for (int n = 0; n < col; ++n)
                         {
-                            DataTable[headArr[index]].Add(ele);
-                            index++;
+                            string ele = "";
+                            if (n < strArr.Count())
+                                ele = strArr[n];
+                            DataTable[headArr[n]].Add(ele);
                         }
-
                     }
 
                 }

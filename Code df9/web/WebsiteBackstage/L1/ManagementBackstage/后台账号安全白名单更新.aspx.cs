@@ -7,6 +7,8 @@ using System.Web.UI.WebControls;
 
 using System.Data;
 using MySql.Data.MySqlClient;
+using SqlSugar;
+using Sugar.Enties;
 
 namespace web1.WebsiteBackstage.L1.ManagementBackstage
 {
@@ -26,7 +28,7 @@ namespace web1.WebsiteBackstage.L1.ManagementBackstage
 
 
             string 从URL传来值 = 从URL获取值();
-            if (判断是否为分级等级L2(从编号查询出账号() ) == true)
+            if (判断是否为分级等级L2(从编号查询出账号()) == true)
             {
 
             }
@@ -50,7 +52,7 @@ namespace web1.WebsiteBackstage.L1.ManagementBackstage
                 // Query string value is there so now use it
                 //查詢字符串值是那麼現在使用它
                 //int thePID = Convert.ToInt32(Request.QueryString["22"]);
-                if (System.Text.RegularExpressions.Regex.IsMatch(Request.QueryString["Bianhao"], "^[0-9a-zA-Z]{2,30}$"))
+                if (System.Text.RegularExpressions.Regex.IsMatch(Request.QueryString["Bianhao"], "^[0-9a-zA-Z]{0,30}$"))
                 {
                     //Label1.Text = "是符合要求字符";
 
@@ -112,7 +114,7 @@ namespace web1.WebsiteBackstage.L1.ManagementBackstage
             else
             {
                 string 从URL传来值 = 从URL获取值();
-                if (判断是否为分级等级L2(从编号查询出账号() ) == true)
+                if (判断是否为分级等级L2(从编号查询出账号()) == true)
                 {
                     Button_更新提交.Enabled = false;
 
@@ -205,6 +207,14 @@ namespace web1.WebsiteBackstage.L1.ManagementBackstage
             }
         }
 
-
+        protected void Button_删除_Click(object sender, EventArgs e)
+        {
+            string 从URL传来值 = 从URL获取值();
+            using (SqlSugarClient sqlSugarClient = new DBClient().GetClient())
+            {
+                sqlSugarClient.Deleteable<table_后台白名单管理>().Where(it => it.编号 == 从URL传来值).ExecuteCommand();
+            }
+            Response.Redirect("后台账号安全白名单.aspx");
+        }
     }
 }

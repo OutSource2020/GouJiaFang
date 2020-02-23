@@ -24,6 +24,42 @@ namespace web1.WebsiteBackstage.L1.ManagementMerchant
         protected global::System.Web.UI.WebControls.Label Label_目标商户账号;
 
         /// <summary>
+        /// Label_目标商户提款余额 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label Label_目标商户提款余额;
+
+        /// <summary>
+        /// Label_目标商户手续费余额 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label Label_目标商户手续费余额;
+
+        /// <summary>
+        /// RadioButton_目标手续费 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RadioButton RadioButton_目标手续费;
+
+        /// <summary>
+        /// RadioButton_目标余额 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RadioButton RadioButton_目标余额;
+
+        /// <summary>
         /// TextBox_扣除金额 control.
         /// </summary>
         /// <remarks>
@@ -31,6 +67,15 @@ namespace web1.WebsiteBackstage.L1.ManagementMerchant
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox TextBox_扣除金额;
+
+        /// <summary>
+        /// TextBox_Google验证码 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox TextBox_Google验证码;
 
         /// <summary>
         /// Button_返回 control.
