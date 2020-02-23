@@ -390,9 +390,17 @@ namespace web1.WebsiteMerchant.商户订单
             {
                 条件4 = "  创建方式='API' ";
             }
+      if (RadioButton_创建方式文档.Checked)
+      {
+        条件4 = "  创建方式='文档导入' ";
+      }
+      if (RadioButton_创建方式文本.Checked)
+      {
+        条件4 = "  创建方式='文本导入' ";
+      }
 
 
-            if (条件4 == null)
+      if (条件4 == null)
             {
 
             }
@@ -554,10 +562,21 @@ namespace web1.WebsiteMerchant.商户订单
             BindGrid(" and " + 查看勾选了哪些() + " ");
         }
 
-        //====================================================================================================
+    protected void RadioButton_创建方式文档_CheckedChanged(object sender, EventArgs e)
+    {
+      BindGrid(" and " + 查看勾选了哪些() + " ");
+    }
+
+    protected void RadioButton_创建方式文本_CheckedChanged(object sender, EventArgs e)
+    {
+      BindGrid(" and " + 查看勾选了哪些() + " ");
+    }
 
 
-        private void BindGrid(string 时间导入绑定)
+    //====================================================================================================
+
+
+    private void BindGrid(string 时间导入绑定)
         {
             string Cookie_UserName = ClassLibrary1.ClassAccount.检查商户端cookie2();
 
@@ -568,8 +587,7 @@ namespace web1.WebsiteMerchant.商户订单
             {
                 connC.Open();
 
-
-                MySqlCommand cmd1 = new MySqlCommand("select COUNT(*) from table_商户明细提款 where 商户ID='" + Cookie_UserName + "' and 状态='进行中' " + 时间导入绑定 + " order by id desc", connC);
+                MySqlCommand cmd1 = new MySqlCommand("select COUNT(*) from table_商户明细提款 where 商户ID='" + Cookie_UserName + "' and 状态='待处理' " + 时间导入绑定 + " order by 时间创建 desc", connC);
                 object obj1 = cmd1.ExecuteScalar();
                 if (obj1 != null)
                 {
@@ -850,6 +868,9 @@ namespace web1.WebsiteMerchant.商户订单
             }
         }
 
-
+    protected void Button_提款_Click(object sender, EventArgs e)
+    {
+      Response.Redirect("商户提款多笔.aspx");  //刷新頁面
     }
+  }
 }
