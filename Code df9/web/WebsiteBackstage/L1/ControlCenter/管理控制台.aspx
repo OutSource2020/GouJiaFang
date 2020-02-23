@@ -128,6 +128,42 @@
         </tr>
 
     </table>
+<p></p>
+                <table class="auto-style1">
+        <tr>
+            <td colspan="2">
+                <strong>待处理事件</strong>
+
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 30%">出款银行卡总金额(提款成功订单的总金额 )</td>
+            <td>
+                <asp:Label ID="Label_出款总额" runat="server" Text="0"></asp:Label>
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 30%">商户卡余额总额(所有商户的提款余额总额)</td>
+            <td>
+                <asp:Label ID="Label_余额总额" runat="server" Text="0"></asp:Label>
+            </td>
+        </tr>
+          <tr>
+            <td style="width: 30%">待处理金额(提款状态待处理订单的总金额)</td>
+            <td>
+                <asp:Label ID="Label_待处理金额" runat="server" Text="0"></asp:Label>
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 30%">差额</td>
+            <td>
+                <asp:Label ID="Label_差额" runat="server" Text="0"></asp:Label>
+            </td>
+        </tr>
+
+    </table>
+
+
 
 
 
