@@ -587,7 +587,6 @@ namespace web1.WebsiteMerchant.商户订单
             {
                 connC.Open();
 
-
                 MySqlCommand cmd1 = new MySqlCommand("select COUNT(*) from table_商户明细提款 where 商户ID='" + Cookie_UserName + "' and 状态='待处理' " + 时间导入绑定 + " order by 时间创建 desc", connC);
                 object obj1 = cmd1.ExecuteScalar();
                 if (obj1 != null)
@@ -595,21 +594,21 @@ namespace web1.WebsiteMerchant.商户订单
                     Label_交易笔数_进行中.Text = obj1.ToString();
                 }
 
-                MySqlCommand cmd2 = new MySqlCommand("select COUNT(*) from table_商户明细提款 where 商户ID='" + Cookie_UserName + "' and 状态='成功' " + 时间导入绑定 + " order by 时间创建 desc", connC);
+                MySqlCommand cmd2 = new MySqlCommand("select COUNT(*) from table_商户明细提款 where 商户ID='" + Cookie_UserName + "' and 状态='成功' " + 时间导入绑定 + " order by id desc", connC);
                 object obj2 = cmd2.ExecuteScalar();
                 if (obj2 != null)
                 {
                     Label_交易笔数_成功.Text = obj2.ToString();
                 }
 
-                MySqlCommand cmd3 = new MySqlCommand("select COUNT(*) from table_商户明细提款 where 商户ID='" + Cookie_UserName + "' and 状态='失败' " + 时间导入绑定 + " order by 时间创建 desc", connC);
+                MySqlCommand cmd3 = new MySqlCommand("select COUNT(*) from table_商户明细提款 where 商户ID='" + Cookie_UserName + "' and 状态='失败' " + 时间导入绑定 + " order by id desc", connC);
                 object obj3 = cmd3.ExecuteScalar();
                 if (obj3 != null)
                 {
                     Label_交易笔数_失败.Text = obj3.ToString();
                 }
 
-                MySqlCommand cmd4 = new MySqlCommand("select COUNT(*) from table_商户明细提款 where 商户ID='" + Cookie_UserName + "'  " + 时间导入绑定 + " order by 时间创建 desc", connC);
+                MySqlCommand cmd4 = new MySqlCommand("select COUNT(*) from table_商户明细提款 where 商户ID='" + Cookie_UserName + "'  " + 时间导入绑定 + " order by id desc", connC);
                 object obj4 = cmd4.ExecuteScalar();
                 if (obj4 != null)
                 {
@@ -619,28 +618,28 @@ namespace web1.WebsiteMerchant.商户订单
 
 
 
-                MySqlCommand cmd21 = new MySqlCommand("select sum(交易金额) from table_商户明细提款 where 商户ID='" + Cookie_UserName + "' and 状态='进行中' " + 时间导入绑定 + " order by 时间创建 desc", connC);
+                MySqlCommand cmd21 = new MySqlCommand("select sum(交易金额) from table_商户明细提款 where 商户ID='" + Cookie_UserName + "' and 状态='进行中' " + 时间导入绑定 + " order by id desc", connC);
                 object obj21 = cmd21.ExecuteScalar();
                 if (obj21 != null)
                 {
                     Label_交易总金额_进行中.Text = obj21.ToString();
                 }
 
-                MySqlCommand cmd22 = new MySqlCommand("select sum(交易金额) from table_商户明细提款 where 商户ID='" + Cookie_UserName + "' and 状态='成功' " + 时间导入绑定 + " order by 时间创建 desc", connC);
+                MySqlCommand cmd22 = new MySqlCommand("select sum(交易金额) from table_商户明细提款 where 商户ID='" + Cookie_UserName + "' and 状态='成功' " + 时间导入绑定 + " order by id desc", connC);
                 object obj22 = cmd22.ExecuteScalar();
                 if (obj22 != null)
                 {
                     Label_交易总金额_成功.Text = obj22.ToString();
                 }
 
-                MySqlCommand cmd23 = new MySqlCommand("select sum(交易金额) from table_商户明细提款 where 商户ID='" + Cookie_UserName + "' and 状态='失败' " + 时间导入绑定 + " order by 时间创建 desc", connC);
+                MySqlCommand cmd23 = new MySqlCommand("select sum(交易金额) from table_商户明细提款 where 商户ID='" + Cookie_UserName + "' and 状态='失败' " + 时间导入绑定 + " order by id desc", connC);
                 object obj23 = cmd23.ExecuteScalar();
                 if (obj23 != null)
                 {
                     Label_交易总金额_失败.Text = obj23.ToString();
                 }
 
-                MySqlCommand cmd24 = new MySqlCommand("select sum(交易金额) from table_商户明细提款 where 商户ID='" + Cookie_UserName + "'  " + 时间导入绑定 + " order by 时间创建 desc", connC);
+                MySqlCommand cmd24 = new MySqlCommand("select sum(交易金额) from table_商户明细提款 where 商户ID='" + Cookie_UserName + "'  " + 时间导入绑定 + " order by id desc", connC);
                 object obj24 = cmd24.ExecuteScalar();
                 if (obj24 != null)
                 {
@@ -677,7 +676,7 @@ namespace web1.WebsiteMerchant.商户订单
                 }
 
 
-                string strQuery = "select 订单号,商户名称,类型,交易方卡号,交易方姓名,交易方银行,交易金额,手续费,创建方式,状态,时间创建,时间完成 from table_商户明细提款 where 商户ID='" + Cookie_UserName + "' " + 时间导入绑定 + " order by 时间创建 desc  LIMIT " + 分页() + " ";
+                string strQuery = "select 订单号,商户名称,类型,交易方卡号,交易方姓名,交易方银行,交易金额,手续费,创建方式,状态,时间创建,时间完成 from table_商户明细提款 where 商户ID='" + Cookie_UserName + "' " + 时间导入绑定 + " order by id desc  LIMIT " + 分页() + " ";
                 DataTable dt = new DataTable();
                 String strConnString = ClassLibrary1.ClassDataControl.conStr1;
                 MySqlConnection con = new MySqlConnection(strConnString);

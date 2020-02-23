@@ -50,7 +50,7 @@ namespace ClassLibrary1
         }
 
         #if DEBUG
-        public static string conStr1 = ("data source = 127.0.0.1; port=3306;charset= utf8; Initial Catalog = web; user id = root;  password = ldqZ070C8CxTZXXf; SslMode = none; Connect Timeout = 60; max pool size=10000");
+        public static string conStr1 = ("data source = 127.0.0.1; port=3306;charset= utf8; Initial Catalog = web; user id = root;  password = root; SslMode = none; Connect Timeout = 60; max pool size=10000");
         #else
         public static string conStr1 = ("data source = 127.0.0.1; port=3306;charset= utf8; Initial Catalog = web; user id = root;  password = ldqZ070C8CxTZXXf; SslMode = none; Connect Timeout = 60; max pool size=10000");
         #endif

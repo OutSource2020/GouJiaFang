@@ -8,6 +8,9 @@ using System.Web.UI.WebControls;
 using System.Data;
 //using System.Data.SqlClient;
 using MySql.Data.MySqlClient;
+using Google.Authenticator;
+using SqlSugar;
+using Sugar.Enties;
 
 namespace web1.WebsiteBackstage.L1.ManagementMerchant
 {
@@ -68,7 +71,7 @@ namespace web1.WebsiteBackstage.L1.ManagementMerchant
 
             using (MySqlConnection con = new MySqlConnection(ClassLibrary1.ClassDataControl.conStr1))
             {
-                using (MySqlCommand cmd = new MySqlCommand("SELECT 商户ID FROM table_商户账号 WHERE 商户ID=@商户ID", con))
+                using (MySqlCommand cmd = new MySqlCommand("SELECT 商户ID,手续费余额,提款余额,keyga FROM table_商户账号 WHERE 商户ID=@商户ID", con))
                 {
                     cmd.Parameters.AddWithValue("@商户ID", 从URL传来值);
                     using (MySqlDataAdapter da = new MySqlDataAdapter(cmd))
@@ -78,7 +81,8 @@ namespace web1.WebsiteBackstage.L1.ManagementMerchant
                         foreach (DataRow dr in images.Rows)
                         {
                             this.Label_目标商户账号.Text = dr["商户ID"].ToString();
-
+                            Label_目标商户提款余额.Text = dr["提款余额"].ToString();
+                            Label_目标商户手续费余额.Text = dr["手续费余额"].ToString();
                         }
                     }
                 }
@@ -87,7 +91,7 @@ namespace web1.WebsiteBackstage.L1.ManagementMerchant
 
         protected void Button_操作扣除_Click(object sender, EventArgs e)
         {
-            if (TextBox_扣除金额.Text.Length > 0)
+            if (TextBox_扣除金额.Text.Length > 0 || TextBox_Google验证码.Text.Length > 0)
             {
                 操作扣除();
             }
@@ -101,15 +105,31 @@ namespace web1.WebsiteBackstage.L1.ManagementMerchant
         {
             Button_操作扣除.Enabled = false;
 
-            string 提款余额 = TextBox_扣除金额.Text;
+            using (SqlSugarClient sqlSugarClient = new DBClient().GetClient())
+            {
+                var getByWhere = sqlSugarClient.Queryable<table_商户账号>().Where(it => it.商户ID == 从URL获取值()).ToList();
+                table_商户账号 商户 = getByWhere[0];
+                TwoFactorAuthenticator tfa = new TwoFactorAuthenticator();
+                var result = tfa.ValidateTwoFactorPIN(商户.keyga, TextBox_Google验证码.Text);
 
-            MySqlConnection conn2 = new MySqlConnection(ClassLibrary1.ClassDataControl.conStr1);
-            conn2.Open();
-            MySqlCommand scmd2 = new MySqlCommand("update table_商户账号 set 提款余额 = 提款余额-'" + 提款余额 + "'  where 商户ID = '" + 从URL获取值() + "' ", conn2);
-            scmd2.ExecuteNonQuery();
-            scmd2.Dispose();
-            conn2.Close();
-
+                #if DEBUG
+                result = true;
+                #endif
+                if (result)
+                {
+                    string 扣除金额 = TextBox_扣除金额.Text;
+                    if (RadioButton_目标手续费.Checked)
+                    {
+                        商户.手续费余额 -= Convert.ToDouble(扣除金额);
+                        sqlSugarClient.Updateable(商户).UpdateColumns(it => new { it.手续费余额 }).ExecuteCommand();
+                    }
+                    else
+                    {
+                        商户.提款余额 -= Convert.ToDouble(扣除金额);
+                        sqlSugarClient.Updateable(商户).UpdateColumns(it => new { it.提款余额 }).ExecuteCommand();
+                    }
+                }
+            }
             Response.Redirect("商户列表.aspx");
         }
     }

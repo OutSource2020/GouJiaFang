@@ -142,7 +142,8 @@ namespace web1.Filters
             }
 
             // 验证IP白名单
-            if (!ClassLibrary1.ClassAccount.验证管理L1白名单IP(account.UserName, ClassLibrary1.ClassAccount.来源IP()))
+            bool x = ClassLibrary1.ClassAccount.验证商户白名单IP(account.UserName, ClassLibrary1.ClassAccount.来源IP());
+            if (!x)
             {
                 filterContext.Result = GetStandardError(BaseErrors.ERROR_NUMBER.LX1003, account.UserName);
                 return;
