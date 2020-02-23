@@ -42,11 +42,13 @@
         </tr>
         <tr>
             
-            <td hidden>
+            <td >
                 创建方式筛选:
                 <asp:RadioButton ID="RadioButton_创建方式全部" runat="server" GroupName="LoDenXi" Text="全部" type="radio" value="全部" AutoPostBack="True" OnCheckedChanged="RadioButton_创建方式全部_CheckedChanged" Checked="True" />
                 <asp:RadioButton ID="RadioButton_创建方式手动" runat="server" GroupName="LoDenXi" Text="手动" type="radio" value="手动" AutoPostBack="True" OnCheckedChanged="RadioButton_创建方式手动_CheckedChanged" />
                 <asp:RadioButton ID="RadioButton_创建方式API" runat="server" GroupName="LoDenXi" Text="API" type="radio" value="API" AutoPostBack="True" OnCheckedChanged="RadioButton_创建方式API_CheckedChanged" />
+               <asp:RadioButton ID="RadioButton_创建方式文档" runat="server" GroupName="LoDenXi" Text="文档导入" type="radio" value="文档导入" AutoPostBack="True" OnCheckedChanged="RadioButton_创建方式文档_CheckedChanged" />
+            <asp:RadioButton ID="RadioButton_创建方式文本" runat="server" GroupName="LoDenXi" Text="文本导入" type="radio" value="文本导入" AutoPostBack="True" OnCheckedChanged="RadioButton_创建方式文本_CheckedChanged" />
             
                 </td>
             <td>
@@ -63,6 +65,7 @@
         <tr>
             <td>
                 <asp:Button ID="Button1" runat="server" Text="查找" class="btn btn-info btn-fw" OnClick="Button_查找_Click" />
+                 <asp:Button ID="Button2" runat="server" Text="提款" class="btn btn-info btn-fw" OnClick="Button_提款_Click" />
             </td>
             <td>
 
@@ -117,7 +120,7 @@
                 <table style="width: 100%">
                     <tr>
                         <td>提款数据统计</td>
-                        <td>进行中</td>
+                        <td>待处理</td>
                         <td>成功</td>
                         <td>失败</td>
                         <td>合计</td>

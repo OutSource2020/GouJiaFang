@@ -215,7 +215,7 @@ namespace web1.WebsiteMerchant.商户订单
                     }
                     else
                     {
-                        ClassLibrary1.ClassMessage.HinXi(Page, "金额 不是数字或者小数");
+                        ClassLibrary1.ClassMessage.HinXi(Page, "金额 不是数字或者小数和还有请不要空行，可以用点击删除来删掉空行");
                     }
                 }
                 else

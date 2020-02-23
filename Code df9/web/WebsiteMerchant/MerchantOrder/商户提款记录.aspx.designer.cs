@@ -177,6 +177,24 @@ namespace web1.WebsiteMerchant.商户订单
     protected global::System.Web.UI.WebControls.RadioButton RadioButton_创建方式API;
 
     /// <summary>
+    /// RadioButton_创建方式文档 控件。
+    /// </summary>
+    /// <remarks>
+    /// 自动生成的字段。
+    /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.RadioButton RadioButton_创建方式文档;
+
+    /// <summary>
+    /// RadioButton_创建方式文本 控件。
+    /// </summary>
+    /// <remarks>
+    /// 自动生成的字段。
+    /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.RadioButton RadioButton_创建方式文本;
+
+    /// <summary>
     /// DropDownList1 控件。
     /// </summary>
     /// <remarks>
@@ -202,6 +220,15 @@ namespace web1.WebsiteMerchant.商户订单
     /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     /// </remarks>
     protected global::System.Web.UI.WebControls.Button Button1;
+
+    /// <summary>
+    /// Button2 控件。
+    /// </summary>
+    /// <remarks>
+    /// 自动生成的字段。
+    /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    /// </remarks>
+    protected global::System.Web.UI.WebControls.Button Button2;
 
     /// <summary>
     /// CheckBox_刷新自动勾选 控件。
