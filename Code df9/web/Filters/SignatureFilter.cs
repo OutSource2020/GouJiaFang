@@ -79,6 +79,12 @@ namespace web1.Filters
             string apiPassword = dbAccount.商户密码API;
             string secret = dbAccount.公共密匙;
             int? timeunix = filterContext.ActionParameters[tsKey] as int?;
+            Int32 unixTimestamp = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+            if (unixTimestamp - timeunix.Value > 30)
+            {
+                filterContext.Result = GetStandardError(BaseErrors.ERROR_NUMBER.LX1006, dbAccount.商户ID);
+                return;
+            }
             string signature = filterContext.ActionParameters[signKey] as string;
             string source;
             if (path.Contains("AccountInquiry"))
