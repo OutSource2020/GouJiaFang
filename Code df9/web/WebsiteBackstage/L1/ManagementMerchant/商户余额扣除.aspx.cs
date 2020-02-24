@@ -71,7 +71,7 @@ namespace web1.WebsiteBackstage.L1.ManagementMerchant
 
             using (MySqlConnection con = new MySqlConnection(ClassLibrary1.ClassDataControl.conStr1))
             {
-                using (MySqlCommand cmd = new MySqlCommand("SELECT 商户ID,手续费余额,提款余额,keyga FROM table_商户账号 WHERE 商户ID=@商户ID", con))
+                using (MySqlCommand cmd = new MySqlCommand("SELECT 商户ID,手续费余额,提款余额 FROM table_商户账号 WHERE 商户ID=@商户ID", con))
                 {
                     cmd.Parameters.AddWithValue("@商户ID", 从URL传来值);
                     using (MySqlDataAdapter da = new MySqlDataAdapter(cmd))
@@ -91,7 +91,7 @@ namespace web1.WebsiteBackstage.L1.ManagementMerchant
 
         protected void Button_操作扣除_Click(object sender, EventArgs e)
         {
-            if (TextBox_扣除金额.Text.Length > 0 || TextBox_Google验证码.Text.Length > 0)
+            if (TextBox_扣除金额.Text.Length > 0 || TextBox_管理员密码.Text.Length > 0)
             {
                 操作扣除();
             }
@@ -109,29 +109,57 @@ namespace web1.WebsiteBackstage.L1.ManagementMerchant
             {
                 var getByWhere = sqlSugarClient.Queryable<table_商户账号>().Where(it => it.商户ID == 从URL获取值()).ToList();
                 table_商户账号 商户 = getByWhere[0];
-                TwoFactorAuthenticator tfa = new TwoFactorAuthenticator();
-                var result = tfa.ValidateTwoFactorPIN(商户.keyga, TextBox_Google验证码.Text);
+                // TwoFactorAuthenticator tfa = new TwoFactorAuthenticator();
+                // var result = tfa.ValidateTwoFactorPIN(商户.keyga, TextBox_Google验证码.Text);
 
-#if DEBUG
-//  result = true;
-#endif
-                if (result)
+                // string Cookie_UserName = ClassLibrary1.ClassAccount.cookie解密(HttpContext.Current.Request.Cookies["PPusernameBackstageL1"]["username"]);
+                string Cookie_Password = ClassLibrary1.ClassAccount.cookie解密(HttpContext.Current.Request.Cookies["PPusernameBackstageL1"]["password"]);
+
+                if (TextBox_管理员密码.Text == Cookie_Password)
                 {
                     string 扣除金额 = TextBox_扣除金额.Text;
+                    Random rd2 = new Random();
+                    DateTime time = DateTime.Now;
+                    string 备注 = "管理员扣除";
                     if (RadioButton_目标手续费.Checked)
                     {
+                        table_商户明细手续费 fee = new table_商户明细手续费();
+                        fee.订单号 = "CZSXF" + DateTime.Now.ToString("yyyyMMddHHmmss") + rd2.Next(1000, 9999);
+                        fee.商户ID = Int32.Parse(商户.商户ID);
+                        fee.类型 = "充值手续费";
+                        fee.交易金额 = Double.Parse(扣除金额);
+                        fee.手续费收入 = Double.Parse(扣除金额);
+                        fee.交易前手续费余额 = 商户.手续费余额;
+                        fee.交易后手续费余额 = 商户.手续费余额 - Double.Parse(扣除金额);
+                        fee.备注 = 备注;
+                        fee.状态 = "成功";
+                        fee.时间创建 = time;
+                        sqlSugarClient.Insertable(fee).ExecuteCommand();
+
                         商户.手续费余额 -= Convert.ToDouble(扣除金额);
                         sqlSugarClient.Updateable(商户).UpdateColumns(it => new { it.手续费余额 }).ExecuteCommand();
                     }
                     else
                     {
+                        table_商户明细余额 balance = new table_商户明细余额();
+                        balance.订单号 = "MBON" + DateTime.Now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999));
+                        balance.商户ID = Convert.ToInt32(商户.商户ID);
+                        balance.类型 = "充值余额";
+                        balance.手续费 = "0";
+                        balance.交易金额 = 扣除金额;
+                        balance.交易前账户余额 = Convert.ToString(商户.提款余额);
+                        balance.交易后账户余额 = Convert.ToString(商户.提款余额 - Double.Parse(扣除金额));
+                        balance.状态 = "成功";
+                        balance.时间创建 = time;
+                        sqlSugarClient.Insertable(balance).ExecuteCommand();
+
                         商户.提款余额 -= Convert.ToDouble(扣除金额);
                         sqlSugarClient.Updateable(商户).UpdateColumns(it => new { it.提款余额 }).ExecuteCommand();
                     }
                 }
                 else
                 {
-                    ClassLibrary1.ClassMessage.HinXi(Page, "Google验证码错误");
+                    ClassLibrary1.ClassMessage.HinXi(Page, "管理员密码错误");
                     Button_操作扣除.Enabled = true;
                     return;
                 }

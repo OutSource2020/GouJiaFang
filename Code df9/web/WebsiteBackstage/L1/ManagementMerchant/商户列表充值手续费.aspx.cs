@@ -8,6 +8,8 @@ using System.Web.UI.WebControls;
 using System.Data;
 //using System.Data.SqlClient;
 using MySql.Data.MySqlClient;
+using SqlSugar;
+using Sugar.Enties;
 
 namespace web1.WebsiteBackstage.L1.ManagementMerchant
 {
@@ -68,7 +70,7 @@ namespace web1.WebsiteBackstage.L1.ManagementMerchant
 
             using (MySqlConnection con = new MySqlConnection(ClassLibrary1.ClassDataControl.conStr1))
             {
-                using (MySqlCommand cmd = new MySqlCommand("SELECT 商户ID FROM table_商户账号 WHERE 商户ID=@商户ID", con))
+                using (MySqlCommand cmd = new MySqlCommand("SELECT 商户ID,手续费余额,提款余额 FROM table_商户账号 WHERE 商户ID=@商户ID", con))
                 {
                     cmd.Parameters.AddWithValue("@商户ID", 从URL传来值);
                     using (MySqlDataAdapter da = new MySqlDataAdapter(cmd))
@@ -78,7 +80,8 @@ namespace web1.WebsiteBackstage.L1.ManagementMerchant
                         foreach (DataRow dr in images.Rows)
                         {
                             this.Label_目标商户账号.Text = dr["商户ID"].ToString();
-
+                            Label_目标商户提款余额.Text = dr["提款余额"].ToString();
+                            Label_目标商户手续费余额.Text = dr["手续费余额"].ToString();
                         }
                     }
                 }
@@ -87,7 +90,7 @@ namespace web1.WebsiteBackstage.L1.ManagementMerchant
 
         protected void Button_操作充值_Click(object sender, EventArgs e)
         {
-            if (TextBox_充值手续费金额.Text.Length > 0 && TextBox_充值手续费备注.Text.Length > 0)
+            if (TextBox_充值金额.Text.Length > 0 && TextBox_管理员密码.Text.Length > 0)
             {
                 操作充值();
             }
@@ -101,69 +104,61 @@ namespace web1.WebsiteBackstage.L1.ManagementMerchant
         {
             Button_操作充值.Enabled = false;
 
-            using (MySqlConnection con = new MySqlConnection(ClassLibrary1.ClassDataControl.conStr1))
+            using (SqlSugarClient sqlSugarClient = new DBClient().GetClient())
             {
-                string 查哪些1 = "商户ID,手续费余额";
+                var getByWhere = sqlSugarClient.Queryable<table_商户账号>().Where(it => it.商户ID == 从URL获取值()).ToList();
+                table_商户账号 商户 = getByWhere[0];
+                string Cookie_Password = ClassLibrary1.ClassAccount.cookie解密(HttpContext.Current.Request.Cookies["PPusernameBackstageL1"]["password"]);
 
-                using (MySqlCommand cmd = new MySqlCommand("SELECT " + 查哪些1 + " FROM table_商户账号 WHERE 商户ID=@商户ID", con))
+                if (TextBox_管理员密码.Text == Cookie_Password)
                 {
-                    cmd.Parameters.AddWithValue("@商户ID", 从URL获取值());
-                    using (MySqlDataAdapter da = new MySqlDataAdapter(cmd))
+                    string 充值金额 = TextBox_充值金额.Text;
+                    Random rd2 = new Random();
+                    DateTime time = DateTime.Now;
+                    string 备注 = "管理员扣除";
+                    if (RadioButton_目标手续费.Checked)
                     {
-                        DataTable images = new DataTable();
-                        da.Fill(images);
-                        foreach (DataRow dr in images.Rows)
-                        {
-                            string 获得商户ID = dr["商户ID"].ToString();
-                            double 转文本框内数值 = System.Convert.ToDouble(TextBox_充值手续费金额.Text);
-                            double 获得交易前手续费余额 = double.Parse(dr["手续费余额"].ToString());
-                            double 获得交易后手续费余额 = Convert.ToDouble(获得交易前手续费余额) + Convert.ToDouble(转文本框内数值);
-                            //注意这个地方好像不能输入小数的充值
+                        table_商户明细手续费 fee = new table_商户明细手续费();
+                        fee.订单号 = "CZSXF" + DateTime.Now.ToString("yyyyMMddHHmmss") + rd2.Next(1000, 9999);
+                        fee.商户ID = Int32.Parse(商户.商户ID);
+                        fee.类型 = "充值手续费";
+                        fee.交易金额 = Double.Parse(充值金额);
+                        fee.手续费收入 = Double.Parse(充值金额);
+                        fee.交易前手续费余额 = 商户.手续费余额;
+                        fee.交易后手续费余额 = 商户.手续费余额 + Double.Parse(充值金额);
+                        fee.备注 = 备注;
+                        fee.状态 = "成功";
+                        fee.时间创建 = time;
+                        sqlSugarClient.Insertable(fee).ExecuteCommand();
 
-                            //向明细手续费表插入充值记录
-                            using (MySqlConnection scon2 = new MySqlConnection(ClassLibrary1.ClassDataControl.conStr1))
-                            {
-                                Random rd2 = new Random();
-                                string 生成编号2 = "CZSXF" + DateTime.Now.ToString("yyyyMMddHHmmss") + rd2.Next(1000, 9999);
-                                string RegisterTime2;
-                                RegisterTime2 = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
-                                string 类型 = "充值手续费";
+                        商户.手续费余额 += Convert.ToDouble(充值金额);
+                        sqlSugarClient.Updateable(商户).UpdateColumns(it => new { it.手续费余额 }).ExecuteCommand();
+                    }
+                    else
+                    {
+                        table_商户明细余额 balance = new table_商户明细余额();
+                        balance.订单号 = "MBON" + DateTime.Now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999));
+                        balance.商户ID = Convert.ToInt32(商户.商户ID);
+                        balance.类型 = "充值余额";
+                        balance.手续费 = "0";
+                        balance.交易金额 = 充值金额;
+                        balance.交易前账户余额 = Convert.ToString(商户.提款余额);
+                        balance.交易后账户余额 = Convert.ToString(商户.提款余额 + Double.Parse(充值金额));
+                        balance.状态 = "成功";
+                        balance.时间创建 = time;
+                        sqlSugarClient.Insertable(balance).ExecuteCommand();
 
-                                string 充值手续费金额 = TextBox_充值手续费金额.Text;
-                                string 充值手续费备注 = TextBox_充值手续费备注.Text;
-
-                                string 要哪些 = "订单号,商户ID,类型,交易金额,手续费收入,交易前手续费余额,交易后手续费余额,备注,时间创建";
-                                string 插哪些 = "'" + 生成编号2 + "','" + 获得商户ID + "','" + 类型 + "','" + 转文本框内数值 + "','" + 充值手续费金额 + "','" + 获得交易前手续费余额 + "','" + 获得交易后手续费余额 + "','" + 充值手续费备注 + "','" + RegisterTime2 + "'";
-
-                                string str = "insert into table_商户明细手续费(" + 要哪些 + ") values(" + 插哪些 + ")";
-
-                                scon2.Open();
-                                MySqlCommand command = new MySqlCommand();
-                                command.Connection = scon2;
-                                command.CommandText = str;
-                                int obj = command.ExecuteNonQuery();
-
-                                scon2.Close();
-                            }
-
-
-
-                        }
+                        商户.提款余额 += Convert.ToDouble(充值金额);
+                        sqlSugarClient.Updateable(商户).UpdateColumns(it => new { it.提款余额 }).ExecuteCommand();
                     }
                 }
+                else
+                {
+                    ClassLibrary1.ClassMessage.HinXi(Page, "管理员密码错误");
+                    Button_操作充值.Enabled = true;
+                    return;
+                }
             }
-
-
-            string 手续费余额 = TextBox_充值手续费金额.Text;
-
-            MySqlConnection conn2 = new MySqlConnection(ClassLibrary1.ClassDataControl.conStr1);
-            conn2.Open();
-            MySqlCommand scmd2 = new MySqlCommand("update table_商户账号 set 手续费余额 = 手续费余额+'" + 手续费余额 + "'  where 商户ID = '" + 从URL获取值() + "' ", conn2);
-            scmd2.ExecuteNonQuery();
-            scmd2.Dispose();
-            conn2.Close();
-
-
             Response.Redirect("商户列表.aspx");
         }
     }

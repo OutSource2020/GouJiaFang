@@ -114,13 +114,13 @@ namespace web1.WebsiteBackstage.L1.ManagementMerchant
         protected global::System.Web.UI.WebControls.Label Label_所属代理L2;
 
         /// <summary>
-        /// Button_充值商户手续费 control.
+        /// Button_充值余额 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button Button_充值商户手续费;
+        protected global::System.Web.UI.WebControls.Button Button_充值余额;
 
         /// <summary>
         /// Button_商户余额扣除 control.

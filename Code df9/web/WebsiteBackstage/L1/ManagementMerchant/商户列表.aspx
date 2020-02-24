@@ -97,7 +97,7 @@
                     <asp:BoundField DataField="时间最后登入" HeaderText="最后登入时间" />
                     <asp:BoundField DataField="时间注册" HeaderText="时间注册" />
                     <asp:HyperLinkField Text="操作" DataNavigateUrlFields="商户ID" DataNavigateUrlFormatString="商户列表设置.aspx?Bianhao={0}" />
-                    <asp:HyperLinkField Text="充值手续费" DataNavigateUrlFields="商户ID" DataNavigateUrlFormatString="商户列表充值手续费.aspx?Bianhao={0}" />
+                    <asp:HyperLinkField Text="充值余额" DataNavigateUrlFields="商户ID" DataNavigateUrlFormatString="商户列表充值手续费.aspx?Bianhao={0}" />
                 </Columns>
                 <EmptyDataTemplate>No Record Available 沒有可用記錄</EmptyDataTemplate>
 
