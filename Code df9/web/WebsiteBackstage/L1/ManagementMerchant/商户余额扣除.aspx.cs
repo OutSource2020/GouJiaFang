@@ -112,9 +112,9 @@ namespace web1.WebsiteBackstage.L1.ManagementMerchant
                 TwoFactorAuthenticator tfa = new TwoFactorAuthenticator();
                 var result = tfa.ValidateTwoFactorPIN(商户.keyga, TextBox_Google验证码.Text);
 
-                #if DEBUG
-                result = true;
-                #endif
+#if DEBUG
+//  result = true;
+#endif
                 if (result)
                 {
                     string 扣除金额 = TextBox_扣除金额.Text;
@@ -128,6 +128,12 @@ namespace web1.WebsiteBackstage.L1.ManagementMerchant
                         商户.提款余额 -= Convert.ToDouble(扣除金额);
                         sqlSugarClient.Updateable(商户).UpdateColumns(it => new { it.提款余额 }).ExecuteCommand();
                     }
+                }
+                else
+                {
+                    ClassLibrary1.ClassMessage.HinXi(Page, "Google验证码错误");
+                    Button_操作扣除.Enabled = true;
+                    return;
                 }
             }
             Response.Redirect("商户列表.aspx");
