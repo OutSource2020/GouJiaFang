@@ -10,6 +10,9 @@ using MySql.Data.MySqlClient;
 using System.Collections;
 using System.IO;
 using System.Text;
+using NPOI.SS.UserModel;
+using NPOI.HSSF.UserModel;
+using System.Diagnostics;
 
 namespace web1.WebsiteBackstage.L1.ManagementOrder
 {
@@ -204,13 +207,13 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
             }
         }
 
-        private bool 判断是否是x分钟内相同卡号(string 分钟数, string 传来卡号 ,string 传来金额)
+        private bool 判断是否是x分钟内相同卡号(string 分钟数, string 传来卡号, string 传来金额)
         {
             //连接数据库
             ClassLibrary1.ClassDataControl.OpenConnection1();
             string 卡号 = ClassLibrary1.ClassSecurityZF.FilteSQLStr(传来卡号);
             //创建SQL语句
-            string selStr = "select 交易方卡号 from table_商户明细提款 where 交易方卡号='" + 卡号 + "' and 交易金额='"+ 传来金额 + "' and 时间创建 >= NOW() - INTERVAL " + 分钟数 + " MINUTE";
+            string selStr = "select 交易方卡号 from table_商户明细提款 where 交易方卡号='" + 卡号 + "' and 交易金额='" + 传来金额 + "' and 时间创建 >= NOW() - INTERVAL " + 分钟数 + " MINUTE";
             //创建数据适配器
             MySqlDataAdapter da = new MySqlDataAdapter(selStr, ClassLibrary1.ClassDataControl.con1);
             //创建满足条件的数据集
@@ -247,10 +250,10 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
 
                     string 获得金额 = GridView1.Rows[i].Cells[5].Text;
                     string 获得卡号 = GridView1.Rows[i].Cells[6].Text;
-                    
-                    if (判断是否是x分钟内相同卡号("30", 获得卡号 , 获得金额) == true)
+
+                    if (判断是否是x分钟内相同卡号("30", 获得卡号, 获得金额) == true)
                     {
-                        string 本次内容 = 返回 + "|| 重复卡号: <" + 获得卡号 + "> 重复金额:<"+ 获得金额 + "> || ";
+                        string 本次内容 = 返回 + "|| 重复卡号: <" + 获得卡号 + "> 重复金额:<" + 获得金额 + "> || ";
 
 
                         返回 = 本次内容;
@@ -449,14 +452,14 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
             {
                 条件4 = "  创建方式='API' ";
             }
-           if (RadioButton_创建方式文档导入.Checked)
-           {
+            if (RadioButton_创建方式文档导入.Checked)
+            {
                 条件4 = "  创建方式='文档导入' ";
             }
             if (RadioButton_创建方式文本导入.Checked)
             {
                 条件4 = "  创建方式='文本导入' ";
-             }
+            }
 
 
 
@@ -523,14 +526,14 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                     {
                         下拉表内容 = " 交易金额>='" + TextBox_筛选端金额.Text + "'";
                     }
-                    
+
 
                     条件5 = 下拉表内容;
                     中间加和5 = " and ";
                 }
                 else
                 {
-                    
+
                 }
 
             }
@@ -1322,7 +1325,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                                                                                                 cmd.Parameters.AddWithValue("@备注管理写", TextBox_备注.Text);
                                                                                                 cmd.Parameters.AddWithValue("@状态", DropDownList_下拉框1.SelectedItem.Value);
                                                                                                 cmd.Parameters.AddWithValue("@时间完成", 时间完成);
-                                                                                                cmd.Parameters.AddWithValue("@操作员", ClassLibrary1.ClassAccount.检查管理L1端cookie2() );
+                                                                                                cmd.Parameters.AddWithValue("@操作员", ClassLibrary1.ClassAccount.检查管理L1端cookie2());
                                                                                                 cmd.Parameters.AddWithValue("@订单号", 从URL传来值);
 
                                                                                                 con.Open();
@@ -1362,7 +1365,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                                 }
 
 
-                                
+
 
 
 
@@ -1665,7 +1668,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
             ViewState["CheckBoxArray"] = CheckBoxArray;
         }
 
-        protected void btnExportExcel_Click(object sender, EventArgs e)
+        private void OriginSelect()
         {
             //========== 查询数据 开始 ==========
             string 查询到的数据 = "";
@@ -1721,7 +1724,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
             Response.Buffer = true;
 
             Response.AddHeader("content-disposition",
-             "attachment;filename="+ shixi() + ".xls");
+             "attachment;filename=" + shixi() + ".xls");
 
             //Response.ContentEncoding = System.Text.Encoding.GetEncoding("GB2312");
             Response.ContentEncoding = System.Text.Encoding.UTF8;
@@ -1791,7 +1794,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                             row.Attributes.Add("class", "textmode");
                             if (rowIdx % 2 != 0)
                             {
-                                
+
                             }
                             rowIdx++;
                         }
@@ -1801,13 +1804,13 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
             GridView1.RenderControl(hw);
             string style = @"<style> .textmode { mso-number-format:\@; } </style>";
             Response.Write(style);
-            
-            Response.Output.Write(sw.ToString()+ 查询到的数据);
+
+            Response.Output.Write(sw.ToString() + 查询到的数据);
             Response.End();
-            
+
         }
 
-        protected void btnExportAll_Click(object sender, EventArgs e)
+        private void OriginAll()
         {
             double 有几个 = 0;
             double 有多少钱 = 0;
@@ -2029,56 +2032,143 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
             }
         }
 
-    protected void RadioButton_创建方式文本导入_CheckedChanged(object sender, EventArgs e)
-    {
-      BindGrid("where " + 查看勾选了哪些() + " ");
-    }
+        protected void RadioButton_创建方式文本导入_CheckedChanged(object sender, EventArgs e)
+        {
+            BindGrid("where " + 查看勾选了哪些() + " ");
+        }
 
-    protected void RadioButton_创建方式文档导入_CheckedChanged(object sender, EventArgs e)
-    {
-      BindGrid("where " + 查看勾选了哪些() + " ");
-    }
+        protected void RadioButton_创建方式文档导入_CheckedChanged(object sender, EventArgs e)
+        {
+            BindGrid("where " + 查看勾选了哪些() + " ");
+        }
 
-    protected void RadioButton_创建方式文本输入_CheckedChanged(object sender, EventArgs e)
-    {
-      BindGrid("where " + 查看勾选了哪些() + " ");
+        protected void RadioButton_创建方式文本输入_CheckedChanged(object sender, EventArgs e)
+        {
+            BindGrid("where " + 查看勾选了哪些() + " ");
+        }
+
+        private void ExportGird(bool all, string name, string[] headers, Action<DataRow, GridViewRow, int> action)
+        {
+            DataTable dt = new DataTable();
+            foreach(string head in headers)
+            {
+                dt.Columns.Add(head, typeof(string));
+            }
+
+            DataRow dr = dt.NewRow();
+            for (int i = 0; i < headers.Length; ++i)
+            {
+                dr[i] = headers[i];
+            }
+            dt.Rows.Add(dr);
+
+            if (ViewState["CheckBoxArray"] == null)
+                return;
+            ArrayList CheckBoxArray = (ArrayList)ViewState["CheckBoxArray"];
+            int index = 1;
+            for (int i = 0; i < GridView1.Rows.Count; i++)
+            {
+                GridViewRow row = GridView1.Rows[i];
+                if (row.RowType != DataControlRowType.DataRow)
+                    continue;
+                if (!all)
+                    if (CheckBoxArray.IndexOf(i + 1) == -1)
+                        continue;
+                if (row.Cells[12].Text == "成功")
+                    continue;
+                dr = dt.NewRow();
+                action.Invoke(dr, row, index);
+                dt.Rows.Add(dr);
+                index++;
+            }
+
+            IWorkbook wb = new HSSFWorkbook();
+            ISheet sheet = wb.CreateSheet("Sheet1");
+            ICreationHelper cH = wb.GetCreationHelper();
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                IRow row = sheet.CreateRow(i);
+                for (int j = 0; j < headers.Length; j++)
+                {
+                    ICell cell = row.CreateCell(j);
+                    cell.SetCellValue(cH.CreateRichTextString(dt.Rows[i].ItemArray[j].ToString()));
+                }
+                sheet.AutoSizeColumn(i);
+            }
+            string fileName = name + "_" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + ".xls";
+            Response.ClearContent();
+            Response.Clear();
+            Response.ContentType = "application/vnd.ms-excel";
+            Response.AddHeader("Content-Disposition",
+                              "attachment; filename=" + fileName + ";");
+            wb.Write(Response.OutputStream);
+            Response.Flush();
+            Response.End();
+        }
+
+        private void Export_招商银行(bool all)
+        {
+            string[] headers = { "收款账户列", "收款户名列", "转账金额列", "备注列", "收款银行列", "收款银行支行列", "收款省/直辖市列", "收款市县列", "转出账号/卡", "转账模式" };
+            ExportGird(all, "招商银行", headers, (dr, row, index) =>
+            {
+                dr[0] = row.Cells[6].Text;
+                dr[1] = row.Cells[7].Text;
+                dr[2] = row.Cells[5].Text;
+                dr[4] = row.Cells[8].Text;
+                dr[9] = "实时";
+            });
+        }
+
+        private void Export_光大银行(bool all)
+        {
+            string[] headers = { "序号", "付款账号类型(0:企业账号,1:个人账号)", "付款账号", "付款户名", "收款人账号", "收款户名", "交易金额",
+                "收款行行号", "收款行名称", "用途" };
+            ExportGird(all, "光大银行", headers, (dr, row, index) =>
+            {
+                dr[0] = index.ToString();
+                dr[1] = "1";
+                dr[4] = row.Cells[6].Text;
+                dr[5] = row.Cells[7].Text;
+                dr[6] = row.Cells[5].Text;
+                dr[8] = row.Cells[8].Text;
+            });
+        }
+
+        private void Export_平安银行(bool all)
+        {
+            string[] headers = { "金额", "收款人账号", "收款人名称", "收款账号开户行名称", "收款方所在省", "收款方所在市县", "转账类型", "汇款用途" };
+            ExportGird(all, "平安银行", headers, (dr, row, index) =>
+            {
+                dr[0] = row.Cells[5].Text;
+                dr[1] = row.Cells[6].Text;
+                dr[2] = row.Cells[7].Text;
+                dr[3] = row.Cells[8].Text;
+                dr[6] = (new[] { "行内转账", "异地跨行" })[("平安银行" == dr[3]) ? 0 : 1];
+            });
+        }
+
+        protected void btnExportExcel_Click(object sender, EventArgs e)
+        {
+            if (RadioButton_默认模板.Checked)
+                OriginSelect();
+            else if (RadioButton_招商银行.Checked)
+                Export_招商银行(false);
+            else if (RadioButton_光大银行.Checked)
+                Export_光大银行(false);
+            else if (RadioButton_平安银行.Checked)
+                Export_平安银行(false);
+        }
+
+        protected void btnExportAll_Click(object sender, EventArgs e)
+        {
+            if (RadioButton_默认模板.Checked)
+                OriginAll();
+            else if (RadioButton_招商银行.Checked)
+                Export_招商银行(true);
+            else if (RadioButton_光大银行.Checked)
+                Export_光大银行(true);
+            else if (RadioButton_平安银行.Checked)
+                Export_平安银行(true);
+        }
     }
-  }
 }
-
-//========== 原 勾选不掉 ==========
-//if (ViewState["CheckBoxArray"] != null)
-//{
-//    ArrayList CheckBoxArray = (ArrayList)ViewState["CheckBoxArray"];
-//    string checkAllIndex = "chkAll-" + GridView1.PageIndex;
-
-//    if (CheckBoxArray.IndexOf(checkAllIndex) != -1)
-//    {
-//        CheckBox chkAll = (CheckBox)GridView1.HeaderRow.Cells[0].FindControl("chkAll");
-//        chkAll.Checked = true;
-//    }
-//    for (int i = 0; i < GridView1.Rows.Count; i++)
-//    {
-
-//        if (GridView1.Rows[i].RowType == DataControlRowType.DataRow)
-//        {
-//            if (CheckBoxArray.IndexOf(checkAllIndex) != -1)
-//            {
-//                CheckBox chk = (CheckBox)GridView1.Rows[i].Cells[0].FindControl("CheckBox1");
-//                chk.Checked = true;
-//                GridView1.Rows[i].Attributes.Add("style", "background-color:aqua");
-//            }
-//            else
-//            {
-//                int CheckBoxIndex = GridView1.PageSize * (GridView1.PageIndex) + (i + 1);
-//                if (CheckBoxArray.IndexOf(CheckBoxIndex) != -1)
-//                {
-//                    CheckBox chk = (CheckBox)GridView1.Rows[i].Cells[0].FindControl("CheckBox1");
-//                    chk.Checked = true;
-//                    GridView1.Rows[i].Attributes.Add("style", "background-color:aqua");
-//                }
-//            }
-//        }
-//    }
-//}
-//========== 原 勾选不掉 ==========
