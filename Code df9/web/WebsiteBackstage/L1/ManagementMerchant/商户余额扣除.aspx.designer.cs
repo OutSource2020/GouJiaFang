@@ -69,13 +69,13 @@ namespace web1.WebsiteBackstage.L1.ManagementMerchant
         protected global::System.Web.UI.WebControls.TextBox TextBox_扣除金额;
 
         /// <summary>
-        /// TextBox_Google验证码 control.
+        /// TextBox_管理员密码 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextBox_Google验证码;
+        protected global::System.Web.UI.WebControls.TextBox TextBox_管理员密码;
 
         /// <summary>
         /// Button_返回 control.

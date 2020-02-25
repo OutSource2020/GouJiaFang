@@ -83,7 +83,7 @@
             <tr>
                 <td style="width: 30%">&nbsp;</td>
                 <td>
-                    <asp:Button ID="Button_充值商户手续费" runat="server" class="btn btn-info btn-fw" OnClick="Button_充值商户手续费_Click" Text="充值商户手续费" />
+                    <asp:Button ID="Button_充值余额" runat="server" class="btn btn-info btn-fw" OnClick="Button_充值余额_Click" Text="充值余额" />
                     <asp:Button ID="Button_商户余额扣除" runat="server" class="btn btn-info btn-fw" OnClick="Button_商户余额扣除_Click" Text="商户余额扣除" />
                 </td>
             </tr>

@@ -171,7 +171,7 @@ namespace web1.WebsiteBackstage.L1.ManagementMerchant
             Response.Redirect("商户列表设置安全.aspx?Bianhao=" + 编号 + "");
         }
 
-        protected void Button_充值商户手续费_Click(object sender, EventArgs e)
+        protected void Button_充值余额_Click(object sender, EventArgs e)
         {
             string 编号 = 从URL获取值();
             Response.Redirect("商户列表充值手续费.aspx?Bianhao=" + 编号 + "");

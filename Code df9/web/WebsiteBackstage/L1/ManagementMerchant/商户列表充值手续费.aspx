@@ -20,21 +20,34 @@
             </td>
         </tr>
         <tr>
-            <td style="width: 30%">金额</td>
+            <td style="width: 30%">提款余额</td>
             <td>
-                <asp:TextBox ID="TextBox_充值手续费金额" runat="server" onKeyPress="if((event.keyCode<48 || event.keyCode>57) && event.keyCode!=46 || /\.\d\d$/.test(value))event.returnValue=false"  Width="160px" MaxLength="30" AutoCompleteType="Disabled"></asp:TextBox>
+                <asp:Label ID="Label_目标商户提款余额" runat="server" Text="目标商户提款余额"></asp:Label>
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 30%">手续费余额</td>
+            <td>
+                <asp:Label ID="Label_目标商户手续费余额" runat="server" Text="目标商户手续费余额"></asp:Label>
             </td>
         </tr>
         <tr>
             <td style="width: 30%">类型</td>
             <td>
-                <asp:Label ID="Label_目标类型" runat="server" Text="目标类型"></asp:Label>
+                <asp:RadioButton ID="RadioButton_目标手续费" runat="server" Text="目标手续费" Checked="True" GroupName="类型"/>
+                <asp:RadioButton ID="RadioButton_目标余额" runat="server" Text="目标余额" GroupName="类型"/>
             </td>
         </tr>
         <tr>
-            <td style="width: 30%">备注</td>
+            <td style="width: 30%">金额</td>
             <td>
-                <asp:TextBox ID="TextBox_充值手续费备注" runat="server" Width="160px" MaxLength="30" ></asp:TextBox>
+                <asp:TextBox ID="TextBox_充值金额" runat="server" onKeyPress="if((event.keyCode<48 || event.keyCode>57) && event.keyCode!=46 || /\.\d\d$/.test(value))event.returnValue=false"  Width="160px" MaxLength="30" AutoCompleteType="Disabled"></asp:TextBox>
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 30%">输入管理员密码</td>
+            <td>
+                <asp:TextBox ID="TextBox_管理员密码" runat="server" Width="160px" MaxLength="30" AutoCompleteType="Disabled"></asp:TextBox>
             </td>
         </tr>
         <tr>

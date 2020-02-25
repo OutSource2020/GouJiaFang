@@ -41,9 +41,9 @@
             </td>
         </tr>
         <tr>
-            <td style="width: 30%">输入Google验证码</td>
+            <td style="width: 30%">输入管理员密码</td>
             <td>
-                <asp:TextBox ID="TextBox_Google验证码" runat="server" Width="160px" MaxLength="30" AutoCompleteType="Disabled"></asp:TextBox>
+                <asp:TextBox ID="TextBox_管理员密码" runat="server" Width="160px" MaxLength="30" AutoCompleteType="Disabled"></asp:TextBox>
             </td>
         </tr>
         <tr>
