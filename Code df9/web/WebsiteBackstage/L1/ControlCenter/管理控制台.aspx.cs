@@ -347,7 +347,7 @@ namespace web1.WebsiteBackstage.L1.ControlCenter
         }
 
        
-      MySqlCommand cmd5 = new MySqlCommand("select sum(交易金额)  from  table_商户明细提款  where 状态='成功'", connC);
+      MySqlCommand cmd5 = new MySqlCommand("select sum(出款银行卡余额)  from  table_后台出款银行卡管理  where  状态='启用'", connC);
       object obj5 = cmd5.ExecuteScalar();
       if (obj5 != null&& obj5.ToString()!="")
       {
@@ -370,9 +370,8 @@ namespace web1.WebsiteBackstage.L1.ControlCenter
 
 
 
-        Label_出款总额.Text =(Convert.ToInt32( Label_出款总额.Text)- Convert.ToInt32(Label_余额总额.Text)).ToString();
-        
-
+        Label_差额.Text = (Convert.ToDouble( Label_出款总额.Text)- Convert.ToDouble(Label_余额总额.Text)).ToString();
+        Label_差额.Text =" "+ Label_出款总额.Text+" - "+ Label_余额总额.Text+" = " + Label_差额.Text+ "  （注意补齐待处理金额）";
         connC.Close();
       }
     }

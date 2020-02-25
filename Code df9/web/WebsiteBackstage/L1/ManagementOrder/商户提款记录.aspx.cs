@@ -447,7 +447,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
             }
             if (RadioButton_创建方式API.Checked)
             {
-                条件4 = "  创建方式='API' ";
+                条件4 = "  创建方式='接口' ";
             }
            if (RadioButton_创建方式文档导入.Checked)
            {

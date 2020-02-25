@@ -137,19 +137,19 @@
             </td>
         </tr>
         <tr>
-            <td style="width: 30%">出款银行卡总金额(提款成功订单的总金额 )</td>
+            <td style="width: 30%">出款银行卡总金额(开启)</td>
             <td>
                 <asp:Label ID="Label_出款总额" runat="server" Text="0"></asp:Label>
             </td>
         </tr>
         <tr>
-            <td style="width: 30%">商户卡余额总额(所有商户的提款余额总额)</td>
+            <td style="width: 30%">商户卡余额总额</td>
             <td>
                 <asp:Label ID="Label_余额总额" runat="server" Text="0"></asp:Label>
             </td>
         </tr>
           <tr>
-            <td style="width: 30%">待处理金额(提款待处理订单的总金额)</td>
+            <td style="width: 30%">待处理金额</td>
             <td>
                 <asp:Label ID="Label_待处理金额" runat="server" Text="0"></asp:Label>
             </td>
@@ -174,8 +174,8 @@
 </div>
 <%--=========要刷新的部分 结束=========--%>
 
-
-<p>Version Number DT2019-07-22 V1.0.0.136</p>
+<p></p>
+<p>系统版本: DT2020-02-25 V2.0.0.136</p>
 
 
 </asp:Content>
