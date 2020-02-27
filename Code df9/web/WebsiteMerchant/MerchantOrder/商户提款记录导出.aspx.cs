@@ -203,7 +203,7 @@ namespace web1.WebsiteMerchant.商户订单
                 //TextBox_开始时间.Text = 时间1;
                 //TextBox_结束时间.Text = 时间2;
 
-                TextBox_结束时间.Text = TextBox_开始时间.Text;
+                TextBox_结束时间.Text = DateTime.Now.ToString("yyyy-MM-dd"); 
 
                 条件1 = "  (" + 时间字段 + " between '" + TextBox_开始时间.Text + "'  and '" + TextBox_结束时间.Text + "" + ClassLibrary1.ClassTimeZD.时分秒更多 + "')";
             }
