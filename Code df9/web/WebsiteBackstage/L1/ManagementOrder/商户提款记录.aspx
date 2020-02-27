@@ -206,6 +206,7 @@
                         &nbsp&nbsp&nbsp&nbsp
                         <a href="javascript:void(0)" onclick=" MakeColor()">同一批次着色处理</a>(请排好批次再使用此功能)
                         <asp:Button ID="Button2" runat="server" Text="批次排序" class="btn btn-info btn-fw" OnClick="Button2_Click" />
+                        <asp:Button ID="Button_导出最新后台处理批次ID组" runat="server" Text="导出最新后台处理批次ID组" class="btn btn-info btn-fw" OnClick="Button_导出最新后台处理批次ID组_Click" />
                         <asp:Button ID="Button3" runat="server" Text="完成时间排序)" class="btn btn-info btn-fw" OnClick="Button3_Click"  />
                         
                   
