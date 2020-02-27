@@ -13,6 +13,8 @@ using System.Text;
 using NPOI.SS.UserModel;
 using NPOI.HSSF.UserModel;
 using System.Diagnostics;
+using SqlSugar;
+using Sugar.Enties;
 
 namespace web1.WebsiteBackstage.L1.ManagementOrder
 {
@@ -728,37 +730,37 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
             }
         }
 
-    private void BindGridForBatchOperator()
-    {
-      string strQuery = "select 订单号,商户ID,出款银行卡名称,出款银行卡卡号,交易方姓名,交易方卡号,交易方银行,交易金额,时间创建,时间完成,创建方式,状态,操作员,后台处理批次ID组 FROM table_商户明细提款 "  + " order by 后台处理批次ID组 desc  LIMIT " + 分页() + " ";
-      DataTable dt = new DataTable();
-      String strConnString = ClassLibrary1.ClassDataControl.conStr1;
-      MySqlConnection con = new MySqlConnection(strConnString);
-      MySqlDataAdapter sda = new MySqlDataAdapter();
-      MySqlCommand cmd = new MySqlCommand(strQuery);
-      cmd.CommandType = CommandType.Text;
-      cmd.Connection = con;
-      try
-      {
-        con.Open();
-        sda.SelectCommand = cmd;
-        sda.Fill(dt);
-        GridView1.DataSource = dt;
-        GridView1.DataBind();
-      }
-      catch (Exception ex)
-      {
-        throw ex;
-      }
-      finally
-      {
-        con.Close();
-        sda.Dispose();
-        con.Dispose();
-      }
-    }
+        private void BindGridForBatchOperator()
+        {
+            string strQuery = "select 订单号,商户ID,出款银行卡名称,出款银行卡卡号,交易方姓名,交易方卡号,交易方银行,交易金额,时间创建,时间完成,创建方式,状态,操作员,后台处理批次ID组 FROM table_商户明细提款 " + " order by 后台处理批次ID组 desc  LIMIT " + 分页() + " ";
+            DataTable dt = new DataTable();
+            String strConnString = ClassLibrary1.ClassDataControl.conStr1;
+            MySqlConnection con = new MySqlConnection(strConnString);
+            MySqlDataAdapter sda = new MySqlDataAdapter();
+            MySqlCommand cmd = new MySqlCommand(strQuery);
+            cmd.CommandType = CommandType.Text;
+            cmd.Connection = con;
+            try
+            {
+                con.Open();
+                sda.SelectCommand = cmd;
+                sda.Fill(dt);
+                GridView1.DataSource = dt;
+                GridView1.DataBind();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                con.Close();
+                sda.Dispose();
+                con.Dispose();
+            }
+        }
 
-      private void BindGrid(string 时间导入绑定)
+        private void BindGrid(string 时间导入绑定)
         {
             string strQuery = "select 订单号,商户ID,出款银行卡名称,出款银行卡卡号,交易方姓名,交易方卡号,交易方银行,交易金额,时间创建,时间完成,创建方式,状态,操作员,后台处理批次ID组 FROM table_商户明细提款 " + 时间导入绑定 + " order by 时间创建 desc  LIMIT " + 分页() + " ";
             DataTable dt = new DataTable();
@@ -1009,7 +1011,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
 
 
 
-                long OperatorId = DateTime.Now.Ticks;      
+                long OperatorId = DateTime.Now.Ticks;
 
                 int count = 0;
                 SetData();
@@ -1421,7 +1423,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                 hfCount.Value = "0";
                 GridView1.AllowPaging = true;
                 //BindGrid("");
-                 BindGridForBatchOperator();
+                BindGridForBatchOperator();
                 ShowMessage(count);
 
 
@@ -2081,7 +2083,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
         private void ExportGird(bool all, string name, string[] headers, Action<DataRow, GridViewRow, int> action)
         {
             DataTable dt = new DataTable();
-            foreach(string head in headers)
+            foreach (string head in headers)
             {
                 dt.Columns.Add(head, typeof(string));
             }
@@ -2202,39 +2204,106 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                 Export_平安银行(true);
         }
 
-    protected void Button2_Click(object sender, EventArgs e)
-    {
-      BindGridForBatchOperator();
-    }
+        protected void Button_导出最新后台处理批次ID组_Click(object sender, EventArgs e)
+        {
+            string[] headers = {"订单号", "商户ID", "出款银行卡名称", "出款银行卡卡号", "交易金额", "交易方卡号", "交易方姓名", "交易方银行", "创建时间", 
+                "完成时间", "创建方式", "订单状态", "后台处理批次ID组", "操作员" };
+            DataTable dt = new DataTable();
+            foreach (string head in headers)
+            {
+                dt.Columns.Add(head, typeof(string));
+            }
 
-    protected void Button3_Click(object sender, EventArgs e)
-    {
-      string strQuery = "select 订单号,商户ID,出款银行卡名称,出款银行卡卡号,交易方姓名,交易方卡号,交易方银行,交易金额,时间创建,时间完成,创建方式,状态,操作员,后台处理批次ID组 FROM table_商户明细提款 " + " order by 时间完成 desc  LIMIT " + 分页() + " ";
-      DataTable dt = new DataTable();
-      String strConnString = ClassLibrary1.ClassDataControl.conStr1;
-      MySqlConnection con = new MySqlConnection(strConnString);
-      MySqlDataAdapter sda = new MySqlDataAdapter();
-      MySqlCommand cmd = new MySqlCommand(strQuery);
-      cmd.CommandType = CommandType.Text;
-      cmd.Connection = con;
-      try
-      {
-        con.Open();
-        sda.SelectCommand = cmd;
-        sda.Fill(dt);
-        GridView1.DataSource = dt;
-        GridView1.DataBind();
-      }
-      catch (Exception ex)
-      {
-        throw ex;
-      }
-      finally
-      {
-        con.Close();
-        sda.Dispose();
-        con.Dispose();
-      }
+            DataRow dr = dt.NewRow();
+            for (int i = 0; i < headers.Length; ++i)
+            {
+                dr[i] = headers[i];
+            }
+            dt.Rows.Add(dr);
+
+            using (SqlSugarClient sqlSugarClient = new DBClient().GetClient())
+            {
+                var NewerList = sqlSugarClient.Queryable<table_商户明细提款>().
+                    Where(it => it.后台处理批次ID组 == SqlFunc.Subqueryable<table_商户明细提款>()
+                    .Max(s => s.后台处理批次ID组)).ToList();
+                foreach (table_商户明细提款 record in NewerList)
+                {
+                    dr = dt.NewRow();
+                    dr[0] = record.订单号;
+                    dr[1] = record.商户ID;
+                    dr[2] = record.出款银行卡名称;
+                    dr[3] = record.出款银行卡卡号;
+                    dr[4] = record.交易金额;
+                    dr[5] = record.交易方卡号;
+                    dr[6] = record.交易方姓名;
+                    dr[7] = record.交易方银行;
+                    dr[8] = record.时间创建.Value.ToString("yyyy-MM-dd HH:mm:ss");
+                    dr[9] = record.时间完成.Value.ToString("yyyy-MM-dd HH:mm:ss");
+                    dr[10] = record.创建方式;
+                    dr[11] = record.状态;
+                    dr[12] = record.后台处理批次ID组;
+                    dr[13] = record.操作员;
+                    dt.Rows.Add(dr);
+                }
+            }
+
+            IWorkbook wb = new HSSFWorkbook();
+            ISheet sheet = wb.CreateSheet("Sheet1");
+            ICreationHelper cH = wb.GetCreationHelper();
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                IRow row = sheet.CreateRow(i);
+                for (int j = 0; j < headers.Length; j++)
+                {
+                    ICell cell = row.CreateCell(j);
+                    cell.SetCellValue(cH.CreateRichTextString(dt.Rows[i].ItemArray[j].ToString()));
+                }
+                sheet.AutoSizeColumn(i);
+            }
+            string fileName = "最新后台处理批次_" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + ".xls";
+            Response.ClearContent();
+            Response.Clear();
+            Response.ContentType = "application/vnd.ms-excel";
+            Response.AddHeader("Content-Disposition",
+                              "attachment; filename=" + fileName + ";");
+            wb.Write(Response.OutputStream);
+            Response.Flush();
+            Response.End();
+        }
+
+        protected void Button2_Click(object sender, EventArgs e)
+        {
+            BindGridForBatchOperator();
+        }
+
+        protected void Button3_Click(object sender, EventArgs e)
+        {
+            string strQuery = "select 订单号,商户ID,出款银行卡名称,出款银行卡卡号,交易方姓名,交易方卡号,交易方银行,交易金额,时间创建,时间完成,创建方式,状态,操作员,后台处理批次ID组 FROM table_商户明细提款 " + " order by 时间完成 desc  LIMIT " + 分页() + " ";
+            DataTable dt = new DataTable();
+            String strConnString = ClassLibrary1.ClassDataControl.conStr1;
+            MySqlConnection con = new MySqlConnection(strConnString);
+            MySqlDataAdapter sda = new MySqlDataAdapter();
+            MySqlCommand cmd = new MySqlCommand(strQuery);
+            cmd.CommandType = CommandType.Text;
+            cmd.Connection = con;
+            try
+            {
+                con.Open();
+                sda.SelectCommand = cmd;
+                sda.Fill(dt);
+                GridView1.DataSource = dt;
+                GridView1.DataBind();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                con.Close();
+                sda.Dispose();
+                con.Dispose();
+            }
+        }
     }
-  }
 }
