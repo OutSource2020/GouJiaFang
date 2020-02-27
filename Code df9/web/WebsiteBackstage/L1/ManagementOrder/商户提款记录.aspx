@@ -203,6 +203,12 @@
                     </td>
                     <td>
                         <a href="javascript:void(0)" onclick="document.getElementById('light').style.display='block';document.getElementById('fade').style.display='block'">批量操作</a>
+                        &nbsp&nbsp&nbsp&nbsp
+                        <a href="javascript:void(0)" onclick=" MakeColor()">同一批次着色处理</a>(请排好批次再使用此功能)
+                        <asp:Button ID="Button2" runat="server" Text="批次排序" class="btn btn-info btn-fw" OnClick="Button2_Click" />
+                        <asp:Button ID="Button3" runat="server" Text="完成时间排序)" class="btn btn-info btn-fw" OnClick="Button3_Click"  />
+                        
+                  
                     </td>
                 </tr>
             </table>
@@ -324,7 +330,7 @@
 
                 <hr />
 
-
+                <div id="gridTable">
                 <asp:GridView
                     ID="GridView1"
                     runat="server"
@@ -358,6 +364,7 @@
                         <asp:BoundField DataField="时间完成" HeaderText="完成时间" />
                         <asp:BoundField DataField="创建方式" HeaderText="创建方式" />
                         <asp:BoundField DataField="状态" HeaderText="订单状态" />
+                         <asp:BoundField DataField="后台处理批次ID组" HeaderText="后台处理批次ID组" />
                         <asp:BoundField DataField="操作员" HeaderText="操作员" />
 
                         <asp:HyperLinkField Text="详情" DataNavigateUrlFields="订单号" DataNavigateUrlFormatString="商户提款记录详情.aspx?Bianhao={0}" />
@@ -406,7 +413,7 @@
 
                 </asp:GridView>
 
-
+               </div>
                 <asp:Timer ID="Timer_自动刷新" runat="server" OnTick="TimerTick" />
             </ContentTemplate>
         </asp:UpdatePanel>
@@ -440,5 +447,47 @@
         <asp:GridView ID="GridView_dc" runat="server"></asp:GridView>
     </div>
 
+    <script>
+        // 获取th 的索引("后台处理批次ID组")
+        function GetColumnNum(str) {
+            let eles = Object.values( document.getElementById("gridTable").getElementsByTagName("th"));
+            for (let i = 0; i < eles.length; i++) {
+                if (Object.is(eles[i].innerText, str))
+                    return i;
+            }
+            return -1;
+        }
+        function MakeColor() {
+            let index = GetColumnNum("后台处理批次ID组");
 
+            let flag = "";
+            let color = "#2eff99b3";
+            let eles = Object.values(document.getElementById("gridTable").getElementsByTagName("tr"));
+            for (let i = 0; i < eles.length; i++) {
+                if (i == 0)
+                    continue;
+                if (eles[i].children[index].innerText.trim() != "")
+                    if (!Object.is(flag, eles[i].children[index].innerText)) {
+                        flag = eles[i].children[index].innerText;
+                        if (color != "yellow")
+                            color = "yellow";
+                        else
+                            color = "#2eff99b3";
+                        eles[i].children[13].style.background = color;
+                    }
+                    else {
+                    eles[i].children[13].style.background = color;
+                    }
+
+                 
+               }
+            }
+        
+        window.οnlοad = function () {
+            alert("页面加载完成！");
+            MakeColor()
+        } 
+
+
+    </script>>
 </asp:Content>

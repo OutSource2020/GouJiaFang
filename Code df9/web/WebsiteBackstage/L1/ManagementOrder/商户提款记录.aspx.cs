@@ -728,11 +728,39 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
             }
         }
 
+    private void BindGridForBatchOperator()
+    {
+      string strQuery = "select 订单号,商户ID,出款银行卡名称,出款银行卡卡号,交易方姓名,交易方卡号,交易方银行,交易金额,时间创建,时间完成,创建方式,状态,操作员,后台处理批次ID组 FROM table_商户明细提款 "  + " order by 后台处理批次ID组 desc  LIMIT " + 分页() + " ";
+      DataTable dt = new DataTable();
+      String strConnString = ClassLibrary1.ClassDataControl.conStr1;
+      MySqlConnection con = new MySqlConnection(strConnString);
+      MySqlDataAdapter sda = new MySqlDataAdapter();
+      MySqlCommand cmd = new MySqlCommand(strQuery);
+      cmd.CommandType = CommandType.Text;
+      cmd.Connection = con;
+      try
+      {
+        con.Open();
+        sda.SelectCommand = cmd;
+        sda.Fill(dt);
+        GridView1.DataSource = dt;
+        GridView1.DataBind();
+      }
+      catch (Exception ex)
+      {
+        throw ex;
+      }
+      finally
+      {
+        con.Close();
+        sda.Dispose();
+        con.Dispose();
+      }
+    }
 
-
-        private void BindGrid(string 时间导入绑定)
+      private void BindGrid(string 时间导入绑定)
         {
-            string strQuery = "select 订单号,商户ID,出款银行卡名称,出款银行卡卡号,交易方姓名,交易方卡号,交易方银行,交易金额,时间创建,时间完成,创建方式,状态,操作员 FROM table_商户明细提款 " + 时间导入绑定 + " order by 时间创建 desc  LIMIT " + 分页() + " ";
+            string strQuery = "select 订单号,商户ID,出款银行卡名称,出款银行卡卡号,交易方姓名,交易方卡号,交易方银行,交易金额,时间创建,时间完成,创建方式,状态,操作员,后台处理批次ID组 FROM table_商户明细提款 " + 时间导入绑定 + " order by 时间创建 desc  LIMIT " + 分页() + " ";
             DataTable dt = new DataTable();
             String strConnString = ClassLibrary1.ClassDataControl.conStr1;
             MySqlConnection con = new MySqlConnection(strConnString);
@@ -981,6 +1009,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
 
 
 
+                long OperatorId = DateTime.Now.Ticks;      
 
                 int count = 0;
                 SetData();
@@ -1069,7 +1098,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
 
                                                                                 using (MySqlConnection con = new MySqlConnection(ClassLibrary1.ClassDataControl.conStr1))
                                                                                 {
-                                                                                    using (MySqlCommand cmd = new MySqlCommand("UPDATE table_商户明细提款 SET 备注管理写=@备注管理写 , 状态=@状态 ,时间完成=@时间完成 , 出款银行卡名称=@出款银行卡名称 , 出款银行卡卡号=@出款银行卡卡号 , 操作员=@操作员 WHERE 订单号=@订单号 ", con))
+                                                                                    using (MySqlCommand cmd = new MySqlCommand("UPDATE table_商户明细提款 SET 备注管理写=@备注管理写 , 状态=@状态 ,时间完成=@时间完成 , 出款银行卡名称=@出款银行卡名称 , 出款银行卡卡号=@出款银行卡卡号 , 操作员=@操作员,后台处理批次ID组=@后台处理批次ID组 WHERE 订单号=@订单号 ", con))
                                                                                     {
                                                                                         cmd.Parameters.AddWithValue("@备注管理写", TextBox_备注.Text);
                                                                                         cmd.Parameters.AddWithValue("@状态", DropDownList_下拉框1.SelectedItem.Value);
@@ -1078,6 +1107,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                                                                                         cmd.Parameters.AddWithValue("@出款银行卡卡号", DropDownList_选择银行卡.SelectedItem.Value);
                                                                                         cmd.Parameters.AddWithValue("@操作员", ClassLibrary1.ClassAccount.检查管理L1端cookie2());
                                                                                         cmd.Parameters.AddWithValue("@订单号", 从URL传来值);
+                                                                                        cmd.Parameters.AddWithValue("@后台处理批次ID组", OperatorId);
 
                                                                                         con.Open();
                                                                                         cmd.ExecuteNonQuery();
@@ -1390,7 +1420,8 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                 ViewState["SelectedRecords"] = arr;
                 hfCount.Value = "0";
                 GridView1.AllowPaging = true;
-                BindGrid("");
+                //BindGrid("");
+                 BindGridForBatchOperator();
                 ShowMessage(count);
 
 
@@ -2170,5 +2201,40 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
             else if (RadioButton_平安银行.Checked)
                 Export_平安银行(true);
         }
+
+    protected void Button2_Click(object sender, EventArgs e)
+    {
+      BindGridForBatchOperator();
     }
+
+    protected void Button3_Click(object sender, EventArgs e)
+    {
+      string strQuery = "select 订单号,商户ID,出款银行卡名称,出款银行卡卡号,交易方姓名,交易方卡号,交易方银行,交易金额,时间创建,时间完成,创建方式,状态,操作员,后台处理批次ID组 FROM table_商户明细提款 " + " order by 时间完成 desc  LIMIT " + 分页() + " ";
+      DataTable dt = new DataTable();
+      String strConnString = ClassLibrary1.ClassDataControl.conStr1;
+      MySqlConnection con = new MySqlConnection(strConnString);
+      MySqlDataAdapter sda = new MySqlDataAdapter();
+      MySqlCommand cmd = new MySqlCommand(strQuery);
+      cmd.CommandType = CommandType.Text;
+      cmd.Connection = con;
+      try
+      {
+        con.Open();
+        sda.SelectCommand = cmd;
+        sda.Fill(dt);
+        GridView1.DataSource = dt;
+        GridView1.DataBind();
+      }
+      catch (Exception ex)
+      {
+        throw ex;
+      }
+      finally
+      {
+        con.Close();
+        sda.Dispose();
+        con.Dispose();
+      }
+    }
+  }
 }
