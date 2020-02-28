@@ -199,21 +199,27 @@
                             <asp:CheckBox ID="CheckBox_刷新自动勾选" runat="server" AutoPostBack="True" OnCheckedChanged="CheckBox_刷新自动勾选_CheckedChanged" />
                             <asp:TextBox ID="TextBox_刷新秒数" runat="server" Width="20px">20</asp:TextBox>秒自动刷新
                         </div>
-
                     </td>
                     <td>
                         <a href="javascript:void(0)" onclick="document.getElementById('light').style.display='block';document.getElementById('fade').style.display='block'">批量操作</a>
                         &nbsp&nbsp&nbsp&nbsp
                         <a href="javascript:void(0)" onclick=" MakeColor()">同一批次着色处理</a>(请排好批次再使用此功能)
                         <asp:Button ID="Button2" runat="server" Text="批次排序" class="btn btn-info btn-fw" OnClick="Button2_Click" />
-                        <asp:Button ID="Button_导出最新后台处理批次ID组" runat="server" Text="导出最新后台处理批次ID组" class="btn btn-info btn-fw" OnClick="Button_导出最新后台处理批次ID组_Click" />
                         <asp:Button ID="Button3" runat="server" Text="完成时间排序)" class="btn btn-info btn-fw" OnClick="Button3_Click"  />
-                        
-                  
+                    </td>
+                </tr>
+                <tr>
+                    <td>最新后台处理批次ID导出模板:
+                        <asp:RadioButton ID="RadioButton_批次默认模板" runat="server" GroupName="批次导出模板" Text="默认模板" type="radio" value="默认" Checked="True" />
+                        <asp:RadioButton ID="RadioButton_批次招商银行" runat="server" GroupName="批次导出模板" Text="招商银行模板" type="radio" value="招商银行" />
+                        <asp:RadioButton ID="RadioButton_批次光大银行" runat="server" GroupName="批次导出模板" Text="光大银行模板" type="radio" value="光大银行" />
+                        <asp:RadioButton ID="RadioButton_批次平安银行" runat="server" GroupName="批次导出模板" Text="平安银行模板" type="radio" value="平安银行" />
+                    </td>
+                    <td>
+                        <asp:Button ID="Button_导出最新后台处理批次ID组" runat="server" Text="导出最新后台处理批次ID组" class="btn btn-info btn-fw" OnClick="Button_导出最新后台处理批次ID组_Click" />
                     </td>
                 </tr>
             </table>
-
         </div>
 
     </div>

@@ -2080,7 +2080,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
             BindGrid("where " + 查看勾选了哪些() + " ");
         }
 
-        private void ExportGird(bool all, string name, string[] headers, Action<DataRow, GridViewRow, int> action)
+        private void ExportGird<T>(bool all, string name, string[] headers, Action<bool, DataTable , Action<DataRow, T, int>> data , Action<DataRow, T, int> action)
         {
             DataTable dt = new DataTable();
             foreach (string head in headers)
@@ -2095,25 +2095,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
             }
             dt.Rows.Add(dr);
 
-            if (ViewState["CheckBoxArray"] == null)
-                return;
-            ArrayList CheckBoxArray = (ArrayList)ViewState["CheckBoxArray"];
-            int index = 1;
-            for (int i = 0; i < GridView1.Rows.Count; i++)
-            {
-                GridViewRow row = GridView1.Rows[i];
-                if (row.RowType != DataControlRowType.DataRow)
-                    continue;
-                if (!all)
-                    if (CheckBoxArray.IndexOf(i + 1) == -1)
-                        continue;
-                if (row.Cells[12].Text == "成功")
-                    continue;
-                dr = dt.NewRow();
-                action.Invoke(dr, row, index);
-                dt.Rows.Add(dr);
-                index++;
-            }
+            data.Invoke(all, dt, action);
 
             IWorkbook wb = new HSSFWorkbook();
             ISheet sheet = wb.CreateSheet("Sheet1");
@@ -2139,10 +2121,33 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
             Response.End();
         }
 
+        private void DataFromView(bool all, DataTable dt, Action<DataRow, GridViewRow, int> action)
+        {
+            if (ViewState["CheckBoxArray"] == null)
+                return;
+            ArrayList CheckBoxArray = (ArrayList)ViewState["CheckBoxArray"];
+            int index = 1;
+            for (int i = 0; i < GridView1.Rows.Count; i++)
+            {
+                GridViewRow row = GridView1.Rows[i];
+                if (row.RowType != DataControlRowType.DataRow)
+                    continue;
+                if (!all)
+                    if (CheckBoxArray.IndexOf(i + 1) == -1)
+                        continue;
+                if (row.Cells[12].Text == "成功")
+                    continue;
+                DataRow dr = dt.NewRow();
+                action.Invoke(dr, row, index);
+                dt.Rows.Add(dr);
+                index++;
+            }
+        }
+
         private void Export_招商银行(bool all)
         {
             string[] headers = { "收款账户列", "收款户名列", "转账金额列", "备注列", "收款银行列", "收款银行支行列", "收款省/直辖市列", "收款市县列", "转出账号/卡", "转账模式" };
-            ExportGird(all, "招商银行", headers, (dr, row, index) =>
+            ExportGird<GridViewRow>(all, "招商银行", headers, DataFromView, (dr, row, index) =>
             {
                 dr[0] = row.Cells[6].Text;
                 dr[1] = row.Cells[7].Text;
@@ -2156,7 +2161,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
         {
             string[] headers = { "序号", "付款账号类型(0:企业账号,1:个人账号)", "付款账号", "付款户名", "收款人账号", "收款户名", "交易金额",
                 "收款行行号", "收款行名称", "用途" };
-            ExportGird(all, "光大银行", headers, (dr, row, index) =>
+            ExportGird<GridViewRow>(all, "光大银行", headers, DataFromView, (dr, row, index) =>
             {
                 dr[0] = index.ToString();
                 dr[1] = "1";
@@ -2170,7 +2175,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
         private void Export_平安银行(bool all)
         {
             string[] headers = { "金额", "收款人账号", "收款人名称", "收款账号开户行名称", "收款方所在省", "收款方所在市县", "转账类型", "汇款用途" };
-            ExportGird(all, "平安银行", headers, (dr, row, index) =>
+            ExportGird<GridViewRow>(all, "平安银行", headers, DataFromView, (dr, row, index) =>
             {
                 dr[0] = row.Cells[5].Text;
                 dr[1] = row.Cells[6].Text;
@@ -2204,23 +2209,8 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                 Export_平安银行(true);
         }
 
-        protected void Button_导出最新后台处理批次ID组_Click(object sender, EventArgs e)
+        private void DataFromDatabase(bool all, DataTable dt, Action<DataRow, table_商户明细提款, int> action)
         {
-            string[] headers = {"订单号", "商户ID", "出款银行卡名称", "出款银行卡卡号", "交易金额", "交易方卡号", "交易方姓名", "交易方银行", "创建时间", 
-                "完成时间", "创建方式", "订单状态", "后台处理批次ID组", "操作员" };
-            DataTable dt = new DataTable();
-            foreach (string head in headers)
-            {
-                dt.Columns.Add(head, typeof(string));
-            }
-
-            DataRow dr = dt.NewRow();
-            for (int i = 0; i < headers.Length; ++i)
-            {
-                dr[i] = headers[i];
-            }
-            dt.Rows.Add(dr);
-
             using (SqlSugarClient sqlSugarClient = new DBClient().GetClient())
             {
                 var NewerList = sqlSugarClient.Queryable<table_商户明细提款>().
@@ -2228,47 +2218,92 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                     .Max(s => s.后台处理批次ID组)).ToList();
                 foreach (table_商户明细提款 record in NewerList)
                 {
-                    dr = dt.NewRow();
-                    dr[0] = record.订单号;
-                    dr[1] = record.商户ID;
-                    dr[2] = record.出款银行卡名称;
-                    dr[3] = record.出款银行卡卡号;
-                    dr[4] = record.交易金额;
-                    dr[5] = record.交易方卡号;
-                    dr[6] = record.交易方姓名;
-                    dr[7] = record.交易方银行;
-                    dr[8] = record.时间创建.Value.ToString("yyyy-MM-dd HH:mm:ss");
-                    dr[9] = record.时间完成.Value.ToString("yyyy-MM-dd HH:mm:ss");
-                    dr[10] = record.创建方式;
-                    dr[11] = record.状态;
-                    dr[12] = record.后台处理批次ID组;
-                    dr[13] = record.操作员;
+                    DataRow dr = dt.NewRow();
+                    action(dr, record, NewerList.IndexOf(record) + 1);
                     dt.Rows.Add(dr);
                 }
             }
 
-            IWorkbook wb = new HSSFWorkbook();
-            ISheet sheet = wb.CreateSheet("Sheet1");
-            ICreationHelper cH = wb.GetCreationHelper();
-            for (int i = 0; i < dt.Rows.Count; i++)
+        }
+
+        private void ExportAllData()
+        {
+            string[] headers = {"订单号", "商户ID", "出款银行卡名称", "出款银行卡卡号", "交易金额", "交易方卡号", "交易方姓名", "交易方银行", "创建时间", 
+                "完成时间", "创建方式", "订单状态", "后台处理批次ID组", "操作员" };
+            ExportGird<table_商户明细提款>(true, "最新后台处理批次", headers, DataFromDatabase, (dr, record, index) =>
             {
-                IRow row = sheet.CreateRow(i);
-                for (int j = 0; j < headers.Length; j++)
-                {
-                    ICell cell = row.CreateCell(j);
-                    cell.SetCellValue(cH.CreateRichTextString(dt.Rows[i].ItemArray[j].ToString()));
-                }
-                sheet.AutoSizeColumn(i);
-            }
-            string fileName = "最新后台处理批次_" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + ".xls";
-            Response.ClearContent();
-            Response.Clear();
-            Response.ContentType = "application/vnd.ms-excel";
-            Response.AddHeader("Content-Disposition",
-                              "attachment; filename=" + fileName + ";");
-            wb.Write(Response.OutputStream);
-            Response.Flush();
-            Response.End();
+                dr[0] = record.订单号;
+                dr[1] = record.商户ID;
+                dr[2] = record.出款银行卡名称;
+                dr[3] = record.出款银行卡卡号;
+                dr[4] = record.交易金额;
+                dr[5] = record.交易方卡号;
+                dr[6] = record.交易方姓名;
+                dr[7] = record.交易方银行;
+                dr[8] = record.时间创建.Value.ToString("yyyy-MM-dd HH:mm:ss");
+                dr[9] = record.时间完成.Value.ToString("yyyy-MM-dd HH:mm:ss");
+                dr[10] = record.创建方式;
+                dr[11] = record.状态;
+                dr[12] = record.后台处理批次ID组;
+                dr[13] = record.操作员;
+            });
+        }
+
+        private void ExportGuangDa()
+        {
+            string[] headers = { "序号", "付款账号类型(0:企业账号,1:个人账号)", "付款账号", "付款户名", "收款人账号", "收款户名", "交易金额",
+                "收款行行号", "收款行名称", "用途" };
+            ExportGird<table_商户明细提款>(true, "最新后台处理批次_光大银行", headers, DataFromDatabase, (dr, record, index) =>
+            {
+                dr[0] = index.ToString();
+                dr[1] = "1";
+                dr[2] = record.出款银行卡卡号;
+                dr[3] = record.操作员;
+                dr[4] = record.交易方卡号;
+                dr[5] = record.交易方姓名;
+                dr[6] = record.交易金额;
+                dr[8] = record.交易方银行;
+            });
+        }
+
+        private void ExportPingAn()
+        {
+            string[] headers = { "金额", "收款人账号", "收款人名称", "收款账号开户行名称", "收款方所在省", "收款方所在市县", "转账类型", "汇款用途" };
+            ExportGird<table_商户明细提款>(true, "最新后台处理批次_平安银行", headers, DataFromDatabase, (dr, record, index) =>
+            {
+                dr[0] = record.交易金额;
+                dr[1] = record.交易方卡号;
+                dr[2] = record.交易方姓名;
+                dr[3] = record.交易方银行;
+                dr[6] = (new[] { "行内转账", "异地跨行" })[("平安银行" == dr[3]) ? 0 : 1];
+            });
+        }
+
+        private void ExportZhaoShang()
+        {
+            string[] headers = { "收款账户列", "收款户名列", "转账金额列", "备注列", "收款银行列", "收款银行支行列", "收款省/直辖市列", 
+                "收款市县列", "转出账号/卡", "转账模式" };
+            ExportGird<table_商户明细提款>(true, "最新后台处理批次_招商银行", headers, DataFromDatabase, (dr, record, index) =>
+            {
+                dr[0] = record.交易方卡号;
+                dr[1] = record.交易方姓名;
+                dr[2] = record.交易金额;
+                dr[4] = record.交易方银行;
+                dr[8] = record.出款银行卡卡号;
+                dr[9] = "实时";
+            });
+        }
+
+        protected void Button_导出最新后台处理批次ID组_Click(object sender, EventArgs e)
+        {
+            if (RadioButton_批次默认模板.Checked)
+                ExportAllData();
+            else if (RadioButton_批次光大银行.Checked)
+                ExportGuangDa();
+            else if (RadioButton_批次平安银行.Checked)
+                ExportPingAn();
+            else if (RadioButton_批次招商银行.Checked)
+                ExportZhaoShang();
         }
 
         protected void Button2_Click(object sender, EventArgs e)

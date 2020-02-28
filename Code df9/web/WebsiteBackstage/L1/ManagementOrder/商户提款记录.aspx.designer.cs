@@ -375,15 +375,6 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
         protected global::System.Web.UI.WebControls.Button Button2;
 
         /// <summary>
-        /// Button_导出最新后台处理批次ID组 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button Button_导出最新后台处理批次ID组;
-
-        /// <summary>
         /// Button3 control.
         /// </summary>
         /// <remarks>
@@ -391,6 +382,51 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button Button3;
+
+        /// <summary>
+        /// RadioButton_批次默认模板 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RadioButton RadioButton_批次默认模板;
+
+        /// <summary>
+        /// RadioButton_批次招商银行 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RadioButton RadioButton_批次招商银行;
+
+        /// <summary>
+        /// RadioButton_批次光大银行 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RadioButton RadioButton_批次光大银行;
+
+        /// <summary>
+        /// RadioButton_批次平安银行 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RadioButton RadioButton_批次平安银行;
+
+        /// <summary>
+        /// Button_导出最新后台处理批次ID组 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button Button_导出最新后台处理批次ID组;
 
         /// <summary>
         /// hfCount control.
