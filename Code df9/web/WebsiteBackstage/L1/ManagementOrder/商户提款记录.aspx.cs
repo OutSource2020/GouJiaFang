@@ -920,6 +920,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
             DataSet ds = new DataSet();
             myadapter.Fill(ds, "table_后台出款银行卡管理");
             myconn.Close();
+            DropDownList_选择银行卡.Items.Clear();
             DropDownList_选择银行卡.DataSource = ds.Tables[0].DefaultView;
             DropDownList_选择银行卡.DataTextField = ds.Tables["table_后台出款银行卡管理"].Columns["出款银行卡名称"].ToString();
             DropDownList_选择银行卡.DataValueField = ds.Tables["table_后台出款银行卡管理"].Columns["出款银行卡卡号"].ToString();
