@@ -126,7 +126,7 @@ namespace web1.WebsiteBackstage.L1.ManagementMerchant
                         table_商户明细手续费 fee = new table_商户明细手续费();
                         fee.订单号 = "CZSXF" + DateTime.Now.ToString("yyyyMMddHHmmss") + rd2.Next(1000, 9999);
                         fee.商户ID = Int32.Parse(商户.商户ID);
-                        fee.类型 = "充值手续费";
+                        fee.类型 = "扣除手续费";
                         fee.交易金额 = Double.Parse(扣除金额);
                         fee.手续费收入 = Double.Parse(扣除金额);
                         fee.交易前手续费余额 = 商户.手续费余额;
@@ -144,7 +144,7 @@ namespace web1.WebsiteBackstage.L1.ManagementMerchant
                         table_商户明细余额 balance = new table_商户明细余额();
                         balance.订单号 = "MBON" + DateTime.Now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999));
                         balance.商户ID = Convert.ToInt32(商户.商户ID);
-                        balance.类型 = "充值余额";
+                        balance.类型 = "扣除余额";
                         balance.手续费 = "0";
                         balance.交易金额 = 扣除金额;
                         balance.交易前账户余额 = Convert.ToString(商户.提款余额);
