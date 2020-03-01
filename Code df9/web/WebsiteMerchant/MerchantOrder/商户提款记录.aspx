@@ -95,6 +95,11 @@
                     <asp:Label ID="Label_账户手续费余额" runat="server" Text="Labe_账户手续费余额"></asp:Label>
                 </td>
                 <td>&nbsp;</td>
+                <td> 
+                 <asp:Button ID="Button3" runat="server" Text="最新批次正序排列" class="btn btn-info btn-fw" OnClick="Button3_Click"  />
+                 <asp:Button ID="Button4" runat="server" Text="最新批次倒序排列" class="btn btn-info btn-fw" OnClick="Button4_Click" />
+                    <a href="javascript:void(0)" class="btn btn-info btn-fw" onclick="MakeColor()">相同批次着色</a>
+                </td>
             </tr>
         </table>
 
@@ -171,9 +176,10 @@
                         </td>
                     </tr>
                 </table>
-
+         <div id="gridTable">   
     <asp:GridView ID="GridView1" runat="server"  class="auto-style1"  AutoGenerateColumns="False" OnPageIndexChanging="GridView1_PageIndexChanging" ShowHeaderWhenEmpty="true" PageSize="50">
             <%--OnPageIndexChanging = "OnPaging" AutoGenerateColumns="False" ShowHeaderWhenEmpty="true"--%>
+
 <Columns>
             <asp:BoundField DataField="订单号" HeaderText="订单号" />
             <%--<asp:BoundField DataField="商户ID" HeaderText="商户ID" />--%>
@@ -187,8 +193,9 @@
              <asp:BoundField DataField="状态" HeaderText="状态" />
            <asp:BoundField DataField="时间创建" HeaderText="创建时间" />
             <asp:BoundField DataField="时间完成" HeaderText="时间完成" />
-            
+            <asp:BoundField DataField="商户提交批次ID组" HeaderText="商户提交批次ID组" />
     </Columns>
+     
                 <EmptyDataTemplate>No Record Available 沒有可用記錄</EmptyDataTemplate>
 
 
@@ -221,7 +228,7 @@
 
     </asp:GridView>
 
-    
+       </div>
 <%--//得到分页页面的总数--%>
             <asp:Timer ID="Timer_自动刷新" runat="server" OnTick="TimerTick" />
         </ContentTemplate>
@@ -245,5 +252,49 @@
     <asp:Label ID="Label_现在是第几页" runat="server" Text="."></asp:Label>
 </div>
 
+        <script>
+        // 获取th 的索引("后台处理批次ID组")
+        function GetColumnNum(str) {
+            let eles = Object.values( document.getElementById("gridTable").getElementsByTagName("th"));
+            for (let i = 0; i < eles.length; i++) {
+                if (Object.is(eles[i].innerText, str)) {
+                    console.log(i);
+                    return i;
+                }
+                   
+            }
+            
+            return -1;
+        }
+        function MakeColor() {
+            let index = GetColumnNum("商户提交批次ID组");
 
+            let flag = "";
+            let color = "#2eff99b3";
+            let eles = Object.values(document.getElementById("gridTable").getElementsByTagName("tr"));
+            for (let i = 0; i < eles.length; i++) {
+                if (i == 0)
+                    continue;
+                if (eles[i].children[index].innerText.trim() != "")
+                    if (!Object.is(flag, eles[i].children[index].innerText)) {
+                        flag = eles[i].children[index].innerText;
+                        if (color != "yellow")
+                            color = "yellow";
+                        else
+                            color = "#2eff99b3";
+                        
+                        eles[i].children[index].style.background = color;
+                    }
+                    else {
+                    eles[i].children[index].style.background = color;
+                    }
+
+                 
+               }
+            }
+        
+
+
+
+    </script>
 </asp:Content>
