@@ -322,6 +322,7 @@ namespace web1.WebsiteMerchant.商户订单
 
         private void 开始执行()
         {
+      int Sindex = 0;
             Button_确认订单发起.Enabled = false;//防止重复操作
             long OperatorId = DateTime.Now.Ticks; 
             for (int i = (Gridview1.Rows.Count - 1); i >= 0 ; i--)
@@ -465,8 +466,8 @@ namespace web1.WebsiteMerchant.商户订单
                                                         string 来源IP = ClassLibrary1.ClassAccount.来源IP();
 
                                                       //string 有哪些 = "订单号,商户ID,卡号,充值金额,充值类型,备注,时间创建,状态 ";
-                                                       string 有哪些 = "订单号,商户ID,交易方卡号,交易方姓名,交易方银行,交易金额,手续费,创建方式,备注商户写,状态,类型,时间创建,订单源IP,商户提交批次ID组";
-                                                       string 收哪些 = "'" + 生成编号 + "','" + Cookie_UserName + "','" + 交易方卡号 + "','" + 交易方姓名 + "','" + 交易方银行 + "','" + 交易金额 + "','" + 手续费多少 + "','" + 创建方式 + "','" + 备注 + "','" + 状态 + "','" + 类型 + "','" + 时间创建 + "','" + 来源IP + "' " + ", " + OperatorId + "";
+                                                       string 有哪些 = "订单号,商户ID,交易方卡号,交易方姓名,交易方银行,交易金额,手续费,创建方式,备注商户写,状态,类型,时间创建,订单源IP,商户提交批次ID组,商户提交序号";
+                                                       string 收哪些 = "'" + 生成编号 + "','" + Cookie_UserName + "','" + 交易方卡号 + "','" + 交易方姓名 + "','" + 交易方银行 + "','" + 交易金额 + "','" + 手续费多少 + "','" + 创建方式 + "','" + 备注 + "','" + 状态 + "','" + 类型 + "','" + 时间创建 + "','" + 来源IP + "' " + ", " + OperatorId + ","+Sindex++;
 
                                                         string str3 = "insert into table_商户明细提款(" + 有哪些 + ") values(" + 收哪些 + ")";
                                                         scon3.Open();

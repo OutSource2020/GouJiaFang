@@ -480,10 +480,10 @@
                             color = "yellow";
                         else
                             color = "#2eff99b3";
-                        eles[i].children[13].style.background = color;
+                        eles[i].children[index].style.background = color;
                     }
                     else {
-                    eles[i].children[13].style.background = color;
+                        eles[i].children[index].style.background = color;
                     }
 
                  
@@ -496,5 +496,5 @@
         } 
 
 
-    </script>>
+    </script>
 </asp:Content>

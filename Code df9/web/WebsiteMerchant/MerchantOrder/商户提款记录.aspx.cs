@@ -885,8 +885,7 @@ namespace web1.WebsiteMerchant.商户订单
              Where(it=>it.商户ID== Cookie_UserName)
             .Where(it => it.商户提交批次ID组 == SqlFunc.Subqueryable<table_商户明细提款>()
             .Max(s => s.商户提交批次ID组))
-              .OrderBy(it => it.订单号, OrderByType.Desc)
-           
+            .OrderBy(it =>  it.商户提交序号, OrderByType.Desc)
             . ToList();
       }
 
@@ -917,7 +916,7 @@ namespace web1.WebsiteMerchant.商户订单
           Where(it => it.商户ID == Cookie_UserName)
          .Where(it => it.商户提交批次ID组 == SqlFunc.Subqueryable<table_商户明细提款>()
          .Max(s => s.商户提交批次ID组))
-         .OrderBy(it => it.订单号, OrderByType.Asc)
+         .OrderBy(it => it.商户提交序号, OrderByType.Asc)
          .ToList();
       }
 
