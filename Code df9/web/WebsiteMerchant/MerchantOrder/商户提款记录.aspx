@@ -95,6 +95,10 @@
                     <asp:Label ID="Label_账户手续费余额" runat="server" Text="Labe_账户手续费余额"></asp:Label>
                 </td>
                 <td>&nbsp;</td>
+                <td> 
+                 <asp:Button ID="Button3" runat="server" Text="最新批次正序排列" class="btn btn-info btn-fw" OnClick="Button3_Click"  />
+                 <asp:Button ID="Button4" runat="server" Text="最新批次倒序排列" class="btn btn-info btn-fw" OnClick="Button4_Click" />
+                </td>
             </tr>
         </table>
 
@@ -187,7 +191,7 @@
              <asp:BoundField DataField="状态" HeaderText="状态" />
            <asp:BoundField DataField="时间创建" HeaderText="创建时间" />
             <asp:BoundField DataField="时间完成" HeaderText="时间完成" />
-            
+            <asp:BoundField DataField="商户提交批次ID组" HeaderText="商户提交批次ID组" />
     </Columns>
                 <EmptyDataTemplate>No Record Available 沒有可用記錄</EmptyDataTemplate>
 

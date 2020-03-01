@@ -8,7 +8,8 @@ using System.Web.UI.WebControls;
 using System.Data;
 using MySql.Data.MySqlClient;
 using System.Collections;using System.IO;
-
+using SqlSugar;
+using Sugar.Enties;
 
 namespace web1.WebsiteMerchant.商户订单
 {
@@ -676,7 +677,7 @@ namespace web1.WebsiteMerchant.商户订单
                 }
 
 
-                string strQuery = "select 订单号,商户名称,类型,交易方卡号,交易方姓名,交易方银行,交易金额,手续费,创建方式,状态,时间创建,时间完成 from table_商户明细提款 where 商户ID='" + Cookie_UserName + "' " + 时间导入绑定 + " order by id desc  LIMIT " + 分页() + " ";
+                string strQuery = "select 订单号,商户名称,类型,交易方卡号,交易方姓名,交易方银行,交易金额,手续费,创建方式,状态,时间创建,时间完成,商户提交批次ID组 from table_商户明细提款 where 商户ID='" + Cookie_UserName + "' " + 时间导入绑定 + " order by id desc  LIMIT " + 分页() + " ";
                 DataTable dt = new DataTable();
                 String strConnString = ClassLibrary1.ClassDataControl.conStr1;
                 MySqlConnection con = new MySqlConnection(strConnString);
@@ -872,5 +873,69 @@ namespace web1.WebsiteMerchant.商户订单
     {
       Response.Redirect("商户提款多笔.aspx");  //刷新頁面
     }
+
+    protected void Button4_Click(object sender, EventArgs e)
+    {
+      string Cookie_UserName = ClassLibrary1.ClassAccount.检查商户端cookie2();
+      List<table_商户明细提款>  NewerList =new List<table_商户明细提款>();
+      NewerList = null;
+      using (SqlSugarClient sqlSugarClient = new DBClient().GetClient())
+      {
+           NewerList = sqlSugarClient.Queryable<table_商户明细提款>().
+             Where(it=>it.商户ID== Cookie_UserName)
+            .Where(it => it.商户提交批次ID组 == SqlFunc.Subqueryable<table_商户明细提款>()
+            .Max(s => s.商户提交批次ID组))
+              .OrderBy(it => it.订单号, OrderByType.Desc)
+           
+            . ToList();
+      }
+
+      try
+      {
+
+        GridView1.DataSource = NewerList;
+        GridView1.DataBind();
+      }
+      catch (Exception ex)
+      {
+        throw ex;
+      }
+      finally
+      {
+      }
+
+    }
+
+    protected void Button3_Click(object sender, EventArgs e)
+    {
+      string Cookie_UserName = ClassLibrary1.ClassAccount.检查商户端cookie2();
+      List<table_商户明细提款> NewerList = new List<table_商户明细提款>();
+      NewerList = null;
+      using (SqlSugarClient sqlSugarClient = new DBClient().GetClient())
+      {
+        NewerList = sqlSugarClient.Queryable<table_商户明细提款>().
+          Where(it => it.商户ID == Cookie_UserName)
+         .Where(it => it.商户提交批次ID组 == SqlFunc.Subqueryable<table_商户明细提款>()
+         .Max(s => s.商户提交批次ID组))
+         .OrderBy(it => it.订单号, OrderByType.Asc)
+         .ToList();
+      }
+
+      try
+      {
+
+        GridView1.DataSource = NewerList;
+        GridView1.DataBind();
+      }
+      catch (Exception ex)
+      {
+        throw ex;
+      }
+      finally
+      {
+      }
+
+    }
+
   }
 }
