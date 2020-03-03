@@ -389,7 +389,7 @@ namespace web1.WebsiteMerchant.商户订单
             }
             if (RadioButton_创建方式API.Checked)
             {
-                条件4 = "  创建方式='API' ";
+                条件4 = "  创建方式='接口' ";
             }
       if (RadioButton_创建方式文档.Checked)
       {
