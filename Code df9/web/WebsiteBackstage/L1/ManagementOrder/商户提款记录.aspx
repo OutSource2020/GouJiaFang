@@ -361,7 +361,6 @@
                         </asp:TemplateField>
                         <%--<asp:BoundField DataField="类型" HeaderText="类型" />--%>
                         <asp:BoundField DataField="订单号" HeaderText="订单号" />
-                        <asp:BoundField DataField="商户API订单号" HeaderText="商户API订单号" />
                         <asp:BoundField DataField="商户ID" HeaderText="商户ID" />
                         <asp:BoundField DataField="出款银行卡名称" HeaderText="出款银行卡名称" />
                         <asp:BoundField DataField="出款银行卡卡号" HeaderText="出款银行卡卡号" />
@@ -375,6 +374,7 @@
                         <asp:BoundField DataField="状态" HeaderText="订单状态" />
                          <asp:BoundField DataField="后台处理批次ID组" HeaderText="后台处理批次ID组" />
                         <asp:BoundField DataField="操作员" HeaderText="操作员" />
+                        <asp:BoundField DataField="商户API订单号" HeaderText="商户API订单号" />
 
                         <asp:HyperLinkField Text="详情" DataNavigateUrlFields="订单号" DataNavigateUrlFormatString="商户提款记录详情.aspx?Bianhao={0}" />
 

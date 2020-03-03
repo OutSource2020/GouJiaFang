@@ -1735,7 +1735,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                     if (chkRow.Checked)
                     {
                         有几个 += 1;
-                        有多少钱 += double.Parse(row.Cells[6].Text);
+                        有多少钱 += double.Parse(row.Cells[5].Text);
 
                         查询到的数据 = "笔数:" + 有几个 + ",金额:" + 有多少钱 + " ";
                     }
