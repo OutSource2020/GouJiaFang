@@ -1145,7 +1145,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                                                                                                 //3.插入 出款银行卡流水明细 本单交易 本次转出费用的记录
                                                                                                 //3.1查询出款终端管理的 原余额
 
-                                                                                                double 余额 = System.Convert.ToDouble(出款银行卡余额) - System.Convert.ToDouble(本次支出);
+                                                                                                // double 余额 = System.Convert.ToDouble(出款银行卡余额) - System.Convert.ToDouble(本次支出);
 
                                                                                                 //3.2插入 出款银行卡流水明细
                                                                                                 using (MySqlConnection scon = new MySqlConnection(ClassLibrary1.ClassDataControl.conStr1))
@@ -1159,7 +1159,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
 
                                                                                                     string 哪个表1 = "table_后台出款银行卡流水";
                                                                                                     string 写哪些1 = "订单号,商户ID,支出,余额,出款银行卡卡号,出款银行卡名称,类型,状态,时间创建";
-                                                                                                    string 写这些1 = "@订单号,@商户ID,@支出,@余额,@出款银行卡卡号,@出款银行卡名称,@类型,@状态,@时间创建";
+                                                                                                    string 写这些1 = "@订单号,@商户ID,@支出,(SELECT `出款银行卡余额` FROM `table_后台出款银行卡管理` WHERE `出款银行卡卡号`=@出款银行卡卡号),@出款银行卡卡号,@出款银行卡名称,@类型,@状态,@时间创建";
 
                                                                                                     string str = "insert into " + 哪个表1 + "(" + 写哪些1 + ") values(" + 写这些1 + ")";
 
@@ -1169,7 +1169,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                                                                                                     command.Parameters.AddWithValue("@订单号", 生成编号1);
                                                                                                     command.Parameters.AddWithValue("@商户ID", 商户ID);
                                                                                                     command.Parameters.AddWithValue("@支出", 本次支出);
-                                                                                                    command.Parameters.AddWithValue("@余额", 余额);
+                                                                                                    // command.Parameters.AddWithValue("@余额", 余额);
                                                                                                     command.Parameters.AddWithValue("@出款银行卡卡号", DropDownList_选择银行卡.SelectedItem.Value);
                                                                                                     command.Parameters.AddWithValue("@出款银行卡名称", DropDownList_选择银行卡.SelectedItem.Text);
                                                                                                     command.Parameters.AddWithValue("@类型", 类型);
