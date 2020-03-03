@@ -149,6 +149,7 @@
                     <asp:ListItem Value="商户ID">商户ID</asp:ListItem>
                     <asp:ListItem Value="交易方姓名">交易方姓名</asp:ListItem>
                     <asp:ListItem Value="订单号">订单号</asp:ListItem>
+                    <asp:ListItem Value="商户API订单号">商户API订单号</asp:ListItem>
                 </asp:DropDownList>
                         <asp:TextBox ID="TextBox_筛选关键字" runat="server" Width="160px" MaxLength="30" AutoCompleteType="Disabled"></asp:TextBox>
                     </td>
@@ -360,6 +361,7 @@
                         </asp:TemplateField>
                         <%--<asp:BoundField DataField="类型" HeaderText="类型" />--%>
                         <asp:BoundField DataField="订单号" HeaderText="订单号" />
+                        <asp:BoundField DataField="商户API订单号" HeaderText="商户API订单号" />
                         <asp:BoundField DataField="商户ID" HeaderText="商户ID" />
                         <asp:BoundField DataField="出款银行卡名称" HeaderText="出款银行卡名称" />
                         <asp:BoundField DataField="出款银行卡卡号" HeaderText="出款银行卡卡号" />

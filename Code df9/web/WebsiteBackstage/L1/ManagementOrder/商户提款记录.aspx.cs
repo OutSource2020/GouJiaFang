@@ -484,11 +484,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
 
 
             string redkey = DropDownList1.SelectedItem.Value;
-            if (redkey == "未选择")
-            {
-
-            }
-            else
+            if (redkey != "未选择")
             {
                 条件5 = " " + DropDownList1.SelectedItem.Value + "='" + TextBox_筛选关键字.Text + "' ";
                 中间加和5 = " and ";
@@ -732,7 +728,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
 
         private void BindGridForBatchOperator()
         {
-            string strQuery = "select 订单号,商户ID,出款银行卡名称,出款银行卡卡号,交易方姓名,交易方卡号,交易方银行,交易金额,时间创建,时间完成,创建方式,状态,操作员,后台处理批次ID组 FROM table_商户明细提款 " + " order by 后台处理批次ID组 desc  LIMIT " + 分页() + " ";
+            string strQuery = "select 订单号,商户ID,出款银行卡名称,出款银行卡卡号,交易方姓名,交易方卡号,交易方银行,交易金额,时间创建,时间完成,创建方式,状态,操作员,后台处理批次ID组,商户API订单号 FROM table_商户明细提款 " + " order by 后台处理批次ID组 desc  LIMIT " + 分页() + " ";
             DataTable dt = new DataTable();
             String strConnString = ClassLibrary1.ClassDataControl.conStr1;
             MySqlConnection con = new MySqlConnection(strConnString);
@@ -762,7 +758,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
 
         private void BindGrid(string 时间导入绑定)
         {
-            string strQuery = "select 订单号,商户ID,出款银行卡名称,出款银行卡卡号,交易方姓名,交易方卡号,交易方银行,交易金额,时间创建,时间完成,创建方式,状态,操作员,后台处理批次ID组 FROM table_商户明细提款 " + 时间导入绑定 + " order by 时间创建 desc  LIMIT " + 分页() + " ";
+            string strQuery = "select 订单号,商户ID,出款银行卡名称,出款银行卡卡号,交易方姓名,交易方卡号,交易方银行,交易金额,时间创建,时间完成,创建方式,状态,操作员,后台处理批次ID组,商户API订单号 FROM table_商户明细提款 " + 时间导入绑定 + " order by 时间创建 desc  LIMIT " + 分页() + " ";
             DataTable dt = new DataTable();
             String strConnString = ClassLibrary1.ClassDataControl.conStr1;
             MySqlConnection con = new MySqlConnection(strConnString);

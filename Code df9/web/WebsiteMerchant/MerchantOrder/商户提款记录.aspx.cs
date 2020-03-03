@@ -422,11 +422,7 @@ namespace web1.WebsiteMerchant.商户订单
             TextBox_筛选关键字.Enabled = true;
 
             string redkey = DropDownList1.SelectedItem.Value;
-            if (redkey == "未选择")
-            {
-
-            }
-            else
+            if (redkey != "未选择")
             {
                 条件5 = " " + DropDownList1.SelectedItem.Value + "='" + TextBox_筛选关键字.Text + "' ";
                 中间加和5 = " and ";
@@ -677,7 +673,7 @@ namespace web1.WebsiteMerchant.商户订单
                 }
 
 
-                string strQuery = "select 订单号,商户名称,类型,交易方卡号,交易方姓名,交易方银行,交易金额,手续费,创建方式,状态,时间创建,时间完成,商户提交批次ID组 from table_商户明细提款 where 商户ID='" + Cookie_UserName + "' " + 时间导入绑定 + " order by id desc  LIMIT " + 分页() + " ";
+                string strQuery = "select 订单号,商户名称,类型,交易方卡号,交易方姓名,交易方银行,交易金额,手续费,创建方式,状态,时间创建,时间完成,商户提交批次ID组,商户API订单号 from table_商户明细提款 where 商户ID='" + Cookie_UserName + "' " + 时间导入绑定 + " order by id desc  LIMIT " + 分页() + " ";
                 DataTable dt = new DataTable();
                 String strConnString = ClassLibrary1.ClassDataControl.conStr1;
                 MySqlConnection con = new MySqlConnection(strConnString);
