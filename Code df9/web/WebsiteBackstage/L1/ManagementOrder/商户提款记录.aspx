@@ -149,6 +149,7 @@
                     <asp:ListItem Value="商户ID">商户ID</asp:ListItem>
                     <asp:ListItem Value="交易方姓名">交易方姓名</asp:ListItem>
                     <asp:ListItem Value="订单号">订单号</asp:ListItem>
+                    <asp:ListItem Value="商户API订单号">商户API订单号</asp:ListItem>
                 </asp:DropDownList>
                         <asp:TextBox ID="TextBox_筛选关键字" runat="server" Width="160px" MaxLength="30" AutoCompleteType="Disabled"></asp:TextBox>
                     </td>
@@ -373,6 +374,7 @@
                         <asp:BoundField DataField="状态" HeaderText="订单状态" />
                          <asp:BoundField DataField="后台处理批次ID组" HeaderText="后台处理批次ID组" />
                         <asp:BoundField DataField="操作员" HeaderText="操作员" />
+                        <asp:BoundField DataField="商户API订单号" HeaderText="商户API订单号" />
 
                         <asp:HyperLinkField Text="详情" DataNavigateUrlFields="订单号" DataNavigateUrlFormatString="商户提款记录详情.aspx?Bianhao={0}" />
 
