@@ -339,28 +339,28 @@ namespace web1.WebsiteBackstage.L1.ManagementBankCard
             {
                 connC.Open();
 
-                MySqlCommand cmd11 = new MySqlCommand("select sum(支出) from table_后台出款银行卡流水 where 类型='订单提款出款' and " + 时间导入绑定 + " order by 时间创建 desc", connC);
+                MySqlCommand cmd11 = new MySqlCommand("select sum(支出) from table_后台出款银行卡流水 where 类型='订单提款出款' and " + 时间导入绑定 + " order by id desc", connC);
                 object obj11 = cmd11.ExecuteScalar();
                 if (obj11 != null)
                 {
                     Label_订单支出总金额.Text = obj11.ToString();
                 }
 
-                MySqlCommand cmd12 = new MySqlCommand("select sum(收入) from table_后台出款银行卡流水 where 类型='订单提款冲正' and " + 时间导入绑定 + "  order by 时间创建 desc", connC);
+                MySqlCommand cmd12 = new MySqlCommand("select sum(收入) from table_后台出款银行卡流水 where 类型='订单提款冲正' and " + 时间导入绑定 + "  order by id desc", connC);
                 object obj12 = cmd12.ExecuteScalar();
                 if (obj12 != null)
                 {
                     Label_订单冲正总金额.Text = obj12.ToString();
                 }
 
-                MySqlCommand cmd13 = new MySqlCommand("select sum(收入) from table_后台出款银行卡流水 where 类型='充值' and " + 时间导入绑定 + " order by 时间创建 desc", connC);
+                MySqlCommand cmd13 = new MySqlCommand("select sum(收入) from table_后台出款银行卡流水 where 类型='充值' and " + 时间导入绑定 + " order by id desc", connC);
                 object obj13 = cmd13.ExecuteScalar();
                 if (obj13 != null)
                 {
                     Label_出款银行卡充值总金额.Text = obj13.ToString();
                 }
 
-                MySqlCommand cmd14 = new MySqlCommand("select count(*) from table_后台出款银行卡流水 where 类型='其他类型' and " + 时间导入绑定 + " order by 时间创建 desc", connC);
+                MySqlCommand cmd14 = new MySqlCommand("select count(*) from table_后台出款银行卡流水 where 类型='其他类型' and " + 时间导入绑定 + " order by id desc", connC);
                 object obj14 = cmd14.ExecuteScalar();
                 if (obj14 != null)
                 {

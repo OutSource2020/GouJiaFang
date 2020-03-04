@@ -357,7 +357,7 @@ namespace web1.WebsiteBackstage.L1.ManagementMerchant
 
         private void BindGrid(string 时间导入绑定)
         {
-            string strQuery = "SELECT 订单号,商户ID,商户银行卡卡号,类型,交易金额,手续费收入,手续费支出,交易前手续费余额,交易后手续费余额,时间创建 FROM table_商户明细手续费 " + 时间导入绑定 + " order by 时间创建 desc  LIMIT " + 分页() + " ";
+            string strQuery = "SELECT 订单号,商户ID,商户银行卡卡号,类型,交易金额,手续费收入,手续费支出,交易前手续费余额,交易后手续费余额,时间创建 FROM table_商户明细手续费 " + 时间导入绑定 + " order by id desc  LIMIT " + 分页() + " ";
             DataTable dt = new DataTable();
             String strConnString = ClassLibrary1.ClassDataControl.conStr1;
             MySqlConnection con = new MySqlConnection(strConnString);

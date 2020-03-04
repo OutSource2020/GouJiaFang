@@ -584,7 +584,7 @@ namespace web1.WebsiteMerchant.商户订单
             {
                 connC.Open();
 
-                MySqlCommand cmd1 = new MySqlCommand("select COUNT(*) from table_商户明细提款 where 商户ID='" + Cookie_UserName + "' and 状态='待处理' " + 时间导入绑定 + " order by 时间创建 desc", connC);
+                MySqlCommand cmd1 = new MySqlCommand("select COUNT(*) from table_商户明细提款 where 商户ID='" + Cookie_UserName + "' and 状态='待处理' " + 时间导入绑定 + " order by id desc", connC);
                 object obj1 = cmd1.ExecuteScalar();
                 if (obj1 != null)
                 {

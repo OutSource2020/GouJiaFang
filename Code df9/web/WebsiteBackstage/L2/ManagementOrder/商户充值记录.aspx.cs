@@ -354,7 +354,7 @@ namespace web1.WebsiteBackstage.L2.ManagementOrder
                 connC.Close();
             }
 
-            string strQuery = "select 订单号,商户ID,商户银行卡卡号,商户充值目标卡号,充值类型,充值金额,备注后台,状态,时间创建 from table_商户明细充值 where " + 时间导入绑定 + " order by 时间创建 desc  LIMIT " + 分页() + " ";
+            string strQuery = "select 订单号,商户ID,商户银行卡卡号,商户充值目标卡号,充值类型,充值金额,备注后台,状态,时间创建 from table_商户明细充值 where " + 时间导入绑定 + " order by id desc  LIMIT " + 分页() + " ";
             DataTable dt = new DataTable();
             String strConnString = ClassLibrary1.ClassDataControl.conStr1;
             MySqlConnection con = new MySqlConnection(strConnString);
