@@ -367,7 +367,7 @@ namespace web1.WebsiteMerchant.商户订单
         {
             string Cookie_UserName = ClassLibrary1.ClassAccount.检查商户端cookie2();
 
-            string strQuery = "SELECT 订单号,商户ID,交易前账户余额,交易金额,交易后账户余额,类型,时间创建 FROM table_商户明细余额  where 商户ID='" + Cookie_UserName + "' and " + 时间导入绑定 + " order by 时间创建 desc  LIMIT " + 分页() + " ";
+            string strQuery = "SELECT 订单号,商户ID,交易前账户余额,交易金额,交易后账户余额,类型,时间创建 FROM table_商户明细余额  where 商户ID='" + Cookie_UserName + "' and " + 时间导入绑定 + " order by id desc  LIMIT " + 分页() + " ";
             DataTable dt = new DataTable();
             String strConnString = ClassLibrary1.ClassDataControl.conStr1;
             MySqlConnection con = new MySqlConnection(strConnString);
