@@ -1139,7 +1139,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                                           table_后台出款银行卡流水 outCardHistory = new table_后台出款银行卡流水
                                           {
                                             订单号 = 生成编号1,
-                                            商户ID =Convert.ToInt16( data.商户ID),
+                                            商户ID =Convert.ToInt32( data.商户ID),
                                             余额 = 余额1,
                                             类型 = 类型,
                                             状态 = 状态,
