@@ -997,6 +997,9 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
 
         protected void btnDelete_Click(object sender, EventArgs e)
         {
+            DBClient db = new DBClient();
+            var dbCilent= db.GetClient();
+            int calCount = 0; 
             //判定 DropDownList_选择银行卡 是否空
             if (String.IsNullOrEmpty(DropDownList_选择银行卡.SelectedValue))
             {
@@ -1093,101 +1096,72 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                                                                             if ((出款银行卡余额 - 本单交易金额) >= 0)
                                                                             {
                                                                                 //1.设置订单状态 成功
-                                                                                string 时间完成 = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
+                                                                                string 时间完成1 = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
 
-                                                                                using (MySqlConnection con = new MySqlConnection(ClassLibrary1.ClassDataControl.conStr1))
-                                                                                {
-                                                                                    using (MySqlCommand cmd = new MySqlCommand("UPDATE table_商户明细提款 SET 备注管理写=@备注管理写 , 状态=@状态 ,时间完成=@时间完成 , 出款银行卡名称=@出款银行卡名称 , 出款银行卡卡号=@出款银行卡卡号 , 操作员=@操作员,后台处理批次ID组=@后台处理批次ID组 WHERE 订单号=@订单号 ", con))
-                                                                                    {
-                                                                                        cmd.Parameters.AddWithValue("@备注管理写", TextBox_备注.Text);
-                                                                                        cmd.Parameters.AddWithValue("@状态", DropDownList_下拉框1.SelectedItem.Value);
-                                                                                        cmd.Parameters.AddWithValue("@时间完成", 时间完成);
-                                                                                        cmd.Parameters.AddWithValue("@出款银行卡名称", DropDownList_选择银行卡.SelectedItem.Text);
-                                                                                        cmd.Parameters.AddWithValue("@出款银行卡卡号", DropDownList_选择银行卡.SelectedItem.Value);
-                                                                                        cmd.Parameters.AddWithValue("@操作员", ClassLibrary1.ClassAccount.检查管理L1端cookie2());
-                                                                                        cmd.Parameters.AddWithValue("@订单号", 从URL传来值);
-                                                                                        cmd.Parameters.AddWithValue("@后台处理批次ID组", OperatorId);
+                                        var 时间完成debug = Convert.ToDateTime(时间完成1);
 
-                                                                                        con.Open();
-                                                                                        cmd.ExecuteNonQuery();
-                                                                                        con.Close();
-                                                                                    }
-                                                                                }
+                                        //隔离级别序列化
+                                       // dbCilent.Ado.ExecuteCommand("set session transaction isolation level serializable;");
 
-                                                                                //2.1扣除出款银行卡内的余额
-                                                                                using (MySqlConnection con20 = new MySqlConnection(ClassLibrary1.ClassDataControl.conStr1))
-                                                                                {
-                                                                                    using (MySqlCommand cmd20 = new MySqlCommand("SELECT 订单号,商户ID,交易金额,状态 FROM table_商户明细提款 WHERE 订单号=@订单号", con20))
-                                                                                    {
-                                                                                        cmd20.Parameters.AddWithValue("@订单号", 从URL传来值);
-                                                                                        using (MySqlDataAdapter da20 = new MySqlDataAdapter(cmd20))
-                                                                                        {
-                                                                                            DataTable images20 = new DataTable();
-                                                                                            da20.Fill(images20);
-                                                                                            foreach (DataRow dr20 in images20.Rows)
-                                                                                            {
-                                                                                                //2.2扣除出款银行卡内的余额
-                                                                                                string 商户ID = dr20["商户ID"].ToString();
-                                                                                                string 本次支出 = dr20["交易金额"].ToString();
+                                        // 重写的这垃圾代码（接盘的算你幸运，算我受不了帮你写一下）
+                                        var result = dbCilent.Ado.UseTran(() =>
+                                        {
+                                        
+                                          //table_商户明细提款   更新状态
+                                          dbCilent.Updateable<table_商户明细提款>().SetColumns(it => 
+                                          new table_商户明细提款()
+                                          {
+                                            备注管理写 = TextBox_备注.Text, 
+                                            状态 = DropDownList_下拉框1.SelectedItem.Value,
+                                            时间完成= Convert.ToDateTime( 时间完成1),
+                                            出款银行卡名称= DropDownList_选择银行卡.SelectedItem.Text,
+                                            出款银行卡卡号= DropDownList_选择银行卡.SelectedItem.Value,
+                                            操作员= ClassLibrary1.ClassAccount.检查管理L1端cookie2(),
+                                           // 订单号=从URL传来值,
+                                            后台处理批次ID组=OperatorId
+                                          })
+                                          .Where(it => it.订单号 == 从URL传来值).ExecuteCommand();
 
-                                                                                                using (MySqlConnection con21 = new MySqlConnection(ClassLibrary1.ClassDataControl.conStr1))
-                                                                                                {
-                                                                                                    using (MySqlCommand cmd21 = new MySqlCommand("UPDATE table_后台出款银行卡管理 SET 出款银行卡余额=出款银行卡余额-" + 本次支出 + " WHERE 出款银行卡卡号=@出款银行卡卡号 ", con21))
-                                                                                                    {
-                                                                                                        cmd21.Parameters.AddWithValue("@出款银行卡卡号", DropDownList_选择银行卡.SelectedItem.Value);
+                                          //查询 
+                                          var data = dbCilent.Queryable<table_商户明细提款>()
+                                          .Where(it => it.订单号== 从URL传来值)
+                                          .Select(f => new { f.订单号, f.商户ID, f.交易金额, f.状态 })
+                                          .First();
+                                          //扣余额
+                                          dbCilent.Ado.ExecuteCommand( "UPDATE table_后台出款银行卡管理 SET 出款银行卡余额 = 出款银行卡余额 - " + data.交易金额.ToString() + " WHERE 出款银行卡卡号 =" + DropDownList_选择银行卡.SelectedItem.Value);
 
-                                                                                                        con21.Open();
-                                                                                                        cmd21.ExecuteNonQuery();
-                                                                                                        con21.Close();
-                                                                                                    }
-                                                                                                }
+                                          string 生成编号1 = "BOPBCP" + DateTime.Now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999));
+                                          string 时间创建1 = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
+                                          
+                                          string 类型 = "订单提款出款";
+                                          string 状态 = "成功";
+                                          double 余额1 = Convert.ToDouble(出款银行卡余额) - Convert.ToDouble(data.交易金额);
+                                          table_后台出款银行卡流水 outCardHistory = new table_后台出款银行卡流水
+                                          {
+                                            订单号 = 生成编号1,
+                                            商户ID =Convert.ToInt16( data.商户ID),
+                                            余额 = 余额1,
+                                            类型 = 类型,
+                                            状态 = 状态,
+                                            时间创建 = Convert.ToDateTime(时间创建1),
+                                            时间交易 = Convert.ToDateTime(时间创建1),
+                                            支出 = Convert.ToDouble(data.交易金额),
+                                            出款银行卡卡号 = DropDownList_选择银行卡.SelectedItem.Value,
+                                            出款银行卡名称 = DropDownList_选择银行卡.SelectedItem.Text
+                                          };
+                                          // 插入出款流水
+                                          var t2=  dbCilent.Insertable(outCardHistory).ExecuteCommand();
+                                        });
+                                        
 
-                                                                                                //3.插入 出款银行卡流水明细 本单交易 本次转出费用的记录
-                                                                                                //3.1查询出款终端管理的 原余额
+                                      if(result.IsSuccess){
+                                          calCount++;
 
-                                                                                                // double 余额 = System.Convert.ToDouble(出款银行卡余额) - System.Convert.ToDouble(本次支出);
 
-                                                                                                //3.2插入 出款银行卡流水明细
-                                                                                                using (MySqlConnection scon = new MySqlConnection(ClassLibrary1.ClassDataControl.conStr1))
-                                                                                                {
-                                                                                                    Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 100, 300));
-                                                                                                    string 生成编号1 = "BOPBCP" + DateTime.Now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999));
-                                                                                                    string 时间创建1 = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
-
-                                                                                                    string 类型 = "订单提款出款";
-                                                                                                    string 状态 = "成功";
-
-                                                                                                    string 哪个表1 = "table_后台出款银行卡流水";
-                                                                                                    string 写哪些1 = "订单号,商户ID,支出,余额,出款银行卡卡号,出款银行卡名称,类型,状态,时间创建";
-                                                                                                    string 写这些1 = "@订单号,@商户ID,@支出,(SELECT `出款银行卡余额` FROM `table_后台出款银行卡管理` WHERE `出款银行卡卡号`=@出款银行卡卡号),@出款银行卡卡号,@出款银行卡名称,@类型,@状态,@时间创建";
-
-                                                                                                    string str = "insert into " + 哪个表1 + "(" + 写哪些1 + ") values(" + 写这些1 + ")";
-
-                                                                                                    scon.Open();
-                                                                                                    MySqlCommand command = new MySqlCommand();
-
-                                                                                                    command.Parameters.AddWithValue("@订单号", 生成编号1);
-                                                                                                    command.Parameters.AddWithValue("@商户ID", 商户ID);
-                                                                                                    command.Parameters.AddWithValue("@支出", 本次支出);
-                                                                                                    // command.Parameters.AddWithValue("@余额", 余额);
-                                                                                                    command.Parameters.AddWithValue("@出款银行卡卡号", DropDownList_选择银行卡.SelectedItem.Value);
-                                                                                                    command.Parameters.AddWithValue("@出款银行卡名称", DropDownList_选择银行卡.SelectedItem.Text);
-                                                                                                    command.Parameters.AddWithValue("@类型", 类型);
-                                                                                                    command.Parameters.AddWithValue("@状态", 状态);
-                                                                                                    command.Parameters.AddWithValue("@时间创建", 时间创建1);
-
-                                                                                                    command.Connection = scon;
-                                                                                                    command.CommandText = str;
-                                                                                                    int obj = command.ExecuteNonQuery();
-
-                                                                                                    scon.Close();
-                                                                                                }
-
-                                                                                            }
-                                                                                        }
-                                                                                    }
-                                                                                }
-
+                                        }
+                                          
+                                          
+                            
 
                                                                                 //Response.Redirect("商户提款记录.aspx");
                                                                             }
@@ -1421,7 +1395,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                 GridView1.AllowPaging = true;
                 //BindGrid("");
                 BindGridForBatchOperator();
-                ShowMessage(count);
+                ShowMessage(calCount);
 
 
                 //Response.Redirect("商户提款记录.aspx");
@@ -1477,9 +1451,9 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("<script type = 'text/javascript'>");
-            sb.Append("alert('");
+            sb.Append("alert(' 批量操作有 ");
             sb.Append(count.ToString());
-            sb.Append(" records deleted.');");
+            sb.Append(" 笔 成功');");
             sb.Append("</script>");
             ClientScript.RegisterStartupScript(this.GetType(),
                             "script", sb.ToString());
