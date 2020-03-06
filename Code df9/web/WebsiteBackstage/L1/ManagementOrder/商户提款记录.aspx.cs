@@ -1128,7 +1128,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                                           .Select(f => new { f.订单号, f.商户ID, f.交易金额, f.状态 })
                                           .First();
                                           //扣余额
-                                          dbCilent.Ado.ExecuteCommand( "UPDATE table_后台出款银行卡管理 SET 出款银行卡余额 = 出款银行卡余额 - " + data.交易金额.ToString() + " WHERE 出款银行卡卡号 =" + DropDownList_选择银行卡.SelectedItem.Value);
+                                          dbCilent.Ado.ExecuteCommand( "UPDATE table_后台出款银行卡管理 SET 出款银行卡余额 = 出款银行卡余额 - " + data.交易金额.ToString() + " WHERE 出款银行卡卡号 ='" + DropDownList_选择银行卡.SelectedItem.Value + "';");
 
                                           string 生成编号1 = "BOPBCP" + DateTime.Now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999));
                                           string 时间创建1 = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");

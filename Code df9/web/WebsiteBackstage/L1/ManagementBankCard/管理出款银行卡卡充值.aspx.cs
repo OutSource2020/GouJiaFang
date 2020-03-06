@@ -83,6 +83,11 @@ namespace web1.WebsiteBackstage.L1.ManagementBankCard
 
         protected void Button_确认充值_Click(object sender, EventArgs e)
         {
+            if (Double.Parse(TextBox_目标银行卡充值金额.Text) < 0)
+            {
+                ClassLibrary1.ClassMessage.HinXi(Page, "不能充值负数");
+                return;
+            }
             if (TextBox_目标银行卡充值金额.Text.Length > 0 && TextBox_备注.Text.Length > 0)
             {
                 操作充值();
