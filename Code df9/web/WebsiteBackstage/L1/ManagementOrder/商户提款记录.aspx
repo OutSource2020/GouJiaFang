@@ -372,9 +372,14 @@
                         <asp:BoundField DataField="时间完成" HeaderText="完成时间" />
                         <asp:BoundField DataField="创建方式" HeaderText="创建方式" />
                         <asp:BoundField DataField="状态" HeaderText="订单状态" />
-                         <asp:BoundField DataField="后台处理批次ID组" HeaderText="后台处理批次ID组" />
+                        <asp:BoundField DataField="后台处理批次ID组" HeaderText="后台处理批次ID组" />
                         <asp:BoundField DataField="操作员" HeaderText="操作员" />
                         <asp:BoundField DataField="商户API订单号" HeaderText="商户API订单号" />
+                        <asp:TemplateField HeaderText = "行号" ItemStyle-Width="100">
+                            <ItemTemplate>
+                                <asp:Label ID="lblRowNumber" Text='<%# Container.DataItemIndex + 1 %>' runat="server" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
                         <asp:HyperLinkField Text="详情" DataNavigateUrlFields="订单号" DataNavigateUrlFormatString="商户提款记录详情.aspx?Bianhao={0}" />
 
