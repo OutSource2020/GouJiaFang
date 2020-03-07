@@ -2194,8 +2194,10 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                 var NewerList = sqlSugarClient.Queryable<table_商户明细提款>().
                     Where(it => it.后台处理批次ID组 == SqlFunc.Subqueryable<table_商户明细提款>()
                     .Max(s => s.后台处理批次ID组)).ToList();
-                foreach (table_商户明细提款 record in NewerList)
+                int count = NewerList.Count();
+                for (int i = count; i > 0; --i)
                 {
+                    table_商户明细提款 record = NewerList[i - 1];
                     DataRow dr = dt.NewRow();
                     action(dr, record, NewerList.IndexOf(record) + 1);
                     dt.Rows.Add(dr);
