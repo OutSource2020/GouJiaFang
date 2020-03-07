@@ -156,7 +156,7 @@ namespace web1.WebsiteBackstage.L1.ManagementBankCard
                         状态 = "成功",
                         时间创建 = createTime
                     };
-                    dbClient.Insertable(runningA).ExecuteCommand();
+                    dbClient.Insertable(runningB).ExecuteCommand();
                 });
             }
             Response.Redirect("./管理出款银行卡.aspx");
