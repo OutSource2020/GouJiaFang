@@ -86,7 +86,9 @@ namespace web1.API
         [HttpPost]
         public ActionResult OrderCreate(int? timeunix, string signature, OrderCreateRequest request)
         {
-            var getByWhere = sqlSugarClient.Queryable<table_商户账号>().Where(it => it.商户ID == request.UserName).ToList();
+   
+      
+        var getByWhere = sqlSugarClient.Queryable<table_商户账号>().Where(it => it.商户ID == request.UserName).ToList();
             table_商户账号 account = getByWhere[0];
 
             if (Convert.ToDouble(account.手续费余额) - Convert.ToDouble(account.单笔手续费) < 0)
@@ -105,8 +107,11 @@ namespace web1.API
             {
                 return GetStandardError(BaseErrors.ERROR_NUMBER.LX1013, request.UserName, request.UserPassword);
             }
-
-            string 状态 = "待处理";
+      JsonResult jsonResult = new JsonResult();
+      var result = sqlSugarClient.Ado.UseTran(() => {
+        getByWhere = sqlSugarClient.Queryable<table_商户账号>().Where(it => it.商户ID == request.UserName).ToList();
+         account = getByWhere[0];
+        string 状态 = "待处理";
             string 类型 = "提款";
             DateTime 时间创建 = DateTime.Now;
             // string 时间创建 = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
@@ -116,6 +121,8 @@ namespace web1.API
 
             account.提款余额 -= Convert.ToDouble(request.AimsMoney);
             account.手续费余额 -= Convert.ToDouble(account.单笔手续费);
+
+           
             sqlSugarClient.Updateable(account).UpdateColumns(it => new { it.提款余额, it.手续费余额 }).ExecuteCommand();
 
             table_商户明细手续费 fee = new table_商户明细手续费();
@@ -158,8 +165,8 @@ namespace web1.API
             detail.时间创建 = 时间创建;
             detail.订单源IP = ClassLibrary1.ClassAccount.来源IP();
             sqlSugarClient.Insertable<table_商户明细提款>(detail).ExecuteCommand();
-
-            OrderCreateResponse orderCreateResponse = AutoCopy<BaseResponse, OrderCreateResponse>(baseSuccess);
+    
+      OrderCreateResponse orderCreateResponse = AutoCopy<BaseResponse, OrderCreateResponse>(baseSuccess);
             orderCreateResponse.Username = request.UserName;
             orderCreateResponse.Userpassword = request.UserPassword;
             orderCreateResponse.OrderNumberMerchant = request.OrderNumberMerchant;
@@ -169,9 +176,13 @@ namespace web1.API
             orderCreateResponse.AimsCardNumber = request.AimsCardNumber;
             orderCreateResponse.AimsMoney = request.AimsMoney;
 
-            JsonResult jsonResult = new JsonResult();
+       
             jsonResult.Data = orderCreateResponse;
-            return jsonResult;
+      });
+      return jsonResult;
         }
-    }
+
+  
+  }
+  
 }
