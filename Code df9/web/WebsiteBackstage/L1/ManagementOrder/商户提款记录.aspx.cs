@@ -995,6 +995,13 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
             hfCount.Value = (arr.Count - currentCount).ToString();
         }
 
+        private long GetTimeStamp()
+        {
+            DateTime startTime = TimeZone.CurrentTimeZone.ToLocalTime(new System.DateTime(1970, 1, 1, 0, 0, 0, 0));
+            DateTime nowTime = DateTime.Now;
+            return (long)System.Math.Round((nowTime - startTime).TotalMilliseconds, MidpointRounding.AwayFromZero);
+        }
+
         protected void btnDelete_Click(object sender, EventArgs e)
         {
             DBClient db = new DBClient();
@@ -1011,7 +1018,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
 
 
 
-                long OperatorId = DateTime.Now.Ticks;
+                long OperatorId = GetTimeStamp();
 
                 int count = 0;
                 SetData();
