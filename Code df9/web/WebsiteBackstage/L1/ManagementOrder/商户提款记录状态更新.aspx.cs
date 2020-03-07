@@ -222,7 +222,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
 
             using (SqlSugarClient dbClient = new DBClient().GetClient())
             {
-                dbClient.Ado.UseTran(() =>
+             var result=   dbClient.Ado.UseTran(() =>
                 {
                     if (设置订单的状态 == "成功")
                     {
@@ -321,7 +321,12 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                         });
                     }
                 });
+
+        if (!result.IsSuccess){
+          ClassLibrary1.ClassMessage.HinXi(Page, "操作失败");
+        }
             }
+           
             Response.Redirect("商户提款记录.aspx");
         }
 
