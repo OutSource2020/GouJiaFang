@@ -258,15 +258,12 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                         var record1 = dbClient.Queryable<table_商户明细提款>().Where(it => it.订单号 == 从URL传来值).First();
                         dbClient.Ado.ExecuteCommand("UPDATE `table_后台出款银行卡管理` SET `出款银行卡余额`=`出款银行卡余额`-" + record1.交易金额 + " WHERE `出款银行卡卡号`=@出款银行卡卡号", new { 出款银行卡卡号 = DropDownList_选择银行卡.SelectedItem.Value });
 
-                        string 生成编号1 = "" + DateTime.Now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999));
-                        string 时间创建1 = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
-
                         string 类型 = "订单提款出款";
                         string 状态 = "成功";
                         double 余额 = System.Convert.ToDouble(record.出款银行卡余额) - System.Convert.ToDouble(record1.交易金额);
                         table_后台出款银行卡流水 t = new table_后台出款银行卡流水()
                         {
-                            订单号 = 生成编号1,
+                            订单号 = "BOPBCP" + now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999)),
                             商户ID = Int32.Parse(record1.商户ID),
                             支出 = record1.交易金额,
                             余额 = 余额,
