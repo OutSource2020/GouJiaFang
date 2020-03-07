@@ -179,6 +179,11 @@ namespace web1.API
        
             jsonResult.Data = orderCreateResponse;
       });
+      if (!result.IsSuccess)
+      {
+        return GetStandardError(BaseErrors.ERROR_NUMBER.LX1016, request.UserName, request.UserPassword);
+      }
+
       return jsonResult;
         }
 
