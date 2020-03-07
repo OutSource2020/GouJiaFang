@@ -1101,10 +1101,14 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                                         var 时间完成debug = Convert.ToDateTime(时间完成1);
 
                                         //隔离级别序列化
-                                       // dbCilent.Ado.ExecuteCommand("set session transaction isolation level serializable;");
+                                        // dbCilent.Ado.ExecuteCommand("set session transaction isolation level serializable;");
 
+                                        DbResult<bool>   result=null;
+                                        Int16 cou = 0;
                                         // 重写的这垃圾代码（接盘的算你幸运，算我受不了帮你写一下）
-                                        var result = dbCilent.Ado.UseTran(() =>
+                                        while(cou<3){
+
+                                         result = dbCilent.Ado.UseTran(() =>
                                         {
                                         
                                           //table_商户明细提款   更新状态
@@ -1152,9 +1156,17 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                                           // 插入出款流水
                                           var t2=  dbCilent.Insertable(outCardHistory).ExecuteCommand();
                                         });
-                                        
 
-                                      if(result.IsSuccess){
+
+                                          if (result.IsSuccess)
+                                          {
+                                            break;
+                                          }
+
+                                          cou++;
+
+                                        }
+                                        if (result.IsSuccess){
                                           calCount++;
 
 
