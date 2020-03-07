@@ -391,10 +391,17 @@ namespace web1.WebsiteMerchant.商户订单
             }
         }
 
+        private long GetTimeStamp()
+        {
+            DateTime startTime = TimeZone.CurrentTimeZone.ToLocalTime(new System.DateTime(1970, 1, 1, 0, 0, 0, 0));
+            DateTime nowTime = DateTime.Now;
+            return (long)System.Math.Round((nowTime - startTime).TotalMilliseconds, MidpointRounding.AwayFromZero);
+        }
+
         private void 开始执行()
         {
             Button_批量发起提款订单.Enabled = false;//防止重复操作
-            long OperatorId = DateTime.Now.Ticks;
+            long OperatorId = GetTimeStamp();
             int Sindex = 0;
             for (int i = (Gridview1.Rows.Count - 1); i >= 0 ; i--)
             {

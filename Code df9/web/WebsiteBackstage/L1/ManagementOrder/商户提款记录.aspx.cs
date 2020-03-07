@@ -995,6 +995,13 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
             hfCount.Value = (arr.Count - currentCount).ToString();
         }
 
+        private long GetTimeStamp()
+        {
+            DateTime startTime = TimeZone.CurrentTimeZone.ToLocalTime(new System.DateTime(1970, 1, 1, 0, 0, 0, 0));
+            DateTime nowTime = DateTime.Now;
+            return (long)System.Math.Round((nowTime - startTime).TotalMilliseconds, MidpointRounding.AwayFromZero);
+        }
+
         protected void btnDelete_Click(object sender, EventArgs e)
         {
             DBClient db = new DBClient();
@@ -1011,7 +1018,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
 
 
 
-                long OperatorId = DateTime.Now.Ticks;
+                long OperatorId = GetTimeStamp();
 
                 int count = 0;
                 SetData();
@@ -2199,8 +2206,10 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                 var NewerList = sqlSugarClient.Queryable<table_商户明细提款>().
                     Where(it => it.后台处理批次ID组 == SqlFunc.Subqueryable<table_商户明细提款>()
                     .Max(s => s.后台处理批次ID组)).ToList();
-                foreach (table_商户明细提款 record in NewerList)
+                int count = NewerList.Count();
+                for (int i = count; i > 0; --i)
                 {
+                    table_商户明细提款 record = NewerList[i - 1];
                     DataRow dr = dt.NewRow();
                     action(dr, record, NewerList.IndexOf(record) + 1);
                     dt.Rows.Add(dr);
