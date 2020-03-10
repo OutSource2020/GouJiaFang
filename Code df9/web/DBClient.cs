@@ -23,7 +23,7 @@ namespace web1
 
                 File.AppendAllText(rootPath + "LOG_" + DateTime.Now.ToString("yyyyMMdd") + ".log",
                         "[" + System.DateTime.Now.ToString("HH:mm:ss:fff") + "]  " + logInfo + "\r\n",
-                        Encoding.Default);
+                        Encoding.UTF8);
             }
             catch
             {
@@ -46,7 +46,7 @@ namespace web1
                 Debug.WriteLine(sql + "\r\n" + db.Utilities.SerializeObject(pars.ToDictionary(it => it.ParameterName, it => it.Value)));
                 Debug.WriteLine("");
                 #else
-                AddUpdateLog(db.Utilities.SerializeObject(pars.ToDictionary(it => it.ParameterName, it => it.Value)));
+                AddUpdateLog(sql + "\r\n" + db.Utilities.SerializeObject(pars.ToDictionary(it => it.ParameterName, it => it.Value)));
                 #endif
             };
             return db;

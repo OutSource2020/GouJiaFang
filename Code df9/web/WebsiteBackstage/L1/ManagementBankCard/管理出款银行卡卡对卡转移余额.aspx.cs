@@ -139,7 +139,8 @@ namespace web1.WebsiteBackstage.L1.ManagementBankCard
                         出款银行卡卡号 = record.出款银行卡卡号,
                         出款银行卡名称 = record.出款银行名称,
                         状态 = "成功",
-                        时间创建 = createTime
+                        时间创建 = createTime,
+                        时间交易 = createTime
                     };
                     dbClient.Insertable(runningA).ExecuteCommand();
 
@@ -154,7 +155,8 @@ namespace web1.WebsiteBackstage.L1.ManagementBankCard
                         出款银行卡卡号 = record.出款银行卡卡号,
                         出款银行卡名称 = record.出款银行名称,
                         状态 = "成功",
-                        时间创建 = createTime
+                        时间创建 = createTime,
+                        时间交易 = createTime
                     };
                     dbClient.Insertable(runningB).ExecuteCommand();
                 });
