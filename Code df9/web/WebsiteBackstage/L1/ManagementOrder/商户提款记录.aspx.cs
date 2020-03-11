@@ -1048,6 +1048,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                             else
                             {
 
+
                                 //先检查状态是否待处理
                                 using (MySqlConnection conCHA = new MySqlConnection(ClassLibrary1.ClassDataControl.conStr1))
                                 {
@@ -1239,123 +1240,94 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                                                                                         string 时间完成 = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
                                                                                         Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 100, 300));
 
-                                                                                        //1.退回余额和手续费
-                                                                                        //2.插 商户余额交易明细
-                                                                                        //3.插 商户手续费交易明细
-                                                                                        //4.向提款记录表更新信息-失败
+                                            //1.退回余额和手续费
+                                            //2.插 商户余额交易明细
+                                            //3.插 商户手续费交易明细
+                                            //4.向提款记录表更新信息-失败
+                                            Int16 cou = 0;
+                                         var   str = "UPDATE table_商户账号 SET 提款余额=提款余额+" + 交易金额.ToString() + " , 手续费余额= 手续费余额+" + 手续费.ToString() + " where 商户ID="+商户ID+ ";";
+                                            DbResult<bool> result = null;
+                                            while (cou < 3)
+                                            {
+                                              result = dbCilent.Ado.UseTran(() =>
+                                              {
+                                              //1 退回 账户余额和手续费
+                                              dbCilent.Ado.ExecuteCommand(str);
 
-                                                                                        //1 退回 账户余额和手续费
-                                                                                        using (MySqlConnection conmy2 = new MySqlConnection(ClassLibrary1.ClassDataControl.conStr1))
-                                                                                        {
+                                              string 提款手续费_生成编号标头 = "MHFOR";
+                                              string 提款手续费_订单号 = 提款手续费_生成编号标头 + DateTime.Now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999));
+                                              string 提款手续费_商户ID = 商户ID;
+                                              double 提款手续费_手续费 = double.Parse(手续费);
+                                              double 提款手续费_交易金额 = double.Parse(交易金额);
+                                              double 提款手续费_交易前手续费余额 = 手续费余额;
+                                              double 提款手续费_交易后手续费余额 = 手续费余额 + System.Convert.ToDouble(手续费);
+                                              string 提款手续费_类型 = "订单出款退款";
+                                              string 提款手续费_时间创建 = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
 
-                                                                                            using (MySqlCommand cmdmy2 = new MySqlCommand("UPDATE table_商户账号 SET 提款余额=提款余额+" + 交易金额 + " , 手续费余额= 手续费余额+" + 手续费 + " where 商户ID=@商户ID ", conmy2))
-                                                                                            {
-                                                                                                cmdmy2.Parameters.AddWithValue("@商户ID", 商户ID);
+                                     
+                                        
+                                              table_商户明细手续费  fee = new table_商户明细手续费
+                                              {
+                                               订单号 = 提款手续费_订单号,
+                                                商户ID = Convert.ToInt32(提款手续费_商户ID),
+                                                手续费支出 = 提款手续费_手续费,
+                                                交易金额 = 提款手续费_交易金额,
+                                                交易前手续费余额 = 提款手续费_交易前手续费余额,
+                                                交易后手续费余额 = 提款手续费_交易后手续费余额,
+                                                类型 = 提款手续费_类型,
+                                                时间创建 = Convert.ToDateTime(提款手续费_时间创建),
+                                              };
 
-                                                                                                conmy2.Open();
-                                                                                                cmdmy2.ExecuteNonQuery();
-                                                                                                conmy2.Close();
-
-                                                                                            }
-                                                                                        }
-
-
-                                                                                        //2 商户提款手续费交易明细
-                                                                                        using (MySqlConnection scon = new MySqlConnection(ClassLibrary1.ClassDataControl.conStr1))
-                                                                                        {
-                                                                                            string 提款手续费_生成编号标头 = "MHFOR";
-                                                                                            string 提款手续费_订单号 = 提款手续费_生成编号标头 + DateTime.Now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999));
-                                                                                            string 提款手续费_商户ID = 商户ID;
-                                                                                            double 提款手续费_手续费 = double.Parse(手续费);
-                                                                                            double 提款手续费_交易金额 = double.Parse(交易金额);
-                                                                                            double 提款手续费_交易前手续费余额 = 手续费余额;
-                                                                                            double 提款手续费_交易后手续费余额 = 手续费余额 + System.Convert.ToDouble(手续费);
-                                                                                            string 提款手续费_类型 = "订单出款退款";
-                                                                                            string 提款手续费_时间创建 = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
-
-                                                                                            string 手续费交易明细哪个表 = " table_商户明细手续费 ";
-                                                                                            string 手续费交易明细写哪些 = "订单号,商户ID,手续费支出,交易金额,交易前手续费余额,交易后手续费余额,类型,时间创建";
-                                                                                            string 手续费交易明细写这些 = "@订单号,@商户ID,@手续费支出,@交易金额,@交易前手续费余额,@交易后手续费余额,@类型,@时间创建 ";
-
-                                                                                            string str = "insert into " + 手续费交易明细哪个表 + "(" + 手续费交易明细写哪些 + ") values(" + 手续费交易明细写这些 + ")";
-
-                                                                                            scon.Open();
-                                                                                            MySqlCommand command = new MySqlCommand();
-
-                                                                                            command.Parameters.AddWithValue("@订单号", 提款手续费_订单号);
-                                                                                            command.Parameters.AddWithValue("@商户ID", 提款手续费_商户ID);
-                                                                                            command.Parameters.AddWithValue("@手续费支出", 提款手续费_手续费);
-                                                                                            command.Parameters.AddWithValue("@交易金额", 提款手续费_交易金额);
-                                                                                            command.Parameters.AddWithValue("@交易前手续费余额", 提款手续费_交易前手续费余额);
-                                                                                            command.Parameters.AddWithValue("@交易后手续费余额", 提款手续费_交易后手续费余额);
-                                                                                            command.Parameters.AddWithValue("@类型", 提款手续费_类型);
-                                                                                            command.Parameters.AddWithValue("@时间创建", 提款手续费_时间创建);
-
-                                                                                            command.Connection = scon;
-                                                                                            command.CommandText = str;
-                                                                                            int obj = command.ExecuteNonQuery();
-
-                                                                                            scon.Close();
-                                                                                        }
+                                              //2 商户提款手续费交易明细
+                                              dbCilent.Insertable<table_商户明细手续费>(fee).ExecuteCommand();
 
 
-                                                                                        //3 商户账户余额交易明细
-                                                                                        using (MySqlConnection scon = new MySqlConnection(ClassLibrary1.ClassDataControl.conStr1))
-                                                                                        {
-                                                                                            string 账户余额_订单号 = "MOPOR" + DateTime.Now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999));
-                                                                                            string 账户余额_类型 = "订单出款退款";
-                                                                                            double 账户余额_手续费 = 手续费余额;
-                                                                                            double 账户余额_交易金额 = double.Parse(dr12["提款余额"].ToString());
-                                                                                            double 账户余额_交易前余额 = double.Parse(dr12["提款余额"].ToString());
-                                                                                            double 账户余额_交易后余额 = double.Parse(dr12["提款余额"].ToString()) + double.Parse(dr11["交易金额"].ToString());
-                                                                                            string 账户余额_时间创建 = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
+                                              string 账户余额_订单号 = "MOPOR" + DateTime.Now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999));
+                                              string 账户余额_类型 = "订单出款退款";
+                                              double 账户余额_手续费 = 手续费余额;
+                                              double 账户余额_交易金额 = double.Parse(dr12["提款余额"].ToString());
+                                              double 账户余额_交易前余额 = double.Parse(dr12["提款余额"].ToString());
+                                              double 账户余额_交易后余额 = double.Parse(dr12["提款余额"].ToString()) + double.Parse(dr11["交易金额"].ToString());
+                                              string 账户余额_时间创建 = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
 
-                                                                                            string 余额交易明细哪个表 = " table_商户明细余额 ";
-                                                                                            string 余额交易明细写哪些 = "订单号,商户ID,类型,交易金额,交易前账户余额,交易后账户余额,状态,时间创建";
-                                                                                            string 余额交易明细写这些 = "@订单号,@商户ID,@类型,@交易金额,@交易前账户余额,@交易后账户余额,@状态,@时间创建 ";
+                                          
+                                       
 
-                                                                                            string str = "insert into " + 余额交易明细哪个表 + "(" + 余额交易明细写哪些 + ") values(" + 余额交易明细写这些 + ")";
+                                              table_商户明细余额 money = new table_商户明细余额
+                                              {
+                                                订单号 = 账户余额_订单号,
+                                                商户ID = Convert.ToInt32(商户ID),
+                                                类型 = 账户余额_类型,
+                                                交易金额 = Convert.ToString(账户余额_交易金额),
+                                                交易前账户余额 = Convert.ToString(账户余额_交易前余额),
+                                                交易后账户余额 = Convert.ToString(账户余额_交易后余额),
+                                                状态 = "",
+                                                时间创建 = Convert.ToDateTime(账户余额_时间创建),
+                                              };
 
-                                                                                            scon.Open();
-                                                                                            MySqlCommand command = new MySqlCommand();
+                                                //2 table_商户明细余额
+                                                dbCilent.Insertable<table_商户明细余额>(money).ExecuteCommand();
 
-                                                                                            command.Parameters.AddWithValue("@订单号", 账户余额_订单号);
-                                                                                            command.Parameters.AddWithValue("@商户ID", 商户ID);
-                                                                                            command.Parameters.AddWithValue("@类型", 账户余额_类型);
-                                                                                            command.Parameters.AddWithValue("@交易金额", 账户余额_交易金额);
-                                                                                            command.Parameters.AddWithValue("@交易前账户余额", 账户余额_交易前余额);
-                                                                                            command.Parameters.AddWithValue("@交易后账户余额", 账户余额_交易后余额);
-                                                                                            command.Parameters.AddWithValue("@状态", "");
-                                                                                            command.Parameters.AddWithValue("@时间创建", 账户余额_时间创建);
+                      
+                                              dbCilent.Ado.ExecuteCommand("  " +
+                                                "UPDATE table_商户明细提款 SET 备注管理写 = '"+ TextBox_备注.Text + "', 状态 =' "+ DropDownList_下拉框1.SelectedItem.Value + "', 时间完成 = '"+ 时间完成 + "', 操作员 = '"+ ClassLibrary1.ClassAccount.检查管理L1端cookie2() + "'  WHERE 订单号 = '"+ 从URL传来值 + "';");
+                                            
+                                            });
+                                              if (result.IsSuccess)
+                                              {
+                                                calCount++;
+                                                break;
+                                              }
 
-                                                                                            command.Connection = scon;
-                                                                                            command.CommandText = str;
-                                                                                            int obj = command.ExecuteNonQuery();
+                                              cou++;
+                                            }
 
-                                                                                            scon.Close();
-                                                                                        }
-
-                                                                                        //4 向提款记录表更新信息
-                                                                                        using (MySqlConnection con = new MySqlConnection(ClassLibrary1.ClassDataControl.conStr1))
-                                                                                        {
-                                                                                            using (MySqlCommand cmd = new MySqlCommand("UPDATE table_商户明细提款 SET 备注管理写=@备注管理写 , 状态=@状态,时间完成=@时间完成 , 操作员=@操作员  WHERE 订单号=@订单号 ", con))
-                                                                                            {
-                                                                                                cmd.Parameters.AddWithValue("@备注管理写", TextBox_备注.Text);
-                                                                                                cmd.Parameters.AddWithValue("@状态", DropDownList_下拉框1.SelectedItem.Value);
-                                                                                                cmd.Parameters.AddWithValue("@时间完成", 时间完成);
-                                                                                                cmd.Parameters.AddWithValue("@操作员", ClassLibrary1.ClassAccount.检查管理L1端cookie2());
-                                                                                                cmd.Parameters.AddWithValue("@订单号", 从URL传来值);
-
-                                                                                                con.Open();
-                                                                                                cmd.ExecuteNonQuery();
-                                                                                                con.Close();
-                                                                                            }
-                                                                                        }
+                                         
 
 
-                                                                                        //Response.Redirect("商户提款记录.aspx");
+                                            //Response.Redirect("商户提款记录.aspx");
 
-                                                                                    }
+                                          }
                                                                                 }
                                                                             }
                                                                         }

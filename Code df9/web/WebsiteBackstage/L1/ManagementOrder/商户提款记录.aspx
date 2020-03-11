@@ -438,7 +438,8 @@
 
     <div id="选择每页行数">
         <asp:DropDownList ID="DropDownList_选择每页行数" runat="server" AutoPostBack="True" OnSelectedIndexChanged="DropDownList_选择每页行数_SelectedIndexChanged">
-            <asp:ListItem>50</asp:ListItem>
+         <%--   <asp:ListItem>50</asp:ListItem>--%>
+             <asp:ListItem>80</asp:ListItem>
             <asp:ListItem>100</asp:ListItem>
             <asp:ListItem>200</asp:ListItem>
             <asp:ListItem>400</asp:ListItem>
