@@ -42,8 +42,9 @@ namespace IISLogger
         {
             if (sender != null && sender is HttpApplication)
             {
-                var request = (sender as HttpApplication).Request;
-                var response = (sender as HttpApplication).Response;
+                HttpApplication app = sender as HttpApplication;
+                var request = app.Request;
+                var response = app.Response;
 
                 if (request != null && response != null && request.HttpMethod.ToUpper() == "POST")
                 {
@@ -56,6 +57,7 @@ namespace IISLogger
 #else
                         this.AddUpdateLog(request.RawUrl + "\r\n" + s);
 #endif
+                        request.InputStream.Position = 0;
                     }
                 }
             }
