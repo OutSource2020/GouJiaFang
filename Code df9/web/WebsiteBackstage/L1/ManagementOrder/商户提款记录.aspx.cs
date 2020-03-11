@@ -1298,7 +1298,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                                                 订单号 = 账户余额_订单号,
                                                 商户ID = Convert.ToInt32(商户ID),
                                                 类型 = 账户余额_类型,
-                                                交易金额 = Convert.ToString(账户余额_交易金额),
+                                                交易金额 = Convert.ToString(交易金额),
                                                 交易前账户余额 = Convert.ToString(账户余额_交易前余额),
                                                 交易后账户余额 = Convert.ToString(账户余额_交易后余额),
                                                 状态 = "",
