@@ -1235,6 +1235,10 @@
       <Project>{c39207d9-bdf2-4e9a-999a-0682c5ff021d}</Project>
       <Name>ClassLibrary1</Name>
     </ProjectReference>
+    <ProjectReference Include="..\IISLogger\IISLogger.csproj">
+      <Project>{2e3ba179-d21b-4d82-a63f-3335a9f9e63f}</Project>
+      <Name>IISLogger</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="stdole">
