@@ -1,24 +1,21 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using NPOI.HSSF.UserModel;
+using NPOI.SS.UserModel;
+using SqlSugar;
+using Sugar.Enties;
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Data;
+using System.IO;
 using System.Linq;
-using System.Web;
+using System.Text;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-using System.Data;
-using MySql.Data.MySqlClient;
-using System.Collections;
-using System.IO;
-using System.Text;
-using NPOI.SS.UserModel;
-using NPOI.HSSF.UserModel;
-using System.Diagnostics;
-using SqlSugar;
-using Sugar.Enties;
-
 namespace web1.WebsiteBackstage.L1.ManagementOrder
 {
-    public partial class 商户提款记录 : System.Web.UI.Page
+  public partial class 商户提款记录 : System.Web.UI.Page
     {
         public static string 时间字段 = "时间创建";
 
@@ -1163,21 +1160,20 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                                           // 插入出款流水
                                           var t2=  dbCilent.Insertable(outCardHistory).ExecuteCommand();
                                         });
-
+                                      
+                                     
 
                                           if (result.IsSuccess)
                                           {
+                                            calCount++;
                                             break;
                                           }
 
                                           cou++;
+                                       
 
                                         }
-                                        if (result.IsSuccess){
-                                          calCount++;
-
-
-                                        }
+                                    
                                           
                                           
                             
