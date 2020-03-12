@@ -1003,9 +1003,11 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
         {
             DBClient db = new DBClient();
             var dbCilent= db.GetClient();
-            int calCount = 0; 
-            //判定 DropDownList_选择银行卡 是否空
-            if (String.IsNullOrEmpty(DropDownList_选择银行卡.SelectedValue))
+            int calCount = 0;
+      //隔离级别序列化
+      dbCilent.Ado.ExecuteCommand("set session transaction isolation level serializable;");
+      //判定 DropDownList_选择银行卡 是否空
+           if (String.IsNullOrEmpty(DropDownList_选择银行卡.SelectedValue))
             {
                 ClassLibrary1.ClassMessage.HinXi(Page, "出款银行卡还未设置或者未启用");
             }
@@ -1105,17 +1107,19 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
 
                                         var 时间完成debug = Convert.ToDateTime(时间完成1);
 
-                                        //隔离级别序列化
-                                        // dbCilent.Ado.ExecuteCommand("set session transaction isolation level serializable;");
+
 
                                         DbResult<bool>   result=null;
                                         Int16 cou = 0;
                                         // 重写的这垃圾代码（接盘的算你幸运，算我受不了帮你写一下）
-                                        while(cou<3){
+                                        //while(cou<3){
 
                                          result = dbCilent.Ado.UseTran(() =>
                                         {
-                                        
+
+                                         var info= dbCilent.Queryable<table_商户明细提款>().Where(it=>it.订单号== 从URL传来值).First();
+                                          if(info.状态=="待处理")
+                                          { 
                                           //table_商户明细提款   更新状态
                                           dbCilent.Updateable<table_商户明细提款>().SetColumns(it => 
                                           new table_商户明细提款()
@@ -1160,6 +1164,8 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                                           };
                                           // 插入出款流水
                                           var t2=  dbCilent.Insertable(outCardHistory).ExecuteCommand();
+                                          }
+
                                         });
                                       
                                      
@@ -1173,7 +1179,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                                           cou++;
                                        
 
-                                        }
+                                   //     }
                                     
                                           
                                           
@@ -1247,12 +1253,15 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                                             Int16 cou = 0;
                                          var   str = "UPDATE table_商户账号 SET 提款余额=提款余额+" + 交易金额.ToString() + " , 手续费余额= 手续费余额+" + 手续费.ToString() + " where 商户ID="+商户ID+ ";";
                                             DbResult<bool> result = null;
-                                            while (cou < 3)
-                                            {
+                                            //while (cou < 3)
+                                            //{
                                               result = dbCilent.Ado.UseTran(() =>
                                               {
-                                              //1 退回 账户余额和手续费
-                                              dbCilent.Ado.ExecuteCommand(str);
+                                              var info = dbCilent.Queryable<table_商户明细提款>().Where(it => it.订单号 == 从URL传来值).First();
+                                              if (info.状态 == "待处理")
+                                              {
+                                                //1 退回 账户余额和手续费
+                                                dbCilent.Ado.ExecuteCommand(str);
 
                                               string 提款手续费_生成编号标头 = "MHFOR";
                                               string 提款手续费_订单号 = 提款手续费_生成编号标头 + DateTime.Now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999));
@@ -1309,10 +1318,10 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                                                 dbCilent.Insertable<table_商户明细余额>(money).ExecuteCommand();
 
                       
-                                              dbCilent.Ado.ExecuteCommand("  " +
-                                                "UPDATE table_商户明细提款 SET 备注管理写 = '"+ TextBox_备注.Text + "', 状态 =' "+ DropDownList_下拉框1.SelectedItem.Value + "', 时间完成 = '"+ 时间完成 + "', 操作员 = '"+ ClassLibrary1.ClassAccount.检查管理L1端cookie2() + "'  WHERE 订单号 = '"+ 从URL传来值 + "';");
-                                            
+                                              dbCilent.Ado.ExecuteCommand(" UPDATE table_商户明细提款 SET 备注管理写 = '"+ TextBox_备注.Text + "', 状态 =' "+ DropDownList_下拉框1.SelectedItem.Value + "', 时间完成 = '"+ 时间完成 + "', 操作员 = '"+ ClassLibrary1.ClassAccount.检查管理L1端cookie2() + "'  WHERE 订单号 = '"+ 从URL传来值 + "';");
+                                                }
                                             });
+                                             
                                               if (result.IsSuccess)
                                               {
                                                 calCount++;
@@ -1320,7 +1329,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                                               }
 
                                               cou++;
-                                            }
+                                            //}
 
                                          
 
