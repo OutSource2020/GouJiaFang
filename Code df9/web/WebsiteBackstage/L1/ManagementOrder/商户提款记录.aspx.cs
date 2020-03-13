@@ -1113,7 +1113,9 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                         }
                         string 状态1 = "成功";
                         double 余额1 = Convert.ToDouble(出款银行卡余额) - Convert.ToDouble(record.交易金额);
-                        while (true)
+
+                        int c = 5;
+                        while (--c > 0)
                         {
                             dbClient.Ado.UseTran(() =>
                             {
@@ -1178,7 +1180,8 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
 
                         double 余额1 = record1.提款余额.Value + 本单交易金额;
 
-                        while (true)
+                        int c = 5;
+                        while (--c > 0)
                         {
                             dbClient.Ado.UseTran(() =>
                             {
