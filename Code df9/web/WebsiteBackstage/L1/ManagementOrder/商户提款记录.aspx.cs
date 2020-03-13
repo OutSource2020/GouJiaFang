@@ -1160,7 +1160,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                                         DbResult<bool>   result=null;
                                         Int16 cou = 0;
                                         // 重写的这垃圾代码（接盘的算你幸运，算我受不了帮你写一下）
-                                        //while(cou<3){
+                                        while(cou<3){
 
                                          result = dbCilent.Ado.UseTran(() =>
                                         {
@@ -1215,19 +1215,18 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                                           }
 
                                         });
-                                      
-                                     
 
-                                          if (result.IsSuccess)
+
+                                          dbCilent.Ado.UseTran(() => { });
+                                          if (result.IsSuccess&& result!=null)
                                           {
                                             calCount++;
                                             break;
                                           }
 
                                           cou++;
-                                       
-
-                                   //     }
+                                      
+                                        }
                                     
                                           
                                           
@@ -1301,8 +1300,8 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                                             Int16 cou = 0;
                                          var   str = "UPDATE table_商户账号 SET 提款余额=提款余额+" + 交易金额.ToString() + " , 手续费余额= 手续费余额+" + 手续费.ToString() + " where 商户ID="+商户ID+ ";";
                                             DbResult<bool> result = null;
-                                            //while (cou < 3)
-                                            //{
+                                            while (cou < 3)
+                                            {
                                               result = dbCilent.Ado.UseTran(() =>
                                               {
                                               var info = dbCilent.Queryable<table_商户明细提款>().Where(it => it.订单号 == 从URL传来值).First();
@@ -1369,15 +1368,15 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                                               dbCilent.Ado.ExecuteCommand(" UPDATE table_商户明细提款 SET 备注管理写 = '"+ TextBox_备注.Text + "', 状态 ='"+ DropDownList_下拉框1.SelectedItem.Value + "', 时间完成 = '"+ 时间完成 + "', 操作员 = '"+ ClassLibrary1.ClassAccount.检查管理L1端cookie2() + "'  WHERE 订单号 = '"+ 从URL传来值 + "';");
                                                 }
                                             });
-                                             
-                                              if (result.IsSuccess)
+                                              dbCilent.Ado.UseTran(() => { });
+                                              if (result.IsSuccess&&result!=null)
                                               {
                                                 calCount++;
                                                 break;
                                               }
 
                                               cou++;
-                                            //}
+                                            }
 
                                          
 
