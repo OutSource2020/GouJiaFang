@@ -1049,423 +1049,213 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
 
         protected void btnDelete_Click(object sender, EventArgs e)
         {
-            DBClient db = new DBClient();
-            var dbCilent= db.GetClient();
-            int calCount = 0;
-      //隔离级别序列化
-      //dbCilent.Ado.ExecuteCommand("set session transaction isolation level serializable;");
-      //判定 DropDownList_选择银行卡 是否空
-           if (String.IsNullOrEmpty(DropDownList_选择银行卡.SelectedValue))
+            if (String.IsNullOrEmpty(DropDownList_选择银行卡.SelectedValue))
             {
                 ClassLibrary1.ClassMessage.HinXi(Page, "出款银行卡还未设置或者未启用");
+                return;
             }
-            else
+            if (String.IsNullOrEmpty(TextBox_备注.Text))
             {
+                ClassLibrary1.ClassMessage.HinXi(Page, "必须填写备注");
+                return;
+            }
+            int calCount = 0;
+            long OperatorId = GetTimeStamp();
+            SetData();
+            GridView1.AllowPaging = false;
+            GridView1.DataBind();
+            ArrayList arr = (ArrayList)ViewState["SelectedRecords"];
+            int count = arr.Count;
+            string 出款卡主姓名 = DropDownList_选择银行卡.SelectedItem.Text.Substring(0, DropDownList_选择银行卡.SelectedItem.Text.IndexOf(" ")).Trim();
 
-
-
-
-                long OperatorId = GetTimeStamp();
-
-                int count = 0;
-                SetData();
-                GridView1.AllowPaging = false;
-                GridView1.DataBind();
-                ArrayList arr = (ArrayList)ViewState["SelectedRecords"];
-                count = arr.Count;
+            using (SqlSugarClient dbClient = new DBClient().GetClient())
+            {
+                dbClient.Ado.ExecuteCommand("set session transaction isolation level serializable;");
                 for (int i = 0; i < GridView1.Rows.Count; i++)
                 {
-                    if (arr.Contains(GridView1.DataKeys[i].Value))
+                    if (!arr.Contains(GridView1.DataKeys[i].Value))
+                        continue;
+                    string 订单号 = GridView1.Rows[i].Cells[1].Text;
+                    table_商户明细提款 record = null;
+                    dbClient.Ado.UseTran(() => { }); // select 之前保证一次 commit，即使什么都不做
+                    dbClient.Ado.UseTran(() => {
+                        record = dbClient.Queryable<table_商户明细提款>().Where(it => it.订单号 == 订单号).First();
+                    });
+                    if (record == null)
+                        continue;
+                    if (record.状态 != "待处理")
+                        continue;
+                    string 设置订单的状态 = DropDownList_下拉框1.SelectedItem.Value;
+                    double 本单交易金额 = record.交易金额.Value;
+                    DateTime now = DateTime.Now;
+                    if (设置订单的状态 == "成功")
                     {
-                        //DeleteRecord(GridView1.DataKeys[i].Value.ToString());
-
-
-
-                        //判定 DropDownList_选择银行卡 是否空
-                        if (String.IsNullOrEmpty(DropDownList_选择银行卡.SelectedValue))
+                        table_后台出款银行卡管理 record1 = null;
+                        dbClient.Ado.UseTran(() => { }); // select 之前保证一次 commit，即使什么都不做
+                        dbClient.Ado.UseTran(() =>
                         {
-                            ClassLibrary1.ClassMessage.HinXi(Page, "出款银行卡还未设置或者未启用");
+                            record1 = dbClient.Queryable<table_后台出款银行卡管理>().Where(it => it.出款银行卡主姓名 == 出款卡主姓名).First();
+                        });
+                        if (record1 == null)
+                            continue;
+                        double 出款银行卡余额 = record1.出款银行卡余额.Value;
+                        double 银行卡每日限额 = record1.出款银行卡每日限额.Value;
+                        double 银行卡最小交易限额 = record1.出款银行卡最小交易金额.Value;
+                        if ((银行卡最小交易限额 - 本单交易金额) > 0)
+                        {
+                            ClassLibrary1.ClassMessage.HinXi(Page, "本单金额小于出款银行卡限制的 最小交易金额");
+                            continue;
                         }
-                        else
+                        if ((出款银行卡余额 - 本单交易金额) < 0)
                         {
-                            //ClassLibrary1.ClassMessage.HinXi(Page, "出款银行卡");
+                            ClassLibrary1.ClassMessage.HinXi(Page, "出款银行卡余额不足");
+                            return;
+                        }
+                        string 状态1 = "成功";
+                        double 余额1 = Convert.ToDouble(出款银行卡余额) - Convert.ToDouble(record.交易金额);
 
-
-                            if (String.IsNullOrEmpty(TextBox_备注.Text))
+                        int c = 5;
+                        while (--c > 0)
+                        {
+                            dbClient.Ado.UseTran(() =>
                             {
-                                ClassLibrary1.ClassMessage.HinXi(Page, "必须填写备注");
-                            }
-                            else
-                            {
-
-
-                                //先检查状态是否待处理
-                                using (MySqlConnection conCHA = new MySqlConnection(ClassLibrary1.ClassDataControl.conStr1))
+                                record1 = dbClient.Queryable<table_后台出款银行卡管理>().Where(it => it.出款银行卡主姓名 == 出款卡主姓名).First();
+                                if (record1.出款银行卡余额.Value - 余额1 > 0.0001) // double不能判断相等，只能减
                                 {
-                                    using (MySqlCommand cmdCHA = new MySqlCommand("SELECT 状态 FROM table_商户明细提款 WHERE 订单号=@订单号", conCHA))
+                                    dbClient.Ado.ExecuteCommand("UPDATE `table_后台出款银行卡管理` SET `出款银行卡余额` = `出款银行卡余额` - " + record.交易金额.ToString() + " WHERE `出款银行卡卡号` ='" + record1.出款银行卡卡号 + "';");
+                                    string 生成编号1 = "BOPBCP" + now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999));
+                                    string 类型 = "订单提款出款";
+                                    table_后台出款银行卡流水 outCardHistory = new table_后台出款银行卡流水
                                     {
-                                        cmdCHA.Parameters.AddWithValue("@订单号", GridView1.Rows[i].Cells[1].Text);
-                                        using (MySqlDataAdapter daCHA = new MySqlDataAdapter(cmdCHA))
-                                        {
-                                            DataTable imagesCHA = new DataTable();
-                                            daCHA.Fill(imagesCHA);
-                                            foreach (DataRow drCHA in imagesCHA.Rows)
-                                            {
-                                                if (drCHA["状态"].ToString() == "待处理")
-                                                {
-                                                    //开始更新
+                                        订单号 = 生成编号1,
+                                        商户ID = Convert.ToInt32(record.商户ID),
+                                        余额 = 余额1,
+                                        类型 = 类型,
+                                        状态 = 状态1,
+                                        时间创建 = now,
+                                        时间交易 = now,
+                                        支出 = Convert.ToDouble(record.交易金额),
+                                        出款银行卡名称 = record1.出款银行卡主姓名,
+                                        出款银行卡卡号 = record1.出款银行卡卡号
+                                    };
+                                    dbClient.Insertable(outCardHistory).ExecuteCommand();
 
+                                }
+                                dbClient.Updateable<table_商户明细提款>().SetColumns(it =>
+                                new table_商户明细提款()
+                                {
+                                    备注管理写 = TextBox_备注.Text,
+                                    状态 = 状态1,
+                                    时间完成 = now,
+                                    出款银行卡名称 = record1.出款银行卡主姓名,
+                                    出款银行卡卡号 = record1.出款银行卡卡号,
+                                    操作员 = ClassLibrary1.ClassAccount.检查管理L1端cookie2(),
+                                    后台处理批次ID组 = OperatorId
+                                })
+                                .Where(it => it.订单号 == 订单号).ExecuteCommand();
 
+                            });
+                            dbClient.Ado.UseTran(() => { }); // select 之前保证一次 commit，即使什么都不做
+                            dbClient.Ado.UseTran(() =>
+                            {
+                                record = dbClient.Queryable<table_商户明细提款>().Where(it => it.订单号 == 订单号).First();
+                            });
+                            if (record.状态 != "待处理")
+                                break;
+                        }
+                    }
+                    else if (设置订单的状态 == "失败")
+                    {
+                        table_商户账号 record1 = null;
 
+                        dbClient.Ado.UseTran(() => { }); // select 之前保证一次 commit，即使什么都不做
+                        dbClient.Ado.UseTran(() => {
+                            record1 = dbClient.Queryable<table_商户账号>().Where(it => it.商户ID == record.商户ID).First();
+                        });
 
-                                                    string 设置订单的状态 = DropDownList_下拉框1.SelectedItem.Value;
-                                                    if (设置订单的状态 == "成功")
-                                                    {
-                                                        string 从URL传来值 = GridView1.Rows[i].Cells[1].Text;
+                        if (record1 == null)
+                            continue;
 
-                                                        //查询出款银行卡余额是否足够支付
-                                                        using (MySqlConnection con查询出款银行卡 = new MySqlConnection(ClassLibrary1.ClassDataControl.conStr1))
-                                                        {
-                                                            using (MySqlCommand cmd查询出款银行卡 = new MySqlCommand("SELECT 出款银行卡卡号,出款银行卡余额,出款银行卡每日限额,出款银行卡最小交易金额 FROM table_后台出款银行卡管理 WHERE 出款银行卡卡号=@出款银行卡卡号", con查询出款银行卡))
-                                                            {
-                                                                cmd查询出款银行卡.Parameters.AddWithValue("@出款银行卡卡号", DropDownList_选择银行卡.SelectedItem.Value);
-                                                                using (MySqlDataAdapter da查询出款银行卡 = new MySqlDataAdapter(cmd查询出款银行卡))
-                                                                {
-                                                                    DataTable images查询出款银行卡 = new DataTable();
-                                                                    da查询出款银行卡.Fill(images查询出款银行卡);
-                                                                    foreach (DataRow dr查询出款银行卡 in images查询出款银行卡.Rows)
-                                                                    {
-                                                                        //1.扣除出款银行卡内的余额
-                                                                        //2.出款银行卡的流水记录
-                                                                        //3.设置本单状态成功
+                        var str = "UPDATE `table_商户账号` SET `提款余额` = `提款余额` + " + 本单交易金额 + 
+                            ", `手续费余额` = `手续费余额` + " + record.手续费.Value+ " WHERE `商户ID` = " + record.商户ID + ";";
 
+                        double 余额1 = record1.提款余额.Value + 本单交易金额;
 
-                                                                        double 出款银行卡余额 = double.Parse(dr查询出款银行卡["出款银行卡余额"].ToString());
-                                                                        double 银行卡每日限额 = double.Parse(dr查询出款银行卡["出款银行卡每日限额"].ToString());
-                                                                        double 银行卡最小交易限额 = double.Parse(dr查询出款银行卡["出款银行卡最小交易金额"].ToString());
+                        int c = 5;
+                        while (--c > 0)
+                        {
+                            dbClient.Ado.UseTran(() =>
+                            {
+                                record1 = dbClient.Queryable<table_商户账号>().Where(it => it.商户ID == record.商户ID).First();
+                                if (record1.提款余额.Value - 余额1 > 0.0001)
+                                {
+                                    dbClient.Ado.ExecuteCommand(str);
+                                    string 提款手续费_订单号 = "MHFOR" + now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999));
+                                    string 提款手续费_类型 = "订单出款退款";
 
-                                                                        double 本单交易金额 = double.Parse(GridView1.Rows[i].Cells[5].Text);
+                                    table_商户明细手续费 fee = new table_商户明细手续费
+                                    {
+                                        订单号 = 提款手续费_订单号,
+                                        商户ID = Int32.Parse(record1.商户ID),
+                                        手续费支出 = record.手续费,
+                                        交易金额 = 本单交易金额,
+                                        交易前手续费余额 = record1.手续费余额,
+                                        交易后手续费余额 = record1.手续费余额.Value + record.手续费.Value,
+                                        类型 = 提款手续费_类型,
+                                        时间创建 = now,
+                                    };
+                                    dbClient.Insertable(fee).ExecuteCommand();
 
-                                                                        if (银行卡最小交易限额 <= 本单交易金额)
-                                                                        {
-                                                                            if ((出款银行卡余额 - 本单交易金额) >= 0)
-                                                                            {
-                                                                                //1.设置订单状态 成功
-                                                                                string 时间完成1 = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
+                                    string 账户余额_订单号 = "MOPOR" + now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999));
+                                    string 账户余额_类型 = "订单出款退款";
 
-                                        var 时间完成debug = Convert.ToDateTime(时间完成1);
-
-
-
-                                        DbResult<bool>   result=null;
-                                        Int16 cou = 0;
-                                        // 重写的这垃圾代码（接盘的算你幸运，算我受不了帮你写一下）
-                                        while(cou<3){
-
-                                         result = dbCilent.Ado.UseTran(() =>
-                                        {
-
-                                         var info= dbCilent.Queryable<table_商户明细提款>().Where(it=>it.订单号== 从URL传来值).First();
-                                          if(info.状态=="待处理")
-                                          { 
-                                          //table_商户明细提款   更新状态
-                                          dbCilent.Updateable<table_商户明细提款>().SetColumns(it => 
-                                          new table_商户明细提款()
-                                          {
-                                            备注管理写 = TextBox_备注.Text, 
-                                            状态 = DropDownList_下拉框1.SelectedItem.Value,
-                                            时间完成= Convert.ToDateTime( 时间完成1),
-                                            出款银行卡名称= DropDownList_选择银行卡.SelectedItem.Text,
-                                            出款银行卡卡号= DropDownList_选择银行卡.SelectedItem.Value,
-                                            操作员= ClassLibrary1.ClassAccount.检查管理L1端cookie2(),
-                                           // 订单号=从URL传来值,
-                                            后台处理批次ID组=OperatorId
-                                          })
-                                          .Where(it => it.订单号 == 从URL传来值).ExecuteCommand();
-
-                                          //查询 
-                                          var data = dbCilent.Queryable<table_商户明细提款>()
-                                          .Where(it => it.订单号== 从URL传来值)
-                                          .Select(f => new { f.订单号, f.商户ID, f.交易金额, f.状态 })
-                                          .First();
-                                          //扣余额
-                                          dbCilent.Ado.ExecuteCommand( "UPDATE table_后台出款银行卡管理 SET 出款银行卡余额 = 出款银行卡余额 - " + data.交易金额.ToString() + " WHERE 出款银行卡卡号 ='" + DropDownList_选择银行卡.SelectedItem.Value + "';");
-
-                                          string 生成编号1 = "BOPBCP" + DateTime.Now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999));
-                                          string 时间创建1 = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
-                                          
-                                          string 类型 = "订单提款出款";
-                                          string 状态 = "成功";
-                                          double 余额1 = Convert.ToDouble(出款银行卡余额) - Convert.ToDouble(data.交易金额);
-                                          table_后台出款银行卡流水 outCardHistory = new table_后台出款银行卡流水
-                                          {
-                                            订单号 = 生成编号1,
-                                            商户ID =Convert.ToInt32( data.商户ID),
-                                            余额 = 余额1,
-                                            类型 = 类型,
-                                            状态 = 状态,
-                                            时间创建 = Convert.ToDateTime(时间创建1),
-                                            时间交易 = Convert.ToDateTime(时间创建1),
-                                            支出 = Convert.ToDouble(data.交易金额),
-                                            出款银行卡卡号 = DropDownList_选择银行卡.SelectedItem.Value,
-                                            出款银行卡名称 = DropDownList_选择银行卡.SelectedItem.Text
-                                          };
-                                          // 插入出款流水
-                                          var t2=  dbCilent.Insertable(outCardHistory).ExecuteCommand();
-                                          }
-
-                                        });
-
-
-                                          dbCilent.Ado.UseTran(() => { });
-                                          if (result.IsSuccess&& result!=null)
-                                          {
-                                            calCount++;
-                                            break;
-                                          }
-
-                                          cou++;
-                                      
-                                        }
-                                    
-                                          
-                                          
-                            
-
-                                                                                //Response.Redirect("商户提款记录.aspx");
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                ClassLibrary1.ClassMessage.HinXi(Page, "出款银行卡余额不足");
-                                                                            }
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            ClassLibrary1.ClassMessage.HinXi(Page, "本单金额小于出款银行卡限制的 最小交易金额");
-                                                                        }
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-
-
-                                                    }
-                                                    if (设置订单的状态 == "失败")
-                                                    {
-                                                        string 从URL传来值 = GridView1.Rows[i].Cells[1].Text;
-
-                                                        //查询订单信息
-                                                        using (MySqlConnection con11 = new MySqlConnection(ClassLibrary1.ClassDataControl.conStr1))
-                                                        {
-                                                            using (MySqlCommand cmd11 = new MySqlCommand("SELECT 订单号,商户ID,交易方姓名,交易方卡号,交易方银行,交易金额,手续费,状态 FROM table_商户明细提款 WHERE 订单号=@订单号", con11))
-                                                            {
-                                                                cmd11.Parameters.AddWithValue("@订单号", 从URL传来值);
-                                                                using (MySqlDataAdapter da11 = new MySqlDataAdapter(cmd11))
-                                                                {
-                                                                    DataTable images11 = new DataTable();
-                                                                    da11.Fill(images11);
-                                                                    foreach (DataRow dr11 in images11.Rows)
-                                                                    {
-                                                                        string 商户ID = dr11["商户ID"].ToString();
-                                                                        string 交易金额 = dr11["交易金额"].ToString();
-                                                                        string 手续费 = dr11["手续费"].ToString();
-
-                                                                        //查询账户信息
-                                                                        using (MySqlConnection con12 = new MySqlConnection(ClassLibrary1.ClassDataControl.conStr1))
-                                                                        {
-                                                                            using (MySqlCommand cmd12 = new MySqlCommand("SELECT 商户ID,提款余额,手续费余额,手续费比率,单笔手续费,提款最低单笔金额,提款最高单笔金额 FROM table_商户账号 WHERE 商户ID=@商户ID", con12))
-                                                                            {
-                                                                                cmd12.Parameters.AddWithValue("@商户ID", 商户ID);
-                                                                                using (MySqlDataAdapter da12 = new MySqlDataAdapter(cmd12))
-                                                                                {
-                                                                                    DataTable images12 = new DataTable();
-                                                                                    da12.Fill(images12);
-                                                                                    foreach (DataRow dr12 in images12.Rows)
-                                                                                    {
-                                                                                        double 提款余额 = double.Parse(dr12["提款余额"].ToString());
-                                                                                        double 手续费余额 = double.Parse(dr12["手续费余额"].ToString());
-                                                                                        double 手续费比率 = double.Parse(dr12["手续费比率"].ToString());
-                                                                                        double 单笔手续费 = double.Parse(dr12["单笔手续费"].ToString());
-                                                                                        double 提款最低单笔金额 = double.Parse(dr12["提款最低单笔金额"].ToString());
-                                                                                        double 提款最高单笔金额 = double.Parse(dr12["提款最高单笔金额"].ToString());
-
-                                                                                        //直接设置设置订单状态
-                                                                                        string 时间完成 = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
-                                                                                        Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 100, 300));
-
-                                            //1.退回余额和手续费
-                                            //2.插 商户余额交易明细
-                                            //3.插 商户手续费交易明细
-                                            //4.向提款记录表更新信息-失败
-                                            Int16 cou = 0;
-                                         var   str = "UPDATE table_商户账号 SET 提款余额=提款余额+" + 交易金额.ToString() + " , 手续费余额= 手续费余额+" + 手续费.ToString() + " where 商户ID="+商户ID+ ";";
-                                            DbResult<bool> result = null;
-                                            while (cou < 3)
-                                            {
-                                              result = dbCilent.Ado.UseTran(() =>
-                                              {
-                                              var info = dbCilent.Queryable<table_商户明细提款>().Where(it => it.订单号 == 从URL传来值).First();
-                                              if (info.状态 == "待处理")
-                                              {
-                                                //1 退回 账户余额和手续费
-                                                dbCilent.Ado.ExecuteCommand(str);
-
-                                              string 提款手续费_生成编号标头 = "MHFOR";
-                                              string 提款手续费_订单号 = 提款手续费_生成编号标头 + DateTime.Now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999));
-                                              string 提款手续费_商户ID = 商户ID;
-                                              double 提款手续费_手续费 = double.Parse(手续费);
-                                              double 提款手续费_交易金额 = double.Parse(交易金额);
-                                              double 提款手续费_交易前手续费余额 = 手续费余额;
-                                              double 提款手续费_交易后手续费余额 = 手续费余额 + System.Convert.ToDouble(手续费);
-                                              string 提款手续费_类型 = "订单出款退款";
-                                              string 提款手续费_时间创建 = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
-
-                                     
-                                        
-                                              table_商户明细手续费  fee = new table_商户明细手续费
-                                              {
-                                               订单号 = 提款手续费_订单号,
-                                                商户ID = Convert.ToInt32(提款手续费_商户ID),
-                                                手续费支出 = 提款手续费_手续费,
-                                                交易金额 = 提款手续费_交易金额,
-                                                交易前手续费余额 = 提款手续费_交易前手续费余额,
-                                                交易后手续费余额 = 提款手续费_交易后手续费余额,
-                                                类型 = 提款手续费_类型,
-                                                时间创建 = Convert.ToDateTime(提款手续费_时间创建),
-                                              };
-
-                                              //2 商户提款手续费交易明细
-                                              dbCilent.Insertable<table_商户明细手续费>(fee).ExecuteCommand();
-
-
-                                              string 账户余额_订单号 = "MOPOR" + DateTime.Now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999));
-                                              string 账户余额_类型 = "订单出款退款";
-                                              double 账户余额_手续费 = 手续费余额;
-                                              double 账户余额_交易金额 = double.Parse(dr12["提款余额"].ToString());
-                                              double 账户余额_交易前余额 = double.Parse(dr12["提款余额"].ToString());
-                                              double 账户余额_交易后余额 = double.Parse(dr12["提款余额"].ToString()) + double.Parse(dr11["交易金额"].ToString());
-                                              string 账户余额_时间创建 = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
-
-                                          
-                                       
-
-                                              table_商户明细余额 money = new table_商户明细余额
-                                              {
-                                                订单号 = 账户余额_订单号,
-                                                商户ID = Convert.ToInt32(商户ID),
-                                                类型 = 账户余额_类型,
-                                                交易金额 = Convert.ToString(交易金额),
-                                                交易前账户余额 = Convert.ToString(账户余额_交易前余额),
-                                                交易后账户余额 = Convert.ToString(账户余额_交易后余额),
-                                                状态 = "",
-                                                时间创建 = Convert.ToDateTime(账户余额_时间创建),
-                                              };
-
-                                                //2 table_商户明细余额
-                                                dbCilent.Insertable<table_商户明细余额>(money).ExecuteCommand();
-
-                      
-                                              dbCilent.Ado.ExecuteCommand(" UPDATE table_商户明细提款 SET 备注管理写 = '"+ TextBox_备注.Text + "', 状态 ='"+ DropDownList_下拉框1.SelectedItem.Value + "', 时间完成 = '"+ 时间完成 + "', 操作员 = '"+ ClassLibrary1.ClassAccount.检查管理L1端cookie2() + "'  WHERE 订单号 = '"+ 从URL传来值 + "';");
-                                                }
-                                            });
-                                              dbCilent.Ado.UseTran(() => { });
-                                              if (result.IsSuccess&&result!=null)
-                                              {
-                                                calCount++;
-                                                break;
-                                              }
-
-                                              cou++;
-                                            }
-
-                                         
-
-
-                                            //Response.Redirect("商户提款记录.aspx");
-
-                                          }
-                                                                                }
-                                                                            }
-                                                                        }
-
-
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-
-                                                    }
-
-
-
-                                                }
-                                                else
-                                                {
-                                                    ClassLibrary1.ClassMessage.HinXi(Page, "订单已经处理过");
-                                                    //Response.Redirect("代理列表L1.aspx");
-                                                }
-
-                                            }
-                                        }
-                                    }
+                                    table_商户明细余额 money = new table_商户明细余额
+                                    {
+                                        订单号 = 账户余额_订单号,
+                                        商户ID = Int32.Parse(record1.商户ID),
+                                        类型 = 账户余额_类型,
+                                        交易金额 = 本单交易金额.ToString(),
+                                        交易前账户余额 = record1.提款余额.Value.ToString(),
+                                        交易后账户余额 = (record1.提款余额.Value + 本单交易金额).ToString(),
+                                        状态 = "",
+                                        时间创建 = now,
+                                    };
+                                    dbClient.Insertable(money).ExecuteCommand();
                                 }
 
-
-
-
-
-
-                            }
-              dbCilent.Close();
-            }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                        arr.Remove(GridView1.DataKeys[i].Value);
+                                dbClient.Ado.ExecuteCommand("UPDATE `table_商户明细提款` SET `备注管理写` = '" + TextBox_备注.Text +
+                                    "', `状态` = '失败', `时间完成` = '" + now.ToString("yyyy-MM-dd HH:mm:ss.fff") +
+                                    "', `操作员` = '" + ClassLibrary1.ClassAccount.检查管理L1端cookie2() +
+                                    "' WHERE `订单号` = '" + record.订单号 + "';");
+                            });
+                            dbClient.Ado.UseTran(() => { }); // select 之前保证一次 commit，即使什么都不做
+                            dbClient.Ado.UseTran(() =>
+                            {
+                                record = dbClient.Queryable<table_商户明细提款>().Where(it => it.订单号 == 订单号).First();
+                            });
+                            if (record.状态 != "待处理")
+                                break;
+                        }
                     }
+                    calCount++;
+                    arr.Remove(GridView1.DataKeys[i].Value);
                 }
-                ViewState["SelectedRecords"] = arr;
-                hfCount.Value = "0";
-                GridView1.AllowPaging = true;
-                //BindGrid("");
-                BindGridForBatchOperator();
-                ShowMessage(calCount);
-
-
-                //Response.Redirect("商户提款记录.aspx");
-                //========== 执行完批量操作后消除勾选 开始 ==========
-                CheckBox cb;
-                for (int i = 0; i < GridView1.Rows.Count; i++)
-                {
-                    cb = (CheckBox)GridView1.Rows[i].Cells[0].FindControl("CheckBox1");
-                    cb.Checked = false;
-
-                }
-                //========== 执行完批量操作后消除勾选 结束 ==========
-
-
-                勾选循环全部取消();
             }
+            ViewState["SelectedRecords"] = arr;
+            hfCount.Value = "0";
+            GridView1.AllowPaging = true;
+            BindGridForBatchOperator();
+            ShowMessage(calCount);
 
+            CheckBox cb;
+            for (int i = 0; i < GridView1.Rows.Count; i++)
+            {
+                cb = (CheckBox)GridView1.Rows[i].Cells[0].FindControl("CheckBox1");
+                cb.Checked = false;
 
+            }
+            勾选循环全部取消();
         }
-
-
-
-
-
-
 
         private void DeleteRecord(string CustomerID)
         {
