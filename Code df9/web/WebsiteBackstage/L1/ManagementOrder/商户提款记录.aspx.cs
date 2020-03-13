@@ -1366,7 +1366,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                                                 dbCilent.Insertable<table_商户明细余额>(money).ExecuteCommand();
 
                       
-                                              dbCilent.Ado.ExecuteCommand(" UPDATE table_商户明细提款 SET 备注管理写 = '"+ TextBox_备注.Text + "', 状态 =' "+ DropDownList_下拉框1.SelectedItem.Value + "', 时间完成 = '"+ 时间完成 + "', 操作员 = '"+ ClassLibrary1.ClassAccount.检查管理L1端cookie2() + "'  WHERE 订单号 = '"+ 从URL传来值 + "';");
+                                              dbCilent.Ado.ExecuteCommand(" UPDATE table_商户明细提款 SET 备注管理写 = '"+ TextBox_备注.Text + "', 状态 ='"+ DropDownList_下拉框1.SelectedItem.Value + "', 时间完成 = '"+ 时间完成 + "', 操作员 = '"+ ClassLibrary1.ClassAccount.检查管理L1端cookie2() + "'  WHERE 订单号 = '"+ 从URL传来值 + "';");
                                                 }
                                             });
                                              
