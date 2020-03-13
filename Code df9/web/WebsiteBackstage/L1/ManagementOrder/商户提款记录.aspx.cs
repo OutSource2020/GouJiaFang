@@ -923,21 +923,21 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
               modelList.Add(new Model{ 出款银行卡卡号 = it.出款银行卡卡号, 出款银行卡名称 = it.出款银行卡名称+"  "+ it.出款银行卡余额 });
         
             });
-      string querystring = "select distinct 出款银行卡名称,出款银行卡卡号 from table_后台出款银行卡管理 where 状态='启用' ";
-      MySqlConnection myconn = new MySqlConnection(connstring);
-      myconn.Open();
-      MySqlDataAdapter myadapter = new MySqlDataAdapter(querystring, myconn);
-      DataSet ds = new DataSet();
-      myadapter.Fill(ds, "table_后台出款银行卡管理");
-      myconn.Close();
+      //string querystring = "select distinct 出款银行卡名称,出款银行卡卡号 from table_后台出款银行卡管理 where 状态='启用' ";
+      //MySqlConnection myconn = new MySqlConnection(connstring);
+      //myconn.Open();
+      //MySqlDataAdapter myadapter = new MySqlDataAdapter(querystring, myconn);
+      //DataSet ds = new DataSet();
+      //myadapter.Fill(ds, "table_后台出款银行卡管理");
+      //myconn.Close();
 
     
       // populate list
       DataTable ListAsDataTable = BuildDataTable(modelList);
       DataView ListAsDataView = ListAsDataTable.DefaultView;
 
-      DataView  dv = new DataView();
-      DropDownList_选择银行卡.Items.Clear();
+      //DataView  dv = new DataView();
+     //DropDownList_选择银行卡.Items.Clear();
       DropDownList_选择银行卡.DataSource = ListAsDataView; 
       DropDownList_选择银行卡.DataTextField = "出款银行卡名称";
       DropDownList_选择银行卡.DataValueField = "出款银行卡卡号";
