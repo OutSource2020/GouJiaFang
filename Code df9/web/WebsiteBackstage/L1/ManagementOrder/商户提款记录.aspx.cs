@@ -1066,6 +1066,8 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
             GridView1.DataBind();
             ArrayList arr = (ArrayList)ViewState["SelectedRecords"];
             int count = arr.Count;
+            string 出款卡主姓名 = DropDownList_选择银行卡.SelectedItem.Text.Substring(0, DropDownList_选择银行卡.SelectedItem.Text.IndexOf(" ")).Trim();
+
             using (SqlSugarClient dbClient = new DBClient().GetClient())
             {
                 dbClient.Ado.ExecuteCommand("set session transaction isolation level serializable;");
@@ -1075,6 +1077,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                         continue;
                     string 订单号 = GridView1.Rows[i].Cells[1].Text;
                     table_商户明细提款 record = null;
+                    dbClient.Ado.UseTran(() => { }); // select 之前保证一次 commit，即使什么都不做
                     dbClient.Ado.UseTran(() => {
                         record = dbClient.Queryable<table_商户明细提款>().Where(it => it.订单号 == 订单号).First();
                     });
@@ -1091,7 +1094,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                         dbClient.Ado.UseTran(() => { }); // select 之前保证一次 commit，即使什么都不做
                         dbClient.Ado.UseTran(() =>
                         {
-                            record1 = dbClient.Queryable<table_后台出款银行卡管理>().Where(it => it.出款银行卡主姓名 == DropDownList_选择银行卡.SelectedItem.Text).First();
+                            record1 = dbClient.Queryable<table_后台出款银行卡管理>().Where(it => it.出款银行卡主姓名 == 出款卡主姓名).First();
                         });
                         if (record1 == null)
                             continue;
@@ -1114,7 +1117,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                         {
                             dbClient.Ado.UseTran(() =>
                             {
-                                record1 = dbClient.Queryable<table_后台出款银行卡管理>().Where(it => it.出款银行卡主姓名 == DropDownList_选择银行卡.SelectedItem.Text).First();
+                                record1 = dbClient.Queryable<table_后台出款银行卡管理>().Where(it => it.出款银行卡主姓名 == 出款卡主姓名).First();
                                 if (record1.出款银行卡余额.Value - 余额1 > 0.0001) // double不能判断相等，只能减
                                 {
                                     dbClient.Ado.ExecuteCommand("UPDATE `table_后台出款银行卡管理` SET `出款银行卡余额` = `出款银行卡余额` - " + record.交易金额.ToString() + " WHERE `出款银行卡卡号` ='" + record1.出款银行卡卡号 + "';");
@@ -1230,6 +1233,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                                 break;
                         }
                     }
+                    calCount++;
                     arr.Remove(GridView1.DataKeys[i].Value);
                 }
             }
