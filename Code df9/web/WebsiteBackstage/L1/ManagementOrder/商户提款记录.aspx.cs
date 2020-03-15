@@ -1885,7 +1885,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
             BindGrid("where " + 查看勾选了哪些() + " ");
         }
 
-        private void ExportGird<T>(bool all, string name, string[] headers, Action<bool, DataTable , Action<DataRow, T, int>> data , Action<DataRow, T, int> action)
+        private void ExportGird<T>(bool all, string name, string[] headers, Action<bool, DataTable , Action<DataRow, T, int>> data , Action<DataRow, T, int> action, Func<DataRow, DataRow, bool> drawColor)
         {
             DataTable dt = new DataTable();
             foreach (string head in headers)
@@ -1905,13 +1905,21 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
             IWorkbook wb = new HSSFWorkbook();
             ISheet sheet = wb.CreateSheet("Sheet1");
             ICreationHelper cH = wb.GetCreationHelper();
+            ICellStyle style = wb.CreateCellStyle();
+            style.FillForegroundColor = IndexedColors.Red.Index;
+            style.FillPattern = FillPattern.SolidForeground;
+            bool isDrawColor = false;
             for (int i = 0; i < dt.Rows.Count; i++)
             {
                 IRow row = sheet.CreateRow(i);
+                if (i > 1)
+                    isDrawColor = drawColor(dt.Rows[i - 1], dt.Rows[i]);
                 for (int j = 0; j < headers.Length; j++)
                 {
                     ICell cell = row.CreateCell(j);
                     cell.SetCellValue(cH.CreateRichTextString(dt.Rows[i].ItemArray[j].ToString()));
+                    if (isDrawColor)
+                        cell.CellStyle = style;
                 }
                 sheet.AutoSizeColumn(i);
             }
@@ -1959,6 +1967,11 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                 dr[2] = row.Cells[5].Text;
                 dr[4] = row.Cells[8].Text;
                 dr[9] = "实时";
+            }, (dr1, dr2) =>
+            {
+                return (dr1[0].ToString() == dr2[0].ToString())
+                    && (dr1[1].ToString() == dr2[1].ToString())
+                    && (dr1[2].ToString() == dr2[2].ToString());
             });
         }
 
@@ -1974,6 +1987,11 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                 dr[5] = row.Cells[7].Text;
                 dr[6] = row.Cells[5].Text;
                 dr[8] = row.Cells[8].Text;
+            }, (dr1, dr2) =>
+            {
+                return (dr1[4].ToString() == dr2[4].ToString())
+                    && (dr1[5].ToString() == dr2[5].ToString())
+                    && (dr1[6].ToString() == dr2[6].ToString());
             });
         }
 
@@ -1987,6 +2005,11 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                 dr[2] = row.Cells[7].Text;
                 dr[3] = row.Cells[8].Text;
                 dr[6] = (new[] { "行内转账", "异地跨行" })[("平安银行" == dr[3]) ? 0 : 1];
+            }, (dr1, dr2) =>
+            {
+                return (dr1[0].ToString() == dr2[0].ToString())
+                    && (dr1[1].ToString() == dr2[1].ToString())
+                    && (dr1[2].ToString() == dr2[2].ToString());
             });
         }
 
@@ -2053,6 +2076,9 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                 dr[11] = record.状态;
                 dr[12] = record.后台处理批次ID组;
                 dr[13] = record.操作员;
+            }, (dr1, dr2) =>
+            {
+                return false;
             });
         }
 
@@ -2070,6 +2096,9 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                 dr[5] = record.交易方姓名;
                 dr[6] = record.交易金额;
                 dr[8] = record.交易方银行;
+            }, (dr1, dr2) =>
+            {
+                return false;
             });
         }
 
@@ -2083,6 +2112,9 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                 dr[2] = record.交易方姓名;
                 dr[3] = record.交易方银行;
                 dr[6] = (new[] { "行内转账", "异地跨行" })[("平安银行" == dr[3]) ? 0 : 1];
+            }, (dr1, dr2) =>
+            {
+                return false;
             });
         }
 
@@ -2098,6 +2130,9 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                 dr[4] = record.交易方银行;
                 dr[8] = record.出款银行卡卡号;
                 dr[9] = "实时";
+            }, (dr1, dr2) =>
+            {
+                return false;
             });
         }
 
