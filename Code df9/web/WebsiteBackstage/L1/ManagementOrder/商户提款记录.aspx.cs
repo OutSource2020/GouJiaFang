@@ -1066,7 +1066,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
             GridView1.DataBind();
             ArrayList arr = (ArrayList)ViewState["SelectedRecords"];
             int count = arr.Count;
-            string 出款银行卡名称 = DropDownList_选择银行卡.SelectedItem.Text.Substring(0, DropDownList_选择银行卡.SelectedItem.Text.IndexOf(" ")).Trim();
+            string 出款卡主姓名 = DropDownList_选择银行卡.SelectedItem.Text.Substring(0, DropDownList_选择银行卡.SelectedItem.Text.IndexOf(" ")).Trim();
 
             using (SqlSugarClient dbClient = new DBClient().GetClient())
             {
@@ -1094,7 +1094,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                         dbClient.Ado.UseTran(() => { }); // select 之前保证一次 commit，即使什么都不做
                         dbClient.Ado.UseTran(() =>
                         {
-                            record1 = dbClient.Queryable<table_后台出款银行卡管理>().Where(it => it.出款银行卡名称 == 出款银行卡名称 && it.状态=="启用").First();
+                            record1 = dbClient.Queryable<table_后台出款银行卡管理>().Where(it => it.出款银行卡主姓名 == 出款卡主姓名).First();
                         });
                         if (record1 == null)
                             continue;
@@ -1119,7 +1119,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                         {
                             dbClient.Ado.UseTran(() =>
                             {
-                                record1 = dbClient.Queryable<table_后台出款银行卡管理>().Where(it => it.出款银行卡名称 == 出款银行卡名称).First();
+                                record1 = dbClient.Queryable<table_后台出款银行卡管理>().Where(it => it.出款银行卡主姓名 == 出款卡主姓名).First();
                                 if (record1.出款银行卡余额.Value - 余额1 > 0.0001) // double不能判断相等，只能减
                                 {
                                     dbClient.Ado.ExecuteCommand("UPDATE `table_后台出款银行卡管理` SET `出款银行卡余额` = `出款银行卡余额` - " + record.交易金额.ToString() + " WHERE `出款银行卡卡号` ='" + record1.出款银行卡卡号 + "';");
@@ -1135,7 +1135,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                                         时间创建 = now,
                                         时间交易 = now,
                                         支出 = Convert.ToDouble(record.交易金额),
-                                        出款银行卡名称 = record1.出款银行卡名称,
+                                        出款银行卡名称 = record1.出款银行卡主姓名,
                                         出款银行卡卡号 = record1.出款银行卡卡号
                                     };
                                     dbClient.Insertable(outCardHistory).ExecuteCommand();
@@ -1147,7 +1147,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                                     备注管理写 = TextBox_备注.Text,
                                     状态 = 状态1,
                                     时间完成 = now,
-                                    出款银行卡名称 = record1.出款银行卡名称,
+                                    出款银行卡名称 = record1.出款银行卡主姓名,
                                     出款银行卡卡号 = record1.出款银行卡卡号,
                                     操作员 = ClassLibrary1.ClassAccount.检查管理L1端cookie2(),
                                     后台处理批次ID组 = OperatorId
