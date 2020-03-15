@@ -1120,7 +1120,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                             dbClient.Ado.UseTran(() =>
                             {
                                 record1 = dbClient.Queryable<table_后台出款银行卡管理>().Where(it => it.出款银行卡主姓名 == 出款卡主姓名).First();
-                                if (record1.出款银行卡余额.Value - 余额1 > 0.0001) // double不能判断相等，只能减
+                                if (Math.Abs(record1.出款银行卡余额.Value - 余额1) > 0.0001) // double不能判断相等，只能减
                                 {
                                     dbClient.Ado.ExecuteCommand("UPDATE `table_后台出款银行卡管理` SET `出款银行卡余额` = `出款银行卡余额` - " + record.交易金额.ToString() + " WHERE `出款银行卡卡号` ='" + record1.出款银行卡卡号 + "';");
                                     string 生成编号1 = "BOPBCP" + now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999));
