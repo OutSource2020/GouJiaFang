@@ -1,4 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
+using Newtonsoft.Json;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 using SqlSugar;
@@ -10,14 +11,18 @@ using System.ComponentModel;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Reflection;
 using System.Text;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using web1.API.Enties;
 
 namespace web1.WebsiteBackstage.L1.ManagementOrder
 {
-  public partial class 商户提款记录 : System.Web.UI.Page
+    public partial class 商户提款记录 : System.Web.UI.Page
     {
         public static string 时间字段 = "时间创建";
 
@@ -492,6 +497,22 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
             return 条件5 + 中间加和5;
         }
 
+        public string 获得API过滤条件()
+        {
+            string 中间加和6 = "";
+            string 条件6 = "";
+
+            string redkey = DropDownList_回调.SelectedItem.Text;
+            if (redkey != "未选择")
+            {
+                条件6 = " `创建方式` = '接口' and ";
+                条件6 += " " + DropDownList_回调.SelectedItem.Value + "='" + TextBox_回调.Text + "' ";
+                中间加和6 = " and ";
+            }
+
+            return 条件6 + 中间加和6;
+        }
+
 
 
         public string 获得筛选端金额()
@@ -575,7 +596,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
 
         public string 查看勾选了哪些()
         {
-            return 获得订单状态() + 获得类型() + 获得创建方式() + 获得筛选关键字() + 获得筛选端金额() + 获得区间金额() + 获得时间();
+            return 获得订单状态() + 获得类型() + 获得创建方式() + 获得筛选关键字() + 获得筛选端金额() + 获得区间金额() + 获得API过滤条件() + 获得时间();
         }
 
 
@@ -757,7 +778,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
 
         private void BindGrid(string 时间导入绑定)
         {
-            string strQuery = "select 订单号,商户ID,出款银行卡名称,出款银行卡卡号,交易方姓名,交易方卡号,交易方银行,交易金额,时间创建,时间完成,创建方式,状态,操作员,后台处理批次ID组,商户API订单号 FROM table_商户明细提款 " + 时间导入绑定 + " order by id desc  LIMIT " + 分页() + " ";
+            string strQuery = "select 订单号,商户ID,出款银行卡名称,出款银行卡卡号,交易方姓名,交易方卡号,交易方银行,交易金额,时间创建,时间完成,创建方式,状态,操作员,后台处理批次ID组,商户API订单号,API回调次数,最后一次回调返回的状态 FROM table_商户明细提款 " + 时间导入绑定 + " order by id desc  LIMIT " + 分页() + " ";
             DataTable dt = new DataTable();
             String strConnString = ClassLibrary1.ClassDataControl.conStr1;
             MySqlConnection con = new MySqlConnection(strConnString);
@@ -908,77 +929,78 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
 
 
 
-    private void 下拉获取银行卡()
+        private void 下拉获取银行卡()
         {
-           DBClient db = new DBClient();
-           var dbCilent = db.GetClient();
-      
-           string connstring = ClassLibrary1.ClassDataControl.conStr1;
+            DBClient db = new DBClient();
+            var dbCilent = db.GetClient();
 
-            var table=dbCilent.Queryable<table_后台出款银行卡管理>().Where(it=>it.状态== "启用").Select(it=>new{ it.出款银行卡卡号,it.出款银行卡名称,it.出款银行卡余额}).Distinct().ToList();
+            string connstring = ClassLibrary1.ClassDataControl.conStr1;
 
-           var modelList = new List<Model> ();
-            table.ForEach(it=>{
+            var table = dbCilent.Queryable<table_后台出款银行卡管理>().Where(it => it.状态 == "启用").Select(it => new { it.出款银行卡卡号, it.出款银行卡名称, it.出款银行卡余额 }).Distinct().ToList();
 
-              modelList.Add(new Model{ 出款银行卡卡号 = it.出款银行卡卡号, 出款银行卡名称 = it.出款银行卡名称+"  "+ it.出款银行卡余额 });
-        
+            var modelList = new List<Model>();
+            table.ForEach(it =>
+            {
+
+                modelList.Add(new Model { 出款银行卡卡号 = it.出款银行卡卡号, 出款银行卡名称 = it.出款银行卡名称 + "  " + it.出款银行卡余额 });
+
             });
-      //string querystring = "select distinct 出款银行卡名称,出款银行卡卡号 from table_后台出款银行卡管理 where 状态='启用' ";
-      //MySqlConnection myconn = new MySqlConnection(connstring);
-      //myconn.Open();
-      //MySqlDataAdapter myadapter = new MySqlDataAdapter(querystring, myconn);
-      //DataSet ds = new DataSet();
-      //myadapter.Fill(ds, "table_后台出款银行卡管理");
-      //myconn.Close();
-
-    
-      // populate list
-      DataTable ListAsDataTable = BuildDataTable(modelList);
-      DataView ListAsDataView = ListAsDataTable.DefaultView;
-
-      //DataView  dv = new DataView();
-     //DropDownList_选择银行卡.Items.Clear();
-      DropDownList_选择银行卡.DataSource = ListAsDataView; 
-      DropDownList_选择银行卡.DataTextField = "出款银行卡名称";
-      DropDownList_选择银行卡.DataValueField = "出款银行卡卡号";
-      DropDownList_选择银行卡.DataBind();
-
-      //DropDownList_选择银行卡.Items.Clear();
-      //DropDownList_选择银行卡.DataSource = ds.Tables[0].DefaultView;
-      //DropDownList_选择银行卡.DataTextField = ds.Tables["table_后台出款银行卡管理"].Columns["出款银行卡名称"].ToString();
-      //DropDownList_选择银行卡.DataValueField = ds.Tables["table_后台出款银行卡管理"].Columns["出款银行卡卡号"].ToString();
-
-      //DropDownList_选择银行卡.DataBind();
-
-      dbCilent.Close();
-    }
-
-    public  DataTable BuildDataTable(IList<Model> lst)
-    {
-      DataTable tbl = new DataTable();
-
-      tbl.Columns.Add("出款银行卡名称", typeof(string));
-      tbl.Columns.Add("出款银行卡卡号", typeof(string));
-
-      foreach (var  item in lst)
-      {
-          DataRow row = tbl.NewRow();
-          row["出款银行卡名称"] = item.出款银行卡名称;
-          row["出款银行卡卡号"] = item.出款银行卡卡号;
-        tbl.Rows.Add(row);
-      }
-      return tbl;
-    }
+            //string querystring = "select distinct 出款银行卡名称,出款银行卡卡号 from table_后台出款银行卡管理 where 状态='启用' ";
+            //MySqlConnection myconn = new MySqlConnection(connstring);
+            //myconn.Open();
+            //MySqlDataAdapter myadapter = new MySqlDataAdapter(querystring, myconn);
+            //DataSet ds = new DataSet();
+            //myadapter.Fill(ds, "table_后台出款银行卡管理");
+            //myconn.Close();
 
 
-    //protected void OnPaging(object sender, GridViewPageEventArgs e)
-    //{
-    //    GridView1.PageIndex = e.NewPageIndex;
-    //    GridView1.DataBind();
-    //    SetData();
-    //}
+            // populate list
+            DataTable ListAsDataTable = BuildDataTable(modelList);
+            DataView ListAsDataView = ListAsDataTable.DefaultView;
 
-    private void GetData()
+            //DataView  dv = new DataView();
+            //DropDownList_选择银行卡.Items.Clear();
+            DropDownList_选择银行卡.DataSource = ListAsDataView;
+            DropDownList_选择银行卡.DataTextField = "出款银行卡名称";
+            DropDownList_选择银行卡.DataValueField = "出款银行卡卡号";
+            DropDownList_选择银行卡.DataBind();
+
+            //DropDownList_选择银行卡.Items.Clear();
+            //DropDownList_选择银行卡.DataSource = ds.Tables[0].DefaultView;
+            //DropDownList_选择银行卡.DataTextField = ds.Tables["table_后台出款银行卡管理"].Columns["出款银行卡名称"].ToString();
+            //DropDownList_选择银行卡.DataValueField = ds.Tables["table_后台出款银行卡管理"].Columns["出款银行卡卡号"].ToString();
+
+            //DropDownList_选择银行卡.DataBind();
+
+            dbCilent.Close();
+        }
+
+        public DataTable BuildDataTable(IList<Model> lst)
+        {
+            DataTable tbl = new DataTable();
+
+            tbl.Columns.Add("出款银行卡名称", typeof(string));
+            tbl.Columns.Add("出款银行卡卡号", typeof(string));
+
+            foreach (var item in lst)
+            {
+                DataRow row = tbl.NewRow();
+                row["出款银行卡名称"] = item.出款银行卡名称;
+                row["出款银行卡卡号"] = item.出款银行卡卡号;
+                tbl.Rows.Add(row);
+            }
+            return tbl;
+        }
+
+
+        //protected void OnPaging(object sender, GridViewPageEventArgs e)
+        //{
+        //    GridView1.PageIndex = e.NewPageIndex;
+        //    GridView1.DataBind();
+        //    SetData();
+        //}
+
+        private void GetData()
         {
             ArrayList arr;
             if (ViewState["SelectedRecords"] != null)
@@ -1078,7 +1100,8 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                     string 订单号 = GridView1.Rows[i].Cells[1].Text;
                     table_商户明细提款 record = null;
                     dbClient.Ado.UseTran(() => { }); // select 之前保证一次 commit，即使什么都不做
-                    dbClient.Ado.UseTran(() => {
+                    dbClient.Ado.UseTran(() =>
+                    {
                         record = dbClient.Queryable<table_商户明细提款>().Where(it => it.订单号 == 订单号).First();
                     });
                     if (record == null)
@@ -1094,7 +1117,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                         dbClient.Ado.UseTran(() => { }); // select 之前保证一次 commit，即使什么都不做
                         dbClient.Ado.UseTran(() =>
                         {
-                            record1 = dbClient.Queryable<table_后台出款银行卡管理>().Where(it => it.出款银行卡名称 == 出款银行卡名称 && it.状态=="启用").First();
+                            record1 = dbClient.Queryable<table_后台出款银行卡管理>().Where(it => it.出款银行卡名称 == 出款银行卡名称 && it.状态 == "启用").First();
                         });
                         if (record1 == null)
                             continue;
@@ -1169,15 +1192,16 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                         table_商户账号 record1 = null;
 
                         dbClient.Ado.UseTran(() => { }); // select 之前保证一次 commit，即使什么都不做
-                        dbClient.Ado.UseTran(() => {
+                        dbClient.Ado.UseTran(() =>
+                        {
                             record1 = dbClient.Queryable<table_商户账号>().Where(it => it.商户ID == record.商户ID).First();
                         });
 
                         if (record1 == null)
                             continue;
 
-                        var str = "UPDATE `table_商户账号` SET `提款余额` = `提款余额` + " + 本单交易金额 + 
-                            ", `手续费余额` = `手续费余额` + " + record.手续费.Value+ " WHERE `商户ID` = " + record.商户ID + ";";
+                        var str = "UPDATE `table_商户账号` SET `提款余额` = `提款余额` + " + 本单交易金额 +
+                            ", `手续费余额` = `手续费余额` + " + record.手续费.Value + " WHERE `商户ID` = " + record.商户ID + ";";
 
                         double 余额1 = record1.提款余额.Value + 本单交易金额;
 
@@ -1886,7 +1910,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
             BindGrid("where " + 查看勾选了哪些() + " ");
         }
 
-        private void ExportGird<T>(bool all, string name, string[] headers, Action<bool, DataTable , Action<DataRow, T, int>> data , Action<DataRow, T, int> action)
+        private void ExportGird<T>(bool all, string name, string[] headers, Action<bool, DataTable, Action<DataRow, T, int>> data, Action<DataRow, T, int> action)
         {
             DataTable dt = new DataTable();
             foreach (string head in headers)
@@ -2036,7 +2060,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
 
         private void ExportAllData()
         {
-            string[] headers = {"订单号", "商户ID", "出款银行卡名称", "出款银行卡卡号", "交易金额", "交易方卡号", "交易方姓名", "交易方银行", "创建时间", 
+            string[] headers = {"订单号", "商户ID", "出款银行卡名称", "出款银行卡卡号", "交易金额", "交易方卡号", "交易方姓名", "交易方银行", "创建时间",
                 "完成时间", "创建方式", "订单状态", "后台处理批次ID组", "操作员" };
             ExportGird<table_商户明细提款>(true, "最新后台处理批次", headers, DataFromDatabase, (dr, record, index) =>
             {
@@ -2089,7 +2113,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
 
         private void ExportZhaoShang()
         {
-            string[] headers = { "收款账户列", "收款户名列", "转账金额列", "备注列", "收款银行列", "收款银行支行列", "收款省/直辖市列", 
+            string[] headers = { "收款账户列", "收款户名列", "转账金额列", "备注列", "收款银行列", "收款银行支行列", "收款省/直辖市列",
                 "收款市县列", "转出账号/卡", "转账模式" };
             ExportGird<table_商户明细提款>(true, "最新后台处理批次_招商银行", headers, DataFromDatabase, (dr, record, index) =>
             {
@@ -2148,10 +2172,145 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                 con.Dispose();
             }
         }
+
+        protected void Button_查询回调_Click(object sender, EventArgs e)
+        {
+            BindGrid("where " + 查看勾选了哪些() + " ");
+        }
+
+        private static string PostResponse(string url, string postData, out int statusCode)
+        {
+            if (url.StartsWith("https"))
+                System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
+
+            HttpContent httpContent = new StringContent(postData);
+            httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            httpContent.Headers.ContentType.CharSet = "utf-8";
+
+            HttpClient httpClient = new HttpClient();
+            HttpResponseMessage response = httpClient.PostAsync(url, httpContent).Result;
+
+            statusCode = response.StatusCode.ObjToInt();
+            if (response.IsSuccessStatusCode)
+            {
+                string result = response.Content.ReadAsStringAsync().Result;
+                return result;
+            }
+
+            return null;
+        }
+
+        private int SendAllCallBack(Func<SqlSugarClient, List<table_商户明细提款>> func)
+        {
+            int count = 0;
+            using (SqlSugarClient dbClient = new DBClient().GetClient())
+            {
+                List<table_商户明细提款> records = null;
+                dbClient.Ado.UseTran(() => { });
+                dbClient.Ado.UseTran(() =>
+                {
+                    records = func(dbClient);
+                });
+
+                if (records == null)
+                    return count;
+
+                foreach (table_商户明细提款 record in records)
+                {
+                    if (record.状态 == "未处理")
+                        continue;
+
+                    table_商户账号 account = null;
+                    dbClient.Ado.UseTran(() => { });
+                    dbClient.Ado.UseTran(() =>
+                    {
+                        account = dbClient.Queryable<table_商户账号>().Where(it => it.商户ID == record.商户ID).First();
+                    });
+                    if (account == null)
+                        continue;
+
+                    if (account.API回调 == null || account.API回调 == "")
+                        continue;
+
+                    OrderInquireResponse request = new OrderInquireResponse()
+                    {
+                        Username = account.商户ID,
+                        Userpassword = account.商户密码API,
+                        OrderNumberSite = record.订单号,
+                        OrderNumberMerchant = record.商户API订单号,
+                        OrderType = record.类型,
+                        OrderStatus = record.状态,
+                        OrderTimeCreation = record.时间创建.Value.ToString("yyyy-MM-dd HH:mm:ss"),
+                        OrderTimeEnd = record.时间完成.Value.ToString("yyyy-MM-dd HH:mm:ss")
+                    };
+                    BaseResponse baseResponse = null;
+                    try
+                    {
+                        int statusCode = 0;
+                        string response = PostResponse(account.API回调, JsonConvert.SerializeObject(request), out statusCode);
+                        if (statusCode != 200)
+                            baseResponse = new BaseErrors()[(int)BaseErrors.ERROR_NUMBER.LX1016];
+                        else
+                            baseResponse = JsonConvert.DeserializeObject<BaseResponse>(response);
+                    }
+                    catch(Exception)
+                    {
+                        baseResponse = new BaseErrors()[(int)BaseErrors.ERROR_NUMBER.LX1016];
+                    }
+                    if (baseResponse == null || baseResponse.StatusReplyNumbering != "LX1000")
+                        record.最后一次回调返回的状态 = "失败";
+                    else
+                        record.最后一次回调返回的状态 = "成功";
+                    record.API回调次数++;
+                    dbClient.Ado.UseTran(() =>
+                    {
+                        dbClient.Updateable(record).UpdateColumns(it => new { it.API回调次数, it.最后一次回调返回的状态 }).ExecuteCommand();
+                    });
+                    count++;
+                }
+            }
+            return count;
+        }
+
+        protected void Button_发送回调_Click(object sender, EventArgs e)
+        {
+            string condition = DropDownList_回调.SelectedItem.Text;
+            if (condition == "未选择")
+                return;
+            int count = SendAllCallBack(dbClient =>
+            {
+                if (condition == "商户ID")
+                    return dbClient.Queryable<table_商户明细提款>().Where(it => it.创建方式 == "接口" && it.商户ID == TextBox_回调.Text).ToList();
+                else
+                    return dbClient.Queryable<table_商户明细提款>().Where(it => it.创建方式 == "接口" && it.商户API订单号 == TextBox_回调.Text).ToList();
+            });
+            ClassLibrary1.ClassMessage.HinXi(Page, "发送了" + count + "条回调");
+            Response.Redirect("./商户提款记录.aspx");
+        }
+
+        protected void Button_发送未发送回调_Click(object sender, EventArgs e)
+        {
+            int count = SendAllCallBack(dbClient =>
+            {
+                return dbClient.Queryable<table_商户明细提款>().Where(it => it.创建方式 == "接口" && it.API回调次数 == 0).ToList();
+            });
+            ClassLibrary1.ClassMessage.HinXi(Page, "发送了" + count + "条回调");
+            Response.Redirect("./商户提款记录.aspx");
+        }
+
+        protected void Button_发送近三天订单回调_Click(object sender, EventArgs e)
+        {
+            int count = SendAllCallBack(dbClient =>
+            {
+                return dbClient.Queryable<table_商户明细提款>().Where(it => it.创建方式 == "接口" && (DateTime.Now - it.时间完成.Value).Days < 3).ToList();
+            });
+            ClassLibrary1.ClassMessage.HinXi(Page, "发送了" + count + "条回调");
+            Response.Redirect("./商户提款记录.aspx");
+        }
     }
-  public class Model
-  {
-    public string 出款银行卡卡号;
-    public string 出款银行卡名称;
-  }
+    public class Model
+    {
+        public string 出款银行卡卡号;
+        public string 出款银行卡名称;
+    }
 }

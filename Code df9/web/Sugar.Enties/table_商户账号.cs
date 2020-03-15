@@ -307,5 +307,7 @@ namespace Sugar.Enties
         public string 公共密匙 { get; set; }
 
         public int? 签名错误累计 { get; set; }
+
+        public string API回调 { get; set; }
     }
 }

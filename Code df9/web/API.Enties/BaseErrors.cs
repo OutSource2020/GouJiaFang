@@ -27,7 +27,8 @@ namespace web1.API.Enties
             LX1015,
             LX1016,
             LX1017,
-            LX1018
+            LX1018,
+            LX1019
         }
 
         private static Dictionary<string, string> standardError = new Dictionary<string, string>
@@ -50,7 +51,8 @@ namespace web1.API.Enties
             { "LX1015", "参数缺失" },
             { "LX1016", "未知错误 : {0}" },
             { "LX1017", "账号不存在" },
-            { "LX1018", "不支持的操作" }
+            { "LX1018", "不支持的操作" },
+            { "LX1019", "订单处理失败" }
         };
 
         private static BaseResponse[] baseResponses = new BaseResponse[standardError.Count];

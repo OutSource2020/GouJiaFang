@@ -174,6 +174,8 @@ namespace Sugar.Enties
         public long 商户提交批次ID组 { get; set; }
 
         public long 后台处理批次ID组 { get; set; }
-    public int 商户提交序号 { get; set; }
+        public int 商户提交序号 { get; set; }
+        public int? API回调次数 { get; set; }
+        public string 最后一次回调返回的状态 { get; set; }
   }
 }

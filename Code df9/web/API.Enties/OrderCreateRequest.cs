@@ -11,5 +11,6 @@ namespace web1.API.Enties
         public string AimsCardName { get; set; }
         public string AimsCardBank { get; set; }
         public string AimsMoney { get; set; }
+        public string CallBack { get; set; }
     }
 }
