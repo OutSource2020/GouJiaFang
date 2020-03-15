@@ -17,7 +17,7 @@ using System.Web.UI.WebControls;
 
 namespace web1.WebsiteBackstage.L1.ManagementOrder
 {
-  public partial class 商户提款记录 : System.Web.UI.Page
+    public partial class 商户提款记录 : System.Web.UI.Page
     {
         public static string 时间字段 = "时间创建";
 
@@ -908,77 +908,62 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
 
 
 
-    private void 下拉获取银行卡()
+        private void 下拉获取银行卡()
         {
-           DBClient db = new DBClient();
-           var dbCilent = db.GetClient();
-      
-           string connstring = ClassLibrary1.ClassDataControl.conStr1;
+            DBClient db = new DBClient();
+            var dbCilent = db.GetClient();
 
-            var table=dbCilent.Queryable<table_后台出款银行卡管理>().Where(it=>it.状态== "启用").Select(it=>new{ it.出款银行卡卡号,it.出款银行卡名称,it.出款银行卡余额}).Distinct().ToList();
+            var table = dbCilent.Queryable<table_后台出款银行卡管理>().Where(it => it.状态 == "启用").Select(it => new { it.出款银行卡卡号, it.出款银行卡名称, it.出款银行卡余额 }).Distinct().ToList();
 
-           var modelList = new List<Model> ();
-            table.ForEach(it=>{
+            var modelList = new List<Model>();
+            table.ForEach(it =>
+            {
 
-              modelList.Add(new Model{ 出款银行卡卡号 = it.出款银行卡卡号, 出款银行卡名称 = it.出款银行卡名称+"  "+ it.出款银行卡余额 });
-        
+                modelList.Add(new Model { 出款银行卡卡号 = it.出款银行卡卡号, 出款银行卡名称 = it.出款银行卡名称 + "  " + it.出款银行卡余额 });
+
             });
-      //string querystring = "select distinct 出款银行卡名称,出款银行卡卡号 from table_后台出款银行卡管理 where 状态='启用' ";
-      //MySqlConnection myconn = new MySqlConnection(connstring);
-      //myconn.Open();
-      //MySqlDataAdapter myadapter = new MySqlDataAdapter(querystring, myconn);
-      //DataSet ds = new DataSet();
-      //myadapter.Fill(ds, "table_后台出款银行卡管理");
-      //myconn.Close();
 
-    
-      // populate list
-      DataTable ListAsDataTable = BuildDataTable(modelList);
-      DataView ListAsDataView = ListAsDataTable.DefaultView;
+            if (!IsPostBack)
+            {
+                DataTable ListAsDataTable = BuildDataTable(modelList);
+                DataView ListAsDataView = ListAsDataTable.DefaultView;
 
-      //DataView  dv = new DataView();
-      DropDownList_选择银行卡.Items.Clear();
-      DropDownList_选择银行卡.DataSource = ListAsDataView; 
-      DropDownList_选择银行卡.DataTextField = "出款银行卡名称";
-      DropDownList_选择银行卡.DataValueField = "出款银行卡卡号";
-      DropDownList_选择银行卡.DataBind();
+                DropDownList_选择银行卡.Items.Clear();
+                DropDownList_选择银行卡.DataSource = ListAsDataView;
+                DropDownList_选择银行卡.DataTextField = "出款银行卡名称";
+                DropDownList_选择银行卡.DataValueField = "出款银行卡卡号";
+                DropDownList_选择银行卡.DataBind();
+            }
 
-      //DropDownList_选择银行卡.Items.Clear();
-      //DropDownList_选择银行卡.DataSource = ds.Tables[0].DefaultView;
-      //DropDownList_选择银行卡.DataTextField = ds.Tables["table_后台出款银行卡管理"].Columns["出款银行卡名称"].ToString();
-      //DropDownList_选择银行卡.DataValueField = ds.Tables["table_后台出款银行卡管理"].Columns["出款银行卡卡号"].ToString();
+            dbCilent.Close();
+        }
 
-      //DropDownList_选择银行卡.DataBind();
+        public DataTable BuildDataTable(IList<Model> lst)
+        {
+            DataTable tbl = new DataTable();
 
-      dbCilent.Close();
-    }
+            tbl.Columns.Add("出款银行卡名称", typeof(string));
+            tbl.Columns.Add("出款银行卡卡号", typeof(string));
 
-    public  DataTable BuildDataTable(IList<Model> lst)
-    {
-      DataTable tbl = new DataTable();
-
-      tbl.Columns.Add("出款银行卡名称", typeof(string));
-      tbl.Columns.Add("出款银行卡卡号", typeof(string));
-
-      foreach (var  item in lst)
-      {
-          DataRow row = tbl.NewRow();
-          row["出款银行卡名称"] = item.出款银行卡名称;
-          row["出款银行卡卡号"] = item.出款银行卡卡号;
-        tbl.Rows.Add(row);
-      }
-      return tbl;
-    }
+            foreach (var item in lst)
+            {
+                DataRow row = tbl.NewRow();
+                row["出款银行卡名称"] = item.出款银行卡名称;
+                row["出款银行卡卡号"] = item.出款银行卡卡号;
+                tbl.Rows.Add(row);
+            }
+            return tbl;
+        }
 
 
-    //protected void OnPaging(object sender, GridViewPageEventArgs e)
-    //{
-    //    GridView1.PageIndex = e.NewPageIndex;
-    //    GridView1.DataBind();
-    //    SetData();
-    //}
+        //protected void OnPaging(object sender, GridViewPageEventArgs e)
+        //{
+        //    GridView1.PageIndex = e.NewPageIndex;
+        //    GridView1.DataBind();
+        //    SetData();
+        //}
 
-    private void GetData()
+        private void GetData()
         {
             ArrayList arr;
             if (ViewState["SelectedRecords"] != null)
@@ -1078,7 +1063,8 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                     string 订单号 = GridView1.Rows[i].Cells[1].Text;
                     table_商户明细提款 record = null;
                     dbClient.Ado.UseTran(() => { }); // select 之前保证一次 commit，即使什么都不做
-                    dbClient.Ado.UseTran(() => {
+                    dbClient.Ado.UseTran(() =>
+                    {
                         record = dbClient.Queryable<table_商户明细提款>().Where(it => it.订单号 == 订单号).First();
                     });
                     if (record == null)
@@ -1168,15 +1154,16 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                         table_商户账号 record1 = null;
 
                         dbClient.Ado.UseTran(() => { }); // select 之前保证一次 commit，即使什么都不做
-                        dbClient.Ado.UseTran(() => {
+                        dbClient.Ado.UseTran(() =>
+                        {
                             record1 = dbClient.Queryable<table_商户账号>().Where(it => it.商户ID == record.商户ID).First();
                         });
 
                         if (record1 == null)
                             continue;
 
-                        var str = "UPDATE `table_商户账号` SET `提款余额` = `提款余额` + " + 本单交易金额 + 
-                            ", `手续费余额` = `手续费余额` + " + record.手续费.Value+ " WHERE `商户ID` = " + record.商户ID + ";";
+                        var str = "UPDATE `table_商户账号` SET `提款余额` = `提款余额` + " + 本单交易金额 +
+                            ", `手续费余额` = `手续费余额` + " + record.手续费.Value + " WHERE `商户ID` = " + record.商户ID + ";";
 
                         double 余额1 = record1.提款余额.Value + 本单交易金额;
 
@@ -1885,7 +1872,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
             BindGrid("where " + 查看勾选了哪些() + " ");
         }
 
-        private void ExportGird<T>(bool all, string name, string[] headers, Action<bool, DataTable , Action<DataRow, T, int>> data , Action<DataRow, T, int> action, Func<DataRow, DataRow, bool> drawColor)
+        private void ExportGird<T>(bool all, string name, string[] headers, Action<bool, DataTable, Action<DataRow, T, int>> data, Action<DataRow, T, int> action, Func<DataRow, DataRow, bool> drawColor)
         {
             DataTable dt = new DataTable();
             foreach (string head in headers)
@@ -2058,7 +2045,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
 
         private void ExportAllData()
         {
-            string[] headers = {"订单号", "商户ID", "出款银行卡名称", "出款银行卡卡号", "交易金额", "交易方卡号", "交易方姓名", "交易方银行", "创建时间", 
+            string[] headers = {"订单号", "商户ID", "出款银行卡名称", "出款银行卡卡号", "交易金额", "交易方卡号", "交易方姓名", "交易方银行", "创建时间",
                 "完成时间", "创建方式", "订单状态", "后台处理批次ID组", "操作员" };
             ExportGird<table_商户明细提款>(true, "最新后台处理批次", headers, DataFromDatabase, (dr, record, index) =>
             {
@@ -2120,7 +2107,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
 
         private void ExportZhaoShang()
         {
-            string[] headers = { "收款账户列", "收款户名列", "转账金额列", "备注列", "收款银行列", "收款银行支行列", "收款省/直辖市列", 
+            string[] headers = { "收款账户列", "收款户名列", "转账金额列", "备注列", "收款银行列", "收款银行支行列", "收款省/直辖市列",
                 "收款市县列", "转出账号/卡", "转账模式" };
             ExportGird<table_商户明细提款>(true, "最新后台处理批次_招商银行", headers, DataFromDatabase, (dr, record, index) =>
             {
@@ -2183,9 +2170,9 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
             }
         }
     }
-  public class Model
-  {
-    public string 出款银行卡卡号;
-    public string 出款银行卡名称;
-  }
+    public class Model
+    {
+        public string 出款银行卡卡号;
+        public string 出款银行卡名称;
+    }
 }
