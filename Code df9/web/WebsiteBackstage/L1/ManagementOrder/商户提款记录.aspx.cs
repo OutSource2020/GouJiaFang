@@ -937,7 +937,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
       DataView ListAsDataView = ListAsDataTable.DefaultView;
 
       //DataView  dv = new DataView();
-      DropDownList_选择银行卡.Items.Clear();
+     //DropDownList_选择银行卡.Items.Clear();
       DropDownList_选择银行卡.DataSource = ListAsDataView; 
       DropDownList_选择银行卡.DataTextField = "出款银行卡名称";
       DropDownList_选择银行卡.DataValueField = "出款银行卡卡号";
