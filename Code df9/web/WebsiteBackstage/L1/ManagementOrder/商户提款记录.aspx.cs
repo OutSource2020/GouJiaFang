@@ -1186,7 +1186,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                             dbClient.Ado.UseTran(() =>
                             {
                                 record1 = dbClient.Queryable<table_商户账号>().Where(it => it.商户ID == record.商户ID).First();
-                                if (record1.提款余额.Value - 余额1 < 0.0001)
+                                if (Math.Abs(record1.提款余额.Value - 余额1) > 0.0001)
                                 {
                                     dbClient.Ado.ExecuteCommand(str);
                                     string 提款手续费_订单号 = "MHFOR" + now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999));
