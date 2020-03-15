@@ -1139,7 +1139,6 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                                         出款银行卡卡号 = record1.出款银行卡卡号
                                     };
                                     dbClient.Insertable(outCardHistory).ExecuteCommand();
-
                                 }
                                 dbClient.Updateable<table_商户明细提款>().SetColumns(it =>
                                 new table_商户明细提款()
