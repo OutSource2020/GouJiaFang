@@ -419,7 +419,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
             }
             if (RadioButton_类型订单提款冲正.Checked)
             {
-                条件3 = "  类型='订单提款冲正' ";
+                条件3 = "  类型='冲正' ";
             }
 
 
@@ -812,7 +812,10 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                     Label_交易笔数_待处理.Text = obj3.ToString();
                 }
 
-                MySqlCommand cmd5 = new MySqlCommand("select COUNT(*) from table_商户明细提款 where 状态='订单提款冲正' and " + 查看勾选了哪些() + " ", connC);
+                string t1 = 查看勾选了哪些();
+                if (!t1.Contains("冲正"))
+                    t1 = "类型='冲正' AND " + t1;
+                MySqlCommand cmd5 = new MySqlCommand("select COUNT(*) from table_商户明细提款 where " + t1, connC);
                 object obj5 = cmd5.ExecuteScalar();
                 if (obj5 != null)
                 {
@@ -849,7 +852,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                     Label_交易总金额_待处理.Text = obj23.ToString();
                 }
 
-                MySqlCommand cmd25 = new MySqlCommand("select sum(交易金额) from table_商户明细提款 where 状态='订单提款冲正' and " + 查看勾选了哪些() + " ", connC);
+                MySqlCommand cmd25 = new MySqlCommand("select sum(交易金额) from table_商户明细提款 where " + t1, connC);
                 object obj25 = cmd25.ExecuteScalar();
                 if (obj25 != null)
                 {
@@ -887,7 +890,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                     Label_手续费总金额_待处理.Text = obj33.ToString();
                 }
 
-                MySqlCommand cmd35 = new MySqlCommand("select sum(手续费) from table_商户明细提款 where 状态='订单提款冲正' and " + 查看勾选了哪些() + " ", connC);
+                MySqlCommand cmd35 = new MySqlCommand("select sum(手续费) from table_商户明细提款 where " + t1, connC);
                 object obj35 = cmd35.ExecuteScalar();
                 if (obj35 != null)
                 {
