@@ -15,6 +15,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
+using System.Security.Cryptography;
 using System.Text;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -2219,6 +2220,18 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
             return null;
         }
 
+        private static string GetMd5Hash(MD5 md5Hash, string input)
+        {
+
+            byte[] data = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(input));
+            StringBuilder sBuilder = new StringBuilder();
+            for (int i = 0; i < data.Length; i++)
+            {
+                sBuilder.Append(data[i].ToString("x2"));
+            }
+            return sBuilder.ToString();
+        }
+
         private int SendAllCallBack(Func<SqlSugarClient, List<table_商户明细提款>> func)
         {
             int count = 0;
@@ -2266,11 +2279,20 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                     try
                     {
                         int statusCode = 0;
-                        string response = PostResponse(account.API回调, JsonConvert.SerializeObject(request), out statusCode);
-                        if (statusCode != 200)
-                            baseResponse = new BaseErrors()[(int)BaseErrors.ERROR_NUMBER.LX1016];
-                        else
-                            baseResponse = JsonConvert.DeserializeObject<BaseResponse>(response);
+                        using (MD5 md5Hash = MD5.Create())
+                        {
+                            // 商户ID + 商户API密码 + 当前unix时间 + 商户自定义订单号 + 生成订单号 + 类型 + 状态 + 公共密匙(公匙)
+                            long ts = GetTimeStamp();
+                            string unsign = account.商户ID + account.商户密码API + ts +
+                                request.OrderNumberMerchant + request.OrderNumberSite + request.OrderType + request.OrderStatus + account.公共密匙;
+                            string sign = GetMd5Hash(md5Hash, unsign);
+                            string url = $"{account.API回调}?timeunix={ts}&signature={sign}";
+                            string response = PostResponse(url, JsonConvert.SerializeObject(request), out statusCode);
+                            if (statusCode != 200)
+                                baseResponse = new BaseErrors()[(int)BaseErrors.ERROR_NUMBER.LX1016];
+                            else
+                                baseResponse = JsonConvert.DeserializeObject<BaseResponse>(response);
+                        }
                     }
                     catch(Exception)
                     {
