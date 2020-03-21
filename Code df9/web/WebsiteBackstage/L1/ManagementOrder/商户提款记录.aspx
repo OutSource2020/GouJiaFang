@@ -40,11 +40,11 @@
 
     <script type="text/javascript">
 
-    </script>
+</script>
     <script type="text/javascript">
         function ConfirmDelete() {
             var count = document.getElementById("<%=hfCount.ClientID %>").value;
-        var gv = document.getElementById("<%=GridView1.ClientID%>");
+            var gv = document.getElementById("<%=GridView1.ClientID%>");
             var chk = gv.getElementsByTagName("input");
             for (var i = 0; i < chk.length; i++) {
                 if (chk[i].checked && chk[i].id.indexOf("chkAll") == -1) {
@@ -206,7 +206,7 @@
                         &nbsp&nbsp&nbsp&nbsp
                         <a href="javascript:void(0)" onclick=" MakeColor()">同一批次着色处理</a>(请排好批次再使用此功能)
                         <asp:Button ID="Button2" runat="server" Text="批次排序" class="btn btn-info btn-fw" OnClick="Button2_Click" />
-                        <asp:Button ID="Button3" runat="server" Text="完成时间排序)" class="btn btn-info btn-fw" OnClick="Button3_Click"  />
+                        <asp:Button ID="Button3" runat="server" Text="完成时间排序)" class="btn btn-info btn-fw" OnClick="Button3_Click" />
                     </td>
                 </tr>
                 <tr>
@@ -218,6 +218,27 @@
                     </td>
                     <td>
                         <asp:Button ID="Button_导出最新后台处理批次ID组" runat="server" Text="导出最新后台处理批次ID组" class="btn btn-info btn-fw" OnClick="Button_导出最新后台处理批次ID组_Click" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>异步回调条件筛选:
+                 <asp:DropDownList ID="DropDownList_回调" runat="server">
+                     <asp:ListItem Value="未选择">未选择</asp:ListItem>
+                     <asp:ListItem Value="商户ID">商户ID</asp:ListItem>
+                     <asp:ListItem Value="商户API订单号">商户API订单号</asp:ListItem>
+                 </asp:DropDownList>
+                        <asp:TextBox ID="TextBox_回调" runat="server" Width="160px" MaxLength="30" AutoCompleteType="Disabled"></asp:TextBox>
+                    </td>
+                    <td>
+                        <asp:Button ID="Button_查询回调" runat="server" Text="按筛选条件查询需要回调订单" class="btn btn-info btn-fw" OnClick="Button_查询回调_Click" />
+                        <asp:Button ID="Button_发送回调" runat="server" Text="按筛选条件给商户发送回调" class="btn btn-info btn-fw" OnClick="Button_发送回调_Click" />
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <asp:Button ID="Button_发送回调全部完成" runat="server" Text="发送所有未发送的订单回调" class="btn btn-info btn-fw" OnClick="Button_发送未发送回调_Click" />
+                        <asp:Button ID="Button_发送近三天订单回调" runat="server" Text="发送近三天所有订单回调" class="btn btn-info btn-fw" OnClick="Button_发送近三天订单回调_Click" />
                     </td>
                 </tr>
             </table>
@@ -339,95 +360,97 @@
                 <hr />
 
                 <div id="gridTable">
-                <asp:GridView
-                    ID="GridView1"
-                    runat="server"
-                    class="auto-style1"
-                    AutoGenerateColumns="False"
-                    AllowPaging="True"
-                    OnPageIndexChanging="GridView1_PageIndexChanging"
-                    ShowHeaderWhenEmpty="true"
-                    DataKeyNames="订单号"
-                    DataKey="订单号" PageSize="50" OnRowDataBound="GridView1_RowDataBound">
-                    <%--OnPageIndexChanging = "OnPaging" AutoGenerateColumns="False" ShowHeaderWhenEmpty="true"--%>
-                    <Columns>
-                        <asp:TemplateField>
-                            <HeaderTemplate>
-                                <asp:CheckBox ID="chkAll" runat="server" onclick="checkAll(this)" Enabled="False" />
-                            </HeaderTemplate>
-                            <ItemTemplate>
-                                <asp:CheckBox ID="CheckBox1" runat="server" onclick="Check_Click(this)" Enabled='<%# Eval("状态").Equals("待处理") %>' />
-                            </ItemTemplate>
-                        </asp:TemplateField>
-                        <%--<asp:BoundField DataField="类型" HeaderText="类型" />--%>
-                        <asp:BoundField DataField="订单号" HeaderText="订单号" />
-                        <asp:BoundField DataField="商户ID" HeaderText="商户ID" />
-                        <asp:BoundField DataField="出款银行卡名称" HeaderText="出款银行卡名称" />
-                        <asp:BoundField DataField="出款银行卡卡号" HeaderText="出款银行卡卡号" />
-                        <asp:BoundField DataField="交易金额" HeaderText="交易金额" />
-                        <asp:BoundField DataField="交易方卡号" HeaderText="交易方卡号" />
-                        <asp:BoundField DataField="交易方姓名" HeaderText="交易方姓名" />
-                        <asp:BoundField DataField="交易方银行" HeaderText="交易方银行" />
-                        <asp:BoundField DataField="时间创建" HeaderText="创建时间" />
-                        <asp:BoundField DataField="时间完成" HeaderText="完成时间" />
-                        <asp:BoundField DataField="创建方式" HeaderText="创建方式" />
-                        <asp:BoundField DataField="状态" HeaderText="订单状态" />
-                        <asp:BoundField DataField="后台处理批次ID组" HeaderText="后台处理批次ID组" />
-                        <asp:BoundField DataField="操作员" HeaderText="操作员" />
-                        <asp:BoundField DataField="商户API订单号" HeaderText="商户API订单号" />
-                        <asp:TemplateField HeaderText = "行号" ItemStyle-Width="100">
-                            <ItemTemplate>
-                                <asp:Label ID="lblRowNumber" Text='<%# Container.DataItemIndex + 1 %>' runat="server" />
-                            </ItemTemplate>
-                        </asp:TemplateField>
+                    <asp:GridView
+                        ID="GridView1"
+                        runat="server"
+                        class="auto-style1"
+                        AutoGenerateColumns="False"
+                        AllowPaging="True"
+                        OnPageIndexChanging="GridView1_PageIndexChanging"
+                        ShowHeaderWhenEmpty="true"
+                        DataKeyNames="订单号"
+                        DataKey="订单号" PageSize="50" OnRowDataBound="GridView1_RowDataBound">
+                        <%--OnPageIndexChanging = "OnPaging" AutoGenerateColumns="False" ShowHeaderWhenEmpty="true"--%>
+                        <Columns>
+                            <asp:TemplateField>
+                                <HeaderTemplate>
+                                    <asp:CheckBox ID="chkAll" runat="server" onclick="checkAll(this)" Enabled="False" />
+                                </HeaderTemplate>
+                                <ItemTemplate>
+                                    <asp:CheckBox ID="CheckBox1" runat="server" onclick="Check_Click(this)" Enabled='<%# Eval("状态").Equals("待处理") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <%--<asp:BoundField DataField="类型" HeaderText="类型" />--%>
+                            <asp:BoundField DataField="订单号" HeaderText="订单号" />
+                            <asp:BoundField DataField="商户ID" HeaderText="商户ID" />
+                            <asp:BoundField DataField="出款银行卡名称" HeaderText="出款银行卡名称" />
+                            <asp:BoundField DataField="出款银行卡卡号" HeaderText="出款银行卡卡号" />
+                            <asp:BoundField DataField="交易金额" HeaderText="交易金额" />
+                            <asp:BoundField DataField="交易方卡号" HeaderText="交易方卡号" />
+                            <asp:BoundField DataField="交易方姓名" HeaderText="交易方姓名" />
+                            <asp:BoundField DataField="交易方银行" HeaderText="交易方银行" />
+                            <asp:BoundField DataField="时间创建" HeaderText="创建时间" />
+                            <asp:BoundField DataField="时间完成" HeaderText="完成时间" />
+                            <asp:BoundField DataField="创建方式" HeaderText="创建方式" />
+                            <asp:BoundField DataField="状态" HeaderText="订单状态" />
+                            <asp:BoundField DataField="后台处理批次ID组" HeaderText="后台处理批次ID组" />
+                            <asp:BoundField DataField="操作员" HeaderText="操作员" />
+                            <asp:BoundField DataField="商户API订单号" HeaderText="商户API订单号" />
+                            <asp:BoundField DataField="API回调次数" HeaderText="商户API回调次数" />
+                            <asp:BoundField DataField="最后一次回调返回的状态" HeaderText="最后一次回调返回的状态" />
+                            <asp:TemplateField HeaderText="行号" ItemStyle-Width="100">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblRowNumber" Text='<%# Container.DataItemIndex + 1 %>' runat="server" />
+                                </ItemTemplate>
+                            </asp:TemplateField>
 
-                        <asp:HyperLinkField Text="详情" DataNavigateUrlFields="订单号" DataNavigateUrlFormatString="商户提款记录详情.aspx?Bianhao={0}" />
+                            <asp:HyperLinkField Text="详情" DataNavigateUrlFields="订单号" DataNavigateUrlFormatString="商户提款记录详情.aspx?Bianhao={0}" />
 
-                        <asp:TemplateField HeaderText="操作">
-                            <ItemTemplate>
-                                <%--<asp:HyperLink ID="HyperLink1" runat="server" NavigateUrl='<%# Eval("订单号", "商户提款记录状态更新.aspx?Bianhao={0}") %>' 
+                            <asp:TemplateField HeaderText="操作">
+                                <ItemTemplate>
+                                    <%--<asp:HyperLink ID="HyperLink1" runat="server" NavigateUrl='<%# Eval("订单号", "商户提款记录状态更新.aspx?Bianhao={0}") %>' 
             Text='<%# Eval("状态") %>' Enabled='<%# Eval("状态").Equals("待处理") %>'></asp:HyperLink>--%>
-                                <asp:HyperLink ID="HyperLink2" runat="server" NavigateUrl='<%# Eval("订单号", "商户提款记录状态更新.aspx?Bianhao={0}") %>'
-                                    Text='操作' Visible='<%# Eval("状态").ToString()=="待处理" %>'></asp:HyperLink>
-                                <asp:HyperLink ID="HyperLink3" runat="server" NavigateUrl='<%# Eval("订单号", "商户提款记录状态更新冲正.aspx?Bianhao={0}") %>'
-                                    Text='冲正' Visible='<%# Eval("状态").ToString()=="成功" %>'></asp:HyperLink>
-                            </ItemTemplate>
-                        </asp:TemplateField>
+                                    <asp:HyperLink ID="HyperLink2" runat="server" NavigateUrl='<%# Eval("订单号", "商户提款记录状态更新.aspx?Bianhao={0}") %>'
+                                        Text='操作' Visible='<%# Eval("状态").ToString()=="待处理" %>'></asp:HyperLink>
+                                    <asp:HyperLink ID="HyperLink3" runat="server" NavigateUrl='<%# Eval("订单号", "商户提款记录状态更新冲正.aspx?Bianhao={0}") %>'
+                                        Text='冲正' Visible='<%# Eval("状态").ToString()=="成功" %>'></asp:HyperLink>
+                                </ItemTemplate>
+                            </asp:TemplateField>
 
-                    </Columns>
-                    <EmptyDataTemplate>No Record Available 沒有可用記錄</EmptyDataTemplate>
+                        </Columns>
+                        <EmptyDataTemplate>No Record Available 沒有可用記錄</EmptyDataTemplate>
 
 
-                    <PagerTemplate>
-                        当前第:
+                        <PagerTemplate>
+                            当前第:
                                      <%--//((GridView)Container.NamingContainer)就是为了得到当前的控件--%>
-                        <asp:Label ID="LabelCurrentPage" runat="server" Text="<%# ((GridView)Container.NamingContainer).PageIndex + 1 %>"></asp:Label>
-                        页/共:
+                            <asp:Label ID="LabelCurrentPage" runat="server" Text="<%# ((GridView)Container.NamingContainer).PageIndex + 1 %>"></asp:Label>
+                            页/共:
                                     <%--//得到分页页面的总数--%>
-                        <asp:Label ID="LabelPageCount" runat="server" Text="<%# ((GridView)Container.NamingContainer).PageCount %>"></asp:Label>
-                        页
+                            <asp:Label ID="LabelPageCount" runat="server" Text="<%# ((GridView)Container.NamingContainer).PageCount %>"></asp:Label>
+                            页
                                     <%--//如果该分页是首分页，那么该连接就不会显示了.同时对应了自带识别的命令参数CommandArgument--%>
-                        <asp:LinkButton ID="LinkButtonFirstPage" runat="server" CommandArgument="First" CommandName="Page"
-                            Visible='<%#((GridView)Container.NamingContainer).PageIndex != 0 %>'>首页</asp:LinkButton>
-                        <asp:LinkButton ID="LinkButtonPreviousPage" runat="server" CommandArgument="Prev"
-                            CommandName="Page" Visible='<%# ((GridView)Container.NamingContainer).PageIndex != 0 %>'>上一页</asp:LinkButton>
-                        <%--//如果该分页是尾页，那么该连接就不会显示了--%>
-                        <asp:LinkButton ID="LinkButtonNextPage" runat="server" CommandArgument="Next" CommandName="Page"
-                            Visible='<%# ((GridView)Container.NamingContainer).PageIndex != ((GridView)Container.NamingContainer).PageCount - 1 %>'>下一页</asp:LinkButton>
-                        <asp:LinkButton ID="LinkButtonLastPage" runat="server" CommandArgument="Last" CommandName="Page"
-                            Visible='<%# ((GridView)Container.NamingContainer).PageIndex != ((GridView)Container.NamingContainer).PageCount - 1 %>'>尾页</asp:LinkButton>
-                        转到第
+                            <asp:LinkButton ID="LinkButtonFirstPage" runat="server" CommandArgument="First" CommandName="Page"
+                                Visible='<%#((GridView)Container.NamingContainer).PageIndex != 0 %>'>首页</asp:LinkButton>
+                            <asp:LinkButton ID="LinkButtonPreviousPage" runat="server" CommandArgument="Prev"
+                                CommandName="Page" Visible='<%# ((GridView)Container.NamingContainer).PageIndex != 0 %>'>上一页</asp:LinkButton>
+                            <%--//如果该分页是尾页，那么该连接就不会显示了--%>
+                            <asp:LinkButton ID="LinkButtonNextPage" runat="server" CommandArgument="Next" CommandName="Page"
+                                Visible='<%# ((GridView)Container.NamingContainer).PageIndex != ((GridView)Container.NamingContainer).PageCount - 1 %>'>下一页</asp:LinkButton>
+                            <asp:LinkButton ID="LinkButtonLastPage" runat="server" CommandArgument="Last" CommandName="Page"
+                                Visible='<%# ((GridView)Container.NamingContainer).PageIndex != ((GridView)Container.NamingContainer).PageCount - 1 %>'>尾页</asp:LinkButton>
+                            转到第
                                     <asp:TextBox ID="txtNewPageIndex" runat="server" Width="20px" Text='<%# ((GridView)Container.Parent.Parent).PageIndex + 1 %>' />页
                                     <%--//这里将CommandArgument即使点击该按钮e.newIndex 值为3 --%>
-                        <asp:LinkButton ID="btnGo" runat="server" CausesValidation="False" CommandArgument="-2"
-                            CommandName="Page" Text="GO" />
-                    </PagerTemplate>
+                            <asp:LinkButton ID="btnGo" runat="server" CausesValidation="False" CommandArgument="-2"
+                                CommandName="Page" Text="GO" />
+                        </PagerTemplate>
 
 
 
-                </asp:GridView>
+                    </asp:GridView>
 
-               </div>
+                </div>
                 <asp:Timer ID="Timer_自动刷新" runat="server" OnTick="TimerTick" />
             </ContentTemplate>
         </asp:UpdatePanel>
@@ -438,12 +461,12 @@
 
     <div id="选择每页行数">
         <asp:DropDownList ID="DropDownList_选择每页行数" runat="server" AutoPostBack="True" OnSelectedIndexChanged="DropDownList_选择每页行数_SelectedIndexChanged">
-         <%--   <asp:ListItem>50</asp:ListItem>--%>
-             <asp:ListItem>80</asp:ListItem>
+            <%--   <asp:ListItem>50</asp:ListItem>--%>
+            <asp:ListItem>80</asp:ListItem>
             <asp:ListItem>100</asp:ListItem>
             <asp:ListItem>200</asp:ListItem>
             <asp:ListItem>400</asp:ListItem>
-             <asp:ListItem>1000</asp:ListItem>
+            <asp:ListItem>1000</asp:ListItem>
         </asp:DropDownList>
     </div>
 
@@ -468,7 +491,7 @@
     <script>
         // 获取th 的索引("后台处理批次ID组")
         function GetColumnNum(str) {
-            let eles = Object.values( document.getElementById("gridTable").getElementsByTagName("th"));
+            let eles = Object.values(document.getElementById("gridTable").getElementsByTagName("th"));
             for (let i = 0; i < eles.length; i++) {
                 if (Object.is(eles[i].innerText, str))
                     return i;
@@ -497,14 +520,14 @@
                         eles[i].children[index].style.background = color;
                     }
 
-                 
-               }
+
             }
-        
+        }
+
         window.οnlοad = function () {
             alert("页面加载完成！");
             MakeColor()
-        } 
+        }
 
 
     </script>

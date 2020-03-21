@@ -465,6 +465,7 @@ namespace web1.WebsiteMerchant.商户订单
 
                           double 手续费多少 = 手续费计算;
 
+                                                    dbCilent.Ado.UseTran(() => { });
                           var result = dbCilent.Ado.UseTran(() =>
                           {
 
@@ -525,6 +526,8 @@ namespace web1.WebsiteMerchant.商户订单
                             dbCilent.Ado.ExecuteCommand(str3);
 
                           });
+
+                                                    dbCilent.Ado.UseTran(() => { });
 
                           if(result.IsSuccess){
                             continue;

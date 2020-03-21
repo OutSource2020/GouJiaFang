@@ -86,9 +86,9 @@ namespace web1.API
         [HttpPost]
         public ActionResult OrderCreate(int? timeunix, string signature, OrderCreateRequest request)
         {
-   
-      
-        var getByWhere = sqlSugarClient.Queryable<table_商户账号>().Where(it => it.商户ID == request.UserName).ToList();
+
+
+            var getByWhere = sqlSugarClient.Queryable<table_商户账号>().Where(it => it.商户ID == request.UserName).ToList();
             table_商户账号 account = getByWhere[0];
 
             if (Convert.ToDouble(account.手续费余额) - Convert.ToDouble(account.单笔手续费) < 0)
@@ -107,87 +107,86 @@ namespace web1.API
             {
                 return GetStandardError(BaseErrors.ERROR_NUMBER.LX1013, request.UserName, request.UserPassword);
             }
-      JsonResult jsonResult = new JsonResult();
-      var result = sqlSugarClient.Ado.UseTran(() => {
-        getByWhere = sqlSugarClient.Queryable<table_商户账号>().Where(it => it.商户ID == request.UserName).ToList();
-         account = getByWhere[0];
-        string 状态 = "待处理";
-            string 类型 = "提款";
-            DateTime 时间创建 = DateTime.Now;
-            // string 时间创建 = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
+            JsonResult jsonResult = null;
+            var result = sqlSugarClient.Ado.UseTran(() =>
+            {
+                getByWhere = sqlSugarClient.Queryable<table_商户账号>().Where(it => it.商户ID == request.UserName).ToList();
+                account = getByWhere[0];
+                string 状态 = "待处理";
+                string 类型 = "提款";
+                DateTime 时间创建 = DateTime.Now;
 
-            double preFee = Convert.ToDouble(account.手续费余额);
-            double preBalance = account.提款余额.Value;
+                double preFee = Convert.ToDouble(account.手续费余额);
+                double preBalance = account.提款余额.Value;
 
-            account.提款余额 -= Convert.ToDouble(request.AimsMoney);
-            account.手续费余额 -= Convert.ToDouble(account.单笔手续费);
+                account.提款余额 -= Convert.ToDouble(request.AimsMoney);
+                account.手续费余额 -= Convert.ToDouble(account.单笔手续费);
+                account.API回调 = request.CallBack;
 
-           
-            sqlSugarClient.Updateable(account).UpdateColumns(it => new { it.提款余额, it.手续费余额 }).ExecuteCommand();
+                sqlSugarClient.Updateable(account).UpdateColumns(it => new { it.提款余额, it.手续费余额, it.API回调 }).ExecuteCommand();
 
-            table_商户明细手续费 fee = new table_商户明细手续费();
-            fee.订单号 = "MHFON" + DateTime.Now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999));
-            fee.商户ID = Convert.ToInt32(account.商户ID);
-            fee.手续费支出 = account.单笔手续费;
-            fee.交易金额 = Convert.ToDouble(request.AimsMoney);
-            fee.交易前手续费余额 = preFee;
-            fee.交易后手续费余额 = account.手续费余额;
-            fee.类型 = 类型;
-            fee.状态 = 状态;
-            fee.时间创建 = 时间创建;
-            sqlSugarClient.Insertable<table_商户明细手续费>(fee).ExecuteCommand();
+                table_商户明细手续费 fee = new table_商户明细手续费();
+                fee.订单号 = "MHFON" + DateTime.Now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999));
+                fee.商户ID = Convert.ToInt32(account.商户ID);
+                fee.手续费支出 = account.单笔手续费;
+                fee.交易金额 = Convert.ToDouble(request.AimsMoney);
+                fee.交易前手续费余额 = preFee;
+                fee.交易后手续费余额 = account.手续费余额;
+                fee.类型 = 类型;
+                fee.状态 = 状态;
+                fee.时间创建 = 时间创建;
+                sqlSugarClient.Insertable(fee).ExecuteCommand();
 
-            table_商户明细余额 balance = new table_商户明细余额();
-            balance.订单号 = "MBON" + DateTime.Now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999));
-            balance.商户ID = Convert.ToInt32(account.商户ID);
-            balance.类型 = 类型;
-            balance.手续费 = Convert.ToString(account.单笔手续费);
-            balance.交易金额 = request.AimsMoney;
-            balance.交易前账户余额 = Convert.ToString(preBalance);
-            balance.交易后账户余额 = Convert.ToString(account.提款余额);
-            balance.状态 = 状态;
-            balance.时间创建 = 时间创建;
-            sqlSugarClient.Insertable<table_商户明细余额>(balance).ExecuteCommand();
+                table_商户明细余额 balance = new table_商户明细余额();
+                balance.订单号 = "MBON" + DateTime.Now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999));
+                balance.商户ID = Convert.ToInt32(account.商户ID);
+                balance.类型 = 类型;
+                balance.手续费 = Convert.ToString(account.单笔手续费);
+                balance.交易金额 = request.AimsMoney;
+                balance.交易前账户余额 = Convert.ToString(preBalance);
+                balance.交易后账户余额 = Convert.ToString(account.提款余额);
+                balance.状态 = 状态;
+                balance.时间创建 = 时间创建;
+                sqlSugarClient.Insertable(balance).ExecuteCommand();
 
-            table_商户明细提款 detail = new table_商户明细提款();
-            detail.订单号 = "MST" + DateTime.Now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999));
-            detail.商户ID = account.商户ID;
-            detail.交易方卡号 = request.AimsCardNumber;
-            detail.交易方姓名 = request.AimsCardName;
-            detail.交易方银行 = request.AimsCardBank;
-            detail.商户API订单号 = request.OrderNumberMerchant;
-            detail.交易金额 = Convert.ToDouble(request.AimsMoney);
-            detail.手续费 = account.单笔手续费;
-            detail.创建方式 = "接口";
-            detail.备注商户写 = "";
-            detail.状态 = 状态;
-            detail.类型 = 类型;
-            detail.时间创建 = 时间创建;
-            detail.订单源IP = ClassLibrary1.ClassAccount.来源IP();
-            sqlSugarClient.Insertable<table_商户明细提款>(detail).ExecuteCommand();
-    
-      OrderCreateResponse orderCreateResponse = AutoCopy<BaseResponse, OrderCreateResponse>(baseSuccess);
-            orderCreateResponse.Username = request.UserName;
-            orderCreateResponse.Userpassword = request.UserPassword;
-            orderCreateResponse.OrderNumberMerchant = request.OrderNumberMerchant;
-            orderCreateResponse.OrderNumberSite = detail.订单号;
-            orderCreateResponse.AimsCardBank = request.AimsCardBank;
-            orderCreateResponse.AimsCardName = request.AimsCardName;
-            orderCreateResponse.AimsCardNumber = request.AimsCardNumber;
-            orderCreateResponse.AimsMoney = request.AimsMoney;
+                table_商户明细提款 detail = new table_商户明细提款();
+                detail.订单号 = "MST" + DateTime.Now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999));
+                detail.商户ID = account.商户ID;
+                detail.交易方卡号 = request.AimsCardNumber;
+                detail.交易方姓名 = request.AimsCardName;
+                detail.交易方银行 = request.AimsCardBank;
+                detail.商户API订单号 = request.OrderNumberMerchant;
+                detail.交易金额 = Convert.ToDouble(request.AimsMoney);
+                detail.手续费 = account.单笔手续费;
+                detail.创建方式 = "接口";
+                detail.备注商户写 = "";
+                detail.状态 = 状态;
+                detail.类型 = 类型;
+                detail.时间创建 = 时间创建;
+                detail.API回调次数 = 0;
+                detail.订单源IP = ClassLibrary1.ClassAccount.来源IP();
+                sqlSugarClient.Insertable(detail).ExecuteCommand();
 
-       
-            jsonResult.Data = orderCreateResponse;
-      });
-      if (!result.IsSuccess)
-      {
-        return GetStandardError(BaseErrors.ERROR_NUMBER.LX1016, request.UserName, request.UserPassword);
-      }
+                OrderCreateResponse orderCreateResponse = AutoCopy<BaseResponse, OrderCreateResponse>(baseSuccess);
+                orderCreateResponse.Username = request.UserName;
+                orderCreateResponse.Userpassword = request.UserPassword;
+                orderCreateResponse.OrderNumberMerchant = request.OrderNumberMerchant;
+                orderCreateResponse.OrderNumberSite = detail.订单号;
+                orderCreateResponse.AimsCardBank = request.AimsCardBank;
+                orderCreateResponse.AimsCardName = request.AimsCardName;
+                orderCreateResponse.AimsCardNumber = request.AimsCardNumber;
+                orderCreateResponse.AimsMoney = request.AimsMoney;
 
-      return jsonResult;
+                jsonResult = new JsonResult();
+                jsonResult.Data = orderCreateResponse;
+            });
+            if (!result.IsSuccess)
+            {
+                jsonResult = GetStandardError(BaseErrors.ERROR_NUMBER.LX1016, request.UserName, request.UserPassword);
+                BaseResponse baseResponse = (BaseResponse)jsonResult.Data;
+                baseResponse.StatusReply = string.Format(baseResponse.StatusReply, result.ErrorMessage);
+            }
+            return jsonResult;
         }
-
-  
-  }
-  
+    }
 }
