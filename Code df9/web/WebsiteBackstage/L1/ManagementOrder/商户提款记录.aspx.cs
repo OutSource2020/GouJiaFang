@@ -424,7 +424,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
             }
             if (RadioButton_类型订单提款冲正.Checked)
             {
-                条件3 = "  类型='订单提款冲正' ";
+                条件3 = "  类型='冲正' ";
             }
 
 
@@ -833,7 +833,10 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                     Label_交易笔数_待处理.Text = obj3.ToString();
                 }
 
-                MySqlCommand cmd5 = new MySqlCommand("select COUNT(*) from table_商户明细提款 where 状态='订单提款冲正' and " + 查看勾选了哪些() + " ", connC);
+                string t1 = 查看勾选了哪些();
+                if (!t1.Contains("冲正"))
+                    t1 = "类型='冲正' AND " + t1;
+                MySqlCommand cmd5 = new MySqlCommand("select COUNT(*) from table_商户明细提款 where " + t1, connC);
                 object obj5 = cmd5.ExecuteScalar();
                 if (obj5 != null)
                 {
@@ -870,7 +873,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                     Label_交易总金额_待处理.Text = obj23.ToString();
                 }
 
-                MySqlCommand cmd25 = new MySqlCommand("select sum(交易金额) from table_商户明细提款 where 状态='订单提款冲正' and " + 查看勾选了哪些() + " ", connC);
+                MySqlCommand cmd25 = new MySqlCommand("select sum(交易金额) from table_商户明细提款 where " + t1, connC);
                 object obj25 = cmd25.ExecuteScalar();
                 if (obj25 != null)
                 {
@@ -908,7 +911,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                     Label_手续费总金额_待处理.Text = obj33.ToString();
                 }
 
-                MySqlCommand cmd35 = new MySqlCommand("select sum(手续费) from table_商户明细提款 where 状态='订单提款冲正' and " + 查看勾选了哪些() + " ", connC);
+                MySqlCommand cmd35 = new MySqlCommand("select sum(手续费) from table_商户明细提款 where " + t1, connC);
                 object obj35 = cmd35.ExecuteScalar();
                 if (obj35 != null)
                 {
@@ -933,9 +936,6 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
         {
             DBClient db = new DBClient();
             var dbCilent = db.GetClient();
-
-            string connstring = ClassLibrary1.ClassDataControl.conStr1;
-
             var table = dbCilent.Queryable<table_后台出款银行卡管理>().Where(it => it.状态 == "启用").Select(it => new { it.出款银行卡卡号, it.出款银行卡名称, it.出款银行卡余额 }).Distinct().ToList();
 
             var modelList = new List<Model>();
@@ -945,33 +945,17 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                 modelList.Add(new Model { 出款银行卡卡号 = it.出款银行卡卡号, 出款银行卡名称 = it.出款银行卡名称 + "  " + it.出款银行卡余额 });
 
             });
-            //string querystring = "select distinct 出款银行卡名称,出款银行卡卡号 from table_后台出款银行卡管理 where 状态='启用' ";
-            //MySqlConnection myconn = new MySqlConnection(connstring);
-            //myconn.Open();
-            //MySqlDataAdapter myadapter = new MySqlDataAdapter(querystring, myconn);
-            //DataSet ds = new DataSet();
-            //myadapter.Fill(ds, "table_后台出款银行卡管理");
-            //myconn.Close();
 
-
-            // populate list
-            DataTable ListAsDataTable = BuildDataTable(modelList);
-            DataView ListAsDataView = ListAsDataTable.DefaultView;
-
-            //DataView  dv = new DataView();
-            //DropDownList_选择银行卡.Items.Clear();
-            DropDownList_选择银行卡.DataSource = ListAsDataView;
-            DropDownList_选择银行卡.DataTextField = "出款银行卡名称";
-            DropDownList_选择银行卡.DataValueField = "出款银行卡卡号";
-            DropDownList_选择银行卡.DataBind();
-
-            //DropDownList_选择银行卡.Items.Clear();
-            //DropDownList_选择银行卡.DataSource = ds.Tables[0].DefaultView;
-            //DropDownList_选择银行卡.DataTextField = ds.Tables["table_后台出款银行卡管理"].Columns["出款银行卡名称"].ToString();
-            //DropDownList_选择银行卡.DataValueField = ds.Tables["table_后台出款银行卡管理"].Columns["出款银行卡卡号"].ToString();
-
-            //DropDownList_选择银行卡.DataBind();
-
+            if (!IsPostBack)
+            {
+                DataTable ListAsDataTable = BuildDataTable(modelList);
+                DataView ListAsDataView = ListAsDataTable.DefaultView;
+                DropDownList_选择银行卡.Items.Clear();
+                DropDownList_选择银行卡.DataSource = ListAsDataView;
+                DropDownList_选择银行卡.DataTextField = "出款银行卡名称";
+                DropDownList_选择银行卡.DataValueField = "出款银行卡卡号";
+                DropDownList_选择银行卡.DataBind();
+            }
             dbCilent.Close();
         }
 
@@ -1143,7 +1127,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                             dbClient.Ado.UseTran(() =>
                             {
                                 record1 = dbClient.Queryable<table_后台出款银行卡管理>().Where(it => it.出款银行卡名称 == 出款银行卡名称).First();
-                                if (record1.出款银行卡余额.Value - 余额1 > 0.0001) // double不能判断相等，只能减
+                                if (Math.Abs(record1.出款银行卡余额.Value - 余额1) > 0.0001) // double不能判断相等，只能减
                                 {
                                     dbClient.Ado.ExecuteCommand("UPDATE `table_后台出款银行卡管理` SET `出款银行卡余额` = `出款银行卡余额` - " + record.交易金额.ToString() + " WHERE `出款银行卡卡号` ='" + record1.出款银行卡卡号 + "';");
                                     string 生成编号1 = "BOPBCP" + now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999));
@@ -1211,7 +1195,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                             dbClient.Ado.UseTran(() =>
                             {
                                 record1 = dbClient.Queryable<table_商户账号>().Where(it => it.商户ID == record.商户ID).First();
-                                if (record1.提款余额.Value - 余额1 > 0.0001)
+                                if (Math.Abs(record1.提款余额.Value - 余额1) > 0.0001)
                                 {
                                     dbClient.Ado.ExecuteCommand(str);
                                     string 提款手续费_订单号 = "MHFOR" + now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999));
@@ -1910,7 +1894,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
             BindGrid("where " + 查看勾选了哪些() + " ");
         }
 
-        private void ExportGird<T>(bool all, string name, string[] headers, Action<bool, DataTable, Action<DataRow, T, int>> data, Action<DataRow, T, int> action)
+        private void ExportGird<T>(bool all, string name, string[] headers, Action<bool, DataTable, Action<DataRow, T, int>> data, Action<DataRow, T, int> action, Func<DataRow, DataRow, bool> drawColor)
         {
             DataTable dt = new DataTable();
             foreach (string head in headers)
@@ -1930,13 +1914,21 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
             IWorkbook wb = new HSSFWorkbook();
             ISheet sheet = wb.CreateSheet("Sheet1");
             ICreationHelper cH = wb.GetCreationHelper();
+            ICellStyle style = wb.CreateCellStyle();
+            style.FillForegroundColor = IndexedColors.Red.Index;
+            style.FillPattern = FillPattern.SolidForeground;
+            bool isDrawColor = false;
             for (int i = 0; i < dt.Rows.Count; i++)
             {
                 IRow row = sheet.CreateRow(i);
+                if (i > 1)
+                    isDrawColor = drawColor(dt.Rows[i - 1], dt.Rows[i]);
                 for (int j = 0; j < headers.Length; j++)
                 {
                     ICell cell = row.CreateCell(j);
                     cell.SetCellValue(cH.CreateRichTextString(dt.Rows[i].ItemArray[j].ToString()));
+                    if (isDrawColor)
+                        cell.CellStyle = style;
                 }
                 sheet.AutoSizeColumn(i);
             }
@@ -1984,6 +1976,11 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                 dr[2] = row.Cells[5].Text;
                 dr[4] = row.Cells[8].Text;
                 dr[9] = "实时";
+            }, (dr1, dr2) =>
+            {
+                return (dr1[0].ToString() == dr2[0].ToString())
+                    && (dr1[1].ToString() == dr2[1].ToString())
+                    && (dr1[2].ToString() == dr2[2].ToString());
             });
         }
 
@@ -1999,6 +1996,11 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                 dr[5] = row.Cells[7].Text;
                 dr[6] = row.Cells[5].Text;
                 dr[8] = row.Cells[8].Text;
+            }, (dr1, dr2) =>
+            {
+                return (dr1[4].ToString() == dr2[4].ToString())
+                    && (dr1[5].ToString() == dr2[5].ToString())
+                    && (dr1[6].ToString() == dr2[6].ToString());
             });
         }
 
@@ -2012,6 +2014,11 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                 dr[2] = row.Cells[7].Text;
                 dr[3] = row.Cells[8].Text;
                 dr[6] = (new[] { "行内转账", "异地跨行" })[("平安银行" == dr[3]) ? 0 : 1];
+            }, (dr1, dr2) =>
+            {
+                return (dr1[0].ToString() == dr2[0].ToString())
+                    && (dr1[1].ToString() == dr2[1].ToString())
+                    && (dr1[2].ToString() == dr2[2].ToString());
             });
         }
 
@@ -2078,6 +2085,9 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                 dr[11] = record.状态;
                 dr[12] = record.后台处理批次ID组;
                 dr[13] = record.操作员;
+            }, (dr1, dr2) =>
+            {
+                return false;
             });
         }
 
@@ -2095,6 +2105,9 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                 dr[5] = record.交易方姓名;
                 dr[6] = record.交易金额;
                 dr[8] = record.交易方银行;
+            }, (dr1, dr2) =>
+            {
+                return false;
             });
         }
 
@@ -2108,6 +2121,9 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                 dr[2] = record.交易方姓名;
                 dr[3] = record.交易方银行;
                 dr[6] = (new[] { "行内转账", "异地跨行" })[("平安银行" == dr[3]) ? 0 : 1];
+            }, (dr1, dr2) =>
+            {
+                return false;
             });
         }
 
@@ -2123,6 +2139,9 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                 dr[4] = record.交易方银行;
                 dr[8] = record.出款银行卡卡号;
                 dr[9] = "实时";
+            }, (dr1, dr2) =>
+            {
+                return false;
             });
         }
 
@@ -2190,7 +2209,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
             HttpClient httpClient = new HttpClient();
             HttpResponseMessage response = httpClient.PostAsync(url, httpContent).Result;
 
-            statusCode = response.StatusCode.ObjToInt();
+            statusCode = (int)response.StatusCode;
             if (response.IsSuccessStatusCode)
             {
                 string result = response.Content.ReadAsStringAsync().Result;
@@ -2261,7 +2280,10 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                         record.最后一次回调返回的状态 = "失败";
                     else
                         record.最后一次回调返回的状态 = "成功";
-                    record.API回调次数++;
+                    if (record.API回调次数.HasValue)
+                        record.API回调次数++;
+                    else
+                        record.API回调次数 = 1;
                     dbClient.Ado.UseTran(() =>
                     {
                         dbClient.Updateable(record).UpdateColumns(it => new { it.API回调次数, it.最后一次回调返回的状态 }).ExecuteCommand();

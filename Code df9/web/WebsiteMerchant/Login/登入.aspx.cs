@@ -57,7 +57,11 @@ namespace web1.WebsiteMerchant.Login
 
 
 
+                                    #if DEBUG
+                                    if (true)
+                                    #else
                                     if (ClassLibrary1.ClassAccount.验证商户白名单IP(商户ID, ClassLibrary1.ClassAccount.来源IP()) == true)//验证来源IP是否在数据库是白名单IP
+                                    #endif
                                     {
 
 
@@ -69,9 +73,9 @@ namespace web1.WebsiteMerchant.Login
                                                 TwoFactorAuthenticator tfa = new TwoFactorAuthenticator();
                                                 var result = tfa.ValidateTwoFactorPIN(密匙, TextBox_回答.Text);
 
-                                                #if DEBUG
+#if DEBUG
                                                 result = true;
-                                                #endif
+#endif
 
                                                 if (result)
                                                 {
