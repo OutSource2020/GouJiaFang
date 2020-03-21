@@ -2346,7 +2346,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
         {
             int count = SendAllCallBack(dbClient =>
             {
-                return dbClient.Queryable<table_商户明细提款>().Where(it => it.创建方式 == "接口" && (DateTime.Now - it.时间完成.Value).Days < 3).ToList();
+                return dbClient.Queryable<table_商户明细提款>().Where(it => it.创建方式 == "接口" && DateTime.Now <= it.时间完成.Value.AddDays(3)).ToList();
             });
             ClassLibrary1.ClassMessage.HinXi(Page, "发送了" + count + "条回调");
             Response.Redirect("./商户提款记录.aspx");
