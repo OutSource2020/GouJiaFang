@@ -390,6 +390,7 @@ namespace web1.WebsiteMerchant.商户订单
 
                                                     double 手续费多少 = 手续费计算;
 
+                                                    dbCilent.Ado.UseTran(() => { });
                           //扣除 账户余额和手续费
                           var result = dbCilent.Ado.UseTran(() =>
                           {
@@ -451,6 +452,8 @@ namespace web1.WebsiteMerchant.商户订单
                             dbCilent.Ado.ExecuteCommand(str3);
 
                           });
+
+                                                    dbCilent.Ado.UseTran(() => { });
 
 
 
