@@ -364,10 +364,17 @@ namespace web1.WebsiteMerchant.商户订单
                                 {
                                     if (支付密码 == TextBox_输入支付密码.Text)//支付密码必须和数据库中一致
                                     {
-
-                                        Button_批量发起提款订单.Enabled = false;//防止重复操作
-                                        开始执行();
-
+                                        if (Session["TimeOut"] == null || GetTimeStamp() - (long)Session["TimeOut"] > 40)
+                                        {
+                                            Session.Add("TimeOut", GetTimeStamp());
+                                            Button_批量发起提款订单.Enabled = false;//防止重复操作
+                                            开始执行();
+                                        }
+                                        else
+                                        {
+                                            ClassLibrary1.ClassMessage.HinXi(Page, "40秒之内不能发起重复订单");
+                                            Response.Redirect("../MerchantOverview/商户首页.aspx");
+                                        }
                                     }
                                     else
                                     {

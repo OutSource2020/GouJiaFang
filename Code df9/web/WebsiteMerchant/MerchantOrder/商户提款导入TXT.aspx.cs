@@ -299,8 +299,17 @@ namespace web1.WebsiteMerchant.商户订单
                                 {
                                     if (支付密码 == TextBox_输入支付密码.Text)//支付密码必须和数据库中一致
                                     {
-                                        Button_确认订单发起.Enabled = false;//防止重复操作
-                                        开始执行();
+                                        if (Session["TimeOut"] == null || GetTimeStamp() - (long)Session["TimeOut"] > 40)
+                                        {
+                                            Session.Add("TimeOut", GetTimeStamp());
+                                            Button_确认订单发起.Enabled = false;//防止重复操作
+                                            开始执行();
+                                        }
+                                        else
+                                        {
+                                            ClassLibrary1.ClassMessage.HinXi(Page, "40秒之内不能发起重复订单");
+                                            Response.Redirect("../MerchantOverview/商户首页.aspx");
+                                        }
                                     }
                                     else
                                     {
@@ -435,7 +444,7 @@ namespace web1.WebsiteMerchant.商户订单
                             交易方银行 = 交易方银行,
                             交易金额 = 提款金额,
                             手续费 = 单笔手续费,
-                            创建方式 = "文档导入",
+                            创建方式 = "文本导入",
                             备注商户写 = 备注,
                             状态 = "待处理",
                             类型 = 类型,
