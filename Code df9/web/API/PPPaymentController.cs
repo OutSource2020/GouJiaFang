@@ -108,6 +108,7 @@ namespace web1.API
                 return GetStandardError(BaseErrors.ERROR_NUMBER.LX1013, request.UserName, request.UserPassword);
             }
             JsonResult jsonResult = null;
+      sqlSugarClient.Ado.UseTran(() => { });
             var result = sqlSugarClient.Ado.UseTran(() =>
             {
                 getByWhere = sqlSugarClient.Queryable<table_商户账号>().Where(it => it.商户ID == request.UserName).ToList();
@@ -180,7 +181,8 @@ namespace web1.API
                 jsonResult = new JsonResult();
                 jsonResult.Data = orderCreateResponse;
             });
-            if (!result.IsSuccess)
+      sqlSugarClient.Ado.UseTran(() => { });
+      if (!result.IsSuccess)
             {
                 jsonResult = GetStandardError(BaseErrors.ERROR_NUMBER.LX1016, request.UserName, request.UserPassword);
                 BaseResponse baseResponse = (BaseResponse)jsonResult.Data;
