@@ -299,7 +299,7 @@ namespace web1.WebsiteMerchant.商户订单
                                 {
                                     if (支付密码 == TextBox_输入支付密码.Text)//支付密码必须和数据库中一致
                                     {
-                                        if (Session["TimeOut"] == null || GetTimeStamp() - (long)Session["TimeOut"] > 40)
+                                        if (Session["TimeOut"] == null || GetTimeStamp() - (long)Session["TimeOut"] > 40 * 1000)
                                         {
                                             Session.Add("TimeOut", GetTimeStamp());
                                             Button_确认订单发起.Enabled = false;//防止重复操作
