@@ -12,6 +12,8 @@ using System.Data.OleDb;
 using System.IO;
 using ExcelDataReader;
 using System.Text.RegularExpressions;
+using SqlSugar;
+using Sugar.Enties;
 
 namespace web1.WebsiteMerchant.商户订单
 {
@@ -297,8 +299,17 @@ namespace web1.WebsiteMerchant.商户订单
                                 {
                                     if (支付密码 == TextBox_输入支付密码.Text)//支付密码必须和数据库中一致
                                     {
-                                        Button_确认订单发起.Enabled = false;//防止重复操作
-                                        开始执行();
+                                        if (Session["TimeOut"] == null || GetTimeStamp() - (long)Session["TimeOut"] > 40)
+                                        {
+                                            Session.Add("TimeOut", GetTimeStamp());
+                                            Button_确认订单发起.Enabled = false;//防止重复操作
+                                            开始执行();
+                                        }
+                                        else
+                                        {
+                                            ClassLibrary1.ClassMessage.HinXi(Page, "40秒之内不能发起重复订单");
+                                            Response.Redirect("../MerchantOverview/商户首页.aspx");
+                                        }
                                     }
                                     else
                                     {
@@ -329,170 +340,126 @@ namespace web1.WebsiteMerchant.商户订单
 
         private void 开始执行()
         {
-      DBClient db = new DBClient();
-      var dbCilent = db.GetClient();
-      Button_确认订单发起.Enabled = false;//防止重复操作
+            Button_确认订单发起.Enabled = false;//防止重复操作
             long OperatorId = GetTimeStamp();
-      int Sindex = 0;
-            for (int i = (Gridview1.Rows.Count - 1); i >= 0 ; i--)
+            int Sindex = 0;
+            using (SqlSugarClient dbClient = new DBClient().GetClient())
             {
-                string 交易方卡号 = ((TextBox)Gridview1.Rows[i].Cells[1].FindControl("TextBox1")).Text;
-                string 交易方姓名 = ((TextBox)Gridview1.Rows[i].Cells[2].FindControl("TextBox2")).Text;
-                string 交易方银行 = ((TextBox)Gridview1.Rows[i].Cells[3].FindControl("TextBox3")).Text;
-                string 交易金额 = ((TextBox)Gridview1.Rows[i].Cells[4].FindControl("TextBox4")).Text;
-                string 备注 = ((TextBox)Gridview1.Rows[i].Cells[5].FindControl("TextBox5")).Text;
-
-                if (ClassLibrary1.ClassYZ.IsNumber(交易金额) == true)
+                for (int i = 0; i < Gridview1.Rows.Count; i++)
                 {
-                    string Cookie_UserName = ClassLibrary1.ClassAccount.检查商户端cookie2();
+                    string 交易方卡号 = ((TextBox)Gridview1.Rows[i].Cells[1].FindControl("TextBox1")).Text;
+                    string 交易方姓名 = ((TextBox)Gridview1.Rows[i].Cells[2].FindControl("TextBox2")).Text;
+                    string 交易方银行 = ((TextBox)Gridview1.Rows[i].Cells[3].FindControl("TextBox3")).Text;
+                    string 交易金额 = ((TextBox)Gridview1.Rows[i].Cells[4].FindControl("TextBox4")).Text;
+                    string 备注 = ((TextBox)Gridview1.Rows[i].Cells[5].FindControl("TextBox5")).Text;
 
-                    //查询账户信息
-                    using (MySqlConnection con1 = new MySqlConnection(ClassLibrary1.ClassDataControl.conStr1))
+                    if (!ClassLibrary1.ClassYZ.IsNumber(交易金额))
                     {
-                        using (MySqlCommand cmd1 = new MySqlCommand("SELECT 商户ID,提款余额,手续费余额,手续费比率,单笔手续费,提款最低单笔金额,提款最高单笔金额 FROM table_商户账号 WHERE 商户ID=@商户ID", con1))
-                        {
-                            cmd1.Parameters.AddWithValue("@商户ID", Cookie_UserName);
-                            using (MySqlDataAdapter da1 = new MySqlDataAdapter(cmd1))
-                            {
-                                DataTable images = new DataTable();
-                                da1.Fill(images);
-                                foreach (DataRow dr1 in images.Rows)
-                                {
-                                    double 提款金额 = double.Parse(((TextBox)Gridview1.Rows[i].Cells[4].FindControl("TextBox4")).Text);
-
-                                    double 提款余额 = double.Parse(dr1["提款余额"].ToString());
-                                    double 手续费余额 = double.Parse(dr1["手续费余额"].ToString());
-                                    double 手续费比率 = double.Parse(dr1["手续费比率"].ToString());
-                                    double 单笔手续费 = double.Parse(dr1["单笔手续费"].ToString());
-                                    double 提款最低单笔金额 = double.Parse(dr1["提款最低单笔金额"].ToString());
-                                    double 提款最高单笔金额 = double.Parse(dr1["提款最高单笔金额"].ToString());
-
-                                    if ((提款余额 - 提款金额) >= 0)
-                                    {
-                                        if (提款最高单笔金额 >= 提款金额)
-                                        {
-                                            if (提款最低单笔金额 <= 提款金额)
-                                            {
-                                                if (手续费余额 - 单笔手续费 >= 0)
-                                                {
-
-                                                    Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 100, 300));
-
-                                                    double a = double.Parse(交易金额);
-                                                    double b = 100;
-                                                    double c = double.Parse(dr1["手续费比率"].ToString());
-                                                    double d = double.Parse(dr1["单笔手续费"].ToString());
-                                                    //double 手续费计算 = (((a / b) * c) + d);
-                                                    //double 手续费多少 = Math.Round(手续费计算, 2);
-
-                                                    //提款只收单笔手续费(不扣手续费比率)
-                                                    double 手续费计算 = d;
-
-                                                    double 手续费多少 = 手续费计算;
-                                                    dbCilent.Ado.UseTran(() => { });
-
-                          var result = dbCilent.Ado.UseTran(() =>
-                          {
-
-                            //扣除 账户余额和手续费
-                            dbCilent.Ado.ExecuteCommand("UPDATE table_商户账号 SET 提款余额=提款余额-'" + 提款金额 + "', 手续费余额= 手续费余额-'" + 手续费多少 + "' where 商户ID='" + Cookie_UserName + "' ;");
-
-                            //商户提款手续费交易明细
-                            string 提款手续费_生成编号标头 = "MHFON";
-                            string 提款手续费_订单号 = 提款手续费_生成编号标头 + DateTime.Now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999));
-                            string 提款手续费_商户ID = Cookie_UserName;
-                            double 提款手续费_手续费 = 手续费多少;
-                            double 提款手续费_交易金额 = 提款金额;
-                            double 提款手续费_交易前手续费余额 = 手续费余额;
-                            double 提款手续费_交易后手续费余额 = 手续费余额 - 手续费多少;
-                            string 提款手续费_类型 = "提款";
-                            string 提款手续费_时间创建 = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
-
-                            string 手续费交易明细哪个表 = " table_商户明细手续费 ";
-                            string 手续费交易明细写哪些 = "订单号,商户ID,手续费支出,交易金额,交易前手续费余额,交易后手续费余额,类型,时间创建";
-                            string 手续费交易明细写这些 = "'" + 提款手续费_订单号 + "','" + 提款手续费_商户ID + "','" + 提款手续费_手续费 + "','" + 提款手续费_交易金额 + "','" + 提款手续费_交易前手续费余额 + "','" + 提款手续费_交易后手续费余额 + "','" + 提款手续费_类型 + "','" + 提款手续费_时间创建 + "' ";
-
-                            string str = "insert into " + 手续费交易明细哪个表 + "(" + 手续费交易明细写哪些 + ") values(" + 手续费交易明细写这些 + ");";
-                            dbCilent.Ado.ExecuteCommand(str);
-                            //商户账户余额交易明细
-
-                            string 账户余额_订单号 = "MBON" + DateTime.Now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999));
-                            string 账户余额_类型 = "提款";
-                            double 账户余额_手续费 = 手续费余额;
-                            double 账户余额_交易金额 = double.Parse(交易金额);
-                            double 账户余额_交易前余额 = double.Parse(dr1["提款余额"].ToString());
-                            double 账户余额_交易后余额 = double.Parse(dr1["提款余额"].ToString()) - double.Parse(交易金额);
-                            string 账户余额_时间创建 = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
-
-                            string 余额交易明细哪个表 = " table_商户明细余额 ";
-                            string 余额交易明细写哪些 = "订单号,商户ID,类型,手续费,交易金额,交易前账户余额,交易后账户余额,状态,时间创建";
-                            string 余额交易明细写这些 = "'" + 账户余额_订单号 + "','" + Cookie_UserName + "','" + 账户余额_类型 + "','" + 手续费多少 + "','" + 账户余额_交易金额 + "','" + 账户余额_交易前余额 + "','" + 账户余额_交易后余额 + "','','" + 账户余额_时间创建 + "' ";
-
-                            string str1 = "insert into " + 余额交易明细哪个表 + "(" + 余额交易明细写哪些 + ") values(" + 余额交易明细写这些 + ")";
-
-                            dbCilent.Ado.ExecuteCommand(str1);
-                            //向提款记录表写入信息
-
-                            string 生成编号 = "MST" + DateTime.Now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999));
-
-                            string 创建方式 = "文档导入";
-
-                            string 状态 = "待处理";
-                            string 类型 = "提款";
-                            string 时间创建 = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
-                            string 来源IP = ClassLibrary1.ClassAccount.来源IP();
-
-                            //string 有哪些 = "订单号,商户ID,卡号,充值金额,充值类型,备注,时间创建,状态 ";
-                            string 有哪些 = "订单号,商户ID,交易方卡号,交易方姓名,交易方银行,交易金额,手续费,创建方式,备注商户写,状态,类型,时间创建,订单源IP,商户提交批次ID组,商户提交序号";
-                            string 收哪些 = "'" + 生成编号 + "','" + Cookie_UserName + "','" + 交易方卡号 + "','" + 交易方姓名 + "','" + 交易方银行 + "','" + 交易金额 + "','" + 手续费多少 + "','" + 创建方式 + "','" + 备注 + "','" + 状态 + "','" + 类型 + "','" + 时间创建 + "','" + 来源IP + "' " + ", " + OperatorId + "," + Sindex++;
-
-
-                            string str3 = "insert into table_商户明细提款(" + 有哪些 + ") values(" + 收哪些 + ")";
-                            dbCilent.Ado.ExecuteCommand(str3);
-
-                          });
-
-                                                    dbCilent.Ado.UseTran(() => { });
-
-
-                        }
-                        else
-                                                {
-                                                    ClassLibrary1.ClassMessage.HinXi(Page, "手续费余额不足");
-                                                    return;
-                                                }
-                                            }
-                                            else
-                                            {
-                                                ClassLibrary1.ClassMessage.HinXi(Page, "目标提款金额 小于账户提款金额限制");
-                                                return;
-                                            }
-                                        }
-                                        else
-                                        {
-                                            ClassLibrary1.ClassMessage.HinXi(Page, "目标提款金额 大于账户提款金额限制");
-                                            return;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        ClassLibrary1.ClassMessage.HinXi(Page, "目标提款金额 账户提款余额不足支付");
-                                        return;
-                                    }
-                                }
-                            }
-                        }
+                        ClassLibrary1.ClassMessage.HinXi(Page, "金额 不是数字或者小数 忽略该笔继续执行");
+                        continue;
                     }
 
-                }
-                else
-                {
-                    ClassLibrary1.ClassMessage.HinXi(Page, "金额 不是数字或者小数");
-                    return;
+                    string Cookie_UserName = ClassLibrary1.ClassAccount.检查商户端cookie2();
+                    dbClient.Ado.UseTran(() => { }); // select 之前保证一次 commit，即使什么都不做
+                    table_商户账号 record = null;
+                    dbClient.Ado.UseTran(() =>
+                    {
+                        record = dbClient.Queryable<table_商户账号>().Where(it => it.商户ID == Cookie_UserName).First();
+                    });
+                    if (record == null)
+                        return;
+                    double 提款金额 = double.Parse(交易金额);
+
+                    double 提款余额 = record.提款余额.Value;
+                    double 手续费余额 = record.手续费余额.Value;
+                    double 手续费比率 = record.手续费比率.Value;
+                    double 单笔手续费 = record.单笔手续费.Value;
+                    double 提款最低单笔金额 = double.Parse(record.提款最低单笔金额);
+                    double 提款最高单笔金额 = double.Parse(record.提款最高单笔金额);
+                    if (提款余额 - 提款金额 < 0)
+                    {
+                        ClassLibrary1.ClassMessage.HinXi(Page, "目标提款金额 账户提款余额不足支付");
+                        return;
+                    }
+                    if (手续费余额 - 单笔手续费 < 0)
+                    {
+                        ClassLibrary1.ClassMessage.HinXi(Page, "手续费余额不足");
+                        return;
+                    }
+
+                    if (提款最高单笔金额 - 提款金额 < 0)
+                    {
+                        ClassLibrary1.ClassMessage.HinXi(Page, "目标提款金额 大于账户提款金额限制 忽略该笔继续执行");
+                        continue;
+                    }
+                    if (提款最低单笔金额 - 提款金额 > 0)
+                    {
+                        ClassLibrary1.ClassMessage.HinXi(Page, "目标提款金额 小于账户提款金额限制 忽略该笔继续执行");
+                        continue;
+                    }
+
+                    dbClient.Ado.UseTran(() =>
+                    {
+                        DateTime now = DateTime.Now;
+
+                        dbClient.Ado.ExecuteCommand("UPDATE `table_商户账号` SET `提款余额` = `提款余额` - '" + 提款金额 + "', " +
+                            "`手续费余额` = `手续费余额` - '" + 单笔手续费 + "' WHERE `商户ID` = '" + record.商户ID + "';");
+
+                        string 类型 = "提款";
+
+                        table_商户明细手续费 fee = new table_商户明细手续费()
+                        {
+                            订单号 = "MHFON" + now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999)),
+                            商户ID = int.Parse(record.商户ID),
+                            手续费支出 = 单笔手续费,
+                            交易金额 = 提款金额,
+                            交易前手续费余额 = 手续费余额,
+                            交易后手续费余额 = 手续费余额 - 单笔手续费,
+                            类型 = 类型,
+                            时间创建 = now
+                        };
+
+                        dbClient.Insertable(fee).ExecuteCommand();
+
+                        table_商户明细余额 balance = new table_商户明细余额()
+                        {
+                            订单号 = "MBON" + now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999)),
+                            商户ID = int.Parse(record.商户ID),
+                            类型 = 类型,
+                            手续费 = 单笔手续费.ToString(),
+                            交易金额 = 交易金额,
+                            交易前账户余额 = 提款余额.ToString(),
+                            交易后账户余额 = (提款余额 - 提款金额).ToString(),
+                            时间创建 = now
+                        };
+
+                        dbClient.Insertable(balance).ExecuteCommand();
+
+                        table_商户明细提款 detail = new table_商户明细提款()
+                        {
+                            订单号 = "MST" + now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999)),
+                            商户ID = record.商户ID,
+                            交易方卡号 = 交易方卡号,
+                            交易方姓名 = 交易方姓名,
+                            交易方银行 = 交易方银行,
+                            交易金额 = 提款金额,
+                            手续费 = 单笔手续费,
+                            创建方式 = "文档导入",
+                            备注商户写 = 备注,
+                            状态 = "待处理",
+                            类型 = 类型,
+                            时间创建 = now,
+                            订单源IP = ClassLibrary1.ClassAccount.来源IP(),
+                            商户提交批次ID组 = OperatorId,
+                            商户提交序号 = Sindex++
+                        };
+
+                        dbClient.Insertable(detail).ExecuteCommand();
+                    });
                 }
             }
-      Response.Redirect("./商户提款记录.aspx");
-    }
+            Response.Redirect("./商户提款记录.aspx");
+        }
 
 
         private void 支付错误()
