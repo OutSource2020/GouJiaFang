@@ -373,7 +373,7 @@ namespace web1.WebsiteMerchant.商户订单
                                         else
                                         {
                                             ClassLibrary1.ClassMessage.HinXi(Page, "40秒之内不能发起重复订单");
-                                            Response.Redirect("../MerchantOverview/商户首页.aspx");
+                                            // Response.Redirect("../MerchantOverview/商户首页.aspx");
                                         }
                                     }
                                     else

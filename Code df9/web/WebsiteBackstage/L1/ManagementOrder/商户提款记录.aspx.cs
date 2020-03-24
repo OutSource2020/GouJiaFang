@@ -2264,7 +2264,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                     if (account.API回调 == null || account.API回调 == "")
                         continue;
 
-                    OrderInquireResponse request = new OrderInquireResponse()
+                    CallbackRequest request = new CallbackRequest()
                     {
                         Username = account.商户ID,
                         Userpassword = account.商户密码API,
@@ -2273,7 +2273,8 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                         OrderType = record.类型,
                         OrderStatus = record.状态,
                         OrderTimeCreation = record.时间创建.Value.ToString("yyyy-MM-dd HH:mm:ss"),
-                        OrderTimeEnd = record.时间完成.Value.ToString("yyyy-MM-dd HH:mm:ss")
+                        OrderTimeEnd = record.时间完成.Value.ToString("yyyy-MM-dd HH:mm:ss"),
+                        OrderMoney = record.交易金额.Value.ToString()
                     };
                     BaseResponse baseResponse = null;
                     try
