@@ -278,6 +278,7 @@
     <Compile Include="API.Enties\BaseErrors.cs" />
     <Compile Include="API.Enties\BaseRequest.cs" />
     <Compile Include="API.Enties\BaseResponse.cs" />
+    <Compile Include="API.Enties\CallbackRequest.cs" />
     <Compile Include="API.Enties\OrderCreateRequest.cs" />
     <Compile Include="API.Enties\OrderCreateResponse.cs" />
     <Compile Include="API.Enties\OrderInquireRequest.cs" />

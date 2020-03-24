@@ -364,7 +364,7 @@ namespace web1.WebsiteMerchant.商户订单
                                 {
                                     if (支付密码 == TextBox_输入支付密码.Text)//支付密码必须和数据库中一致
                                     {
-                                        if (Session["TimeOut"] == null || GetTimeStamp() - (long)Session["TimeOut"] > 40)
+                                        if (Session["TimeOut"] == null || GetTimeStamp() - (long)Session["TimeOut"] > 60 * 1000)
                                         {
                                             Session.Add("TimeOut", GetTimeStamp());
                                             Button_批量发起提款订单.Enabled = false;//防止重复操作
@@ -372,7 +372,7 @@ namespace web1.WebsiteMerchant.商户订单
                                         }
                                         else
                                         {
-                                            ClassLibrary1.ClassMessage.HinXi(Page, "40秒之内不能发起重复订单");
+                                            ClassLibrary1.ClassMessage.HinXi(Page, "1分钟之内不能发起重复订单");
                                             // Response.Redirect("../MerchantOverview/商户首页.aspx");
                                         }
                                     }
@@ -427,6 +427,20 @@ namespace web1.WebsiteMerchant.商户订单
                         ClassLibrary1.ClassMessage.HinXi(Page, "金额 不是数字或者小数 忽略该笔继续执行");
                         continue;
                     }
+
+                    int count = 0;
+
+                    dbClient.Ado.UseTran(() => { }); // select 之前保证一次 commit，即使什么都不做
+                    dbClient.Ado.UseTran(() =>
+                    {
+                        count = dbClient.Queryable<table_商户明细提款>().Where(it => it.交易方卡号 == 交易方卡号
+                        && it.交易方姓名 == 交易方姓名
+                        && it.交易金额.Value.ToString() == 交易金额
+                        && DateTime.Now < it.时间创建.Value.AddMinutes(10)).Count();
+                    });
+
+                    if (count > 0)
+                        continue;
 
                     string Cookie_UserName = ClassLibrary1.ClassAccount.检查商户端cookie2();
                     dbClient.Ado.UseTran(() => { }); // select 之前保证一次 commit，即使什么都不做
