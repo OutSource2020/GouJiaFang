@@ -63,11 +63,7 @@ namespace web1.WebsiteBackstage.L1.Login
 
 
 
-                                    #if DEBUG
-                                    if (true)
-                                    #else
                                     if (ClassLibrary1.ClassAccount.验证管理L1白名单IP(查询管理ID, ClassLibrary1.ClassAccount.来源IP()) == true)//验证来源IP是否在数据库是白名单IP
-                                    #endif
                                     {
                                         if (查询状态 == "启用")
                                         {

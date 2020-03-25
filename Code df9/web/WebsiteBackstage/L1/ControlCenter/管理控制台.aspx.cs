@@ -8,6 +8,8 @@ using System.Web.UI.WebControls;
 using System.Data;
 using MySql.Data.MySqlClient;
 using System.Media;
+using SqlSugar;
+using Sugar.Enties;
 
 namespace web1.WebsiteBackstage.L1.ControlCenter
 {
@@ -31,8 +33,10 @@ namespace web1.WebsiteBackstage.L1.ControlCenter
             查询商户提款(查看勾选了哪些());
 
             获取计数(" " + 查看勾选了哪些() + " ");
-            
+
             判断响起提示音();
+
+            LoadTable();
 
             //页面自动刷新();
             Label_刷新时间.Text = "载入时间: " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
@@ -339,42 +343,43 @@ namespace web1.WebsiteBackstage.L1.ControlCenter
                     Label_银行卡待审核.Text = obj3.ToString();
                 }
 
-        MySqlCommand cmd4 = new MySqlCommand("select sum(提款余额) from  table_商户账号 ", connC);
-        object obj4 = cmd4.ExecuteScalar();
-        if (obj4 != null)
-        {
-          Label_余额总额.Text = obj4.ToString();
+                MySqlCommand cmd4 = new MySqlCommand("select sum(提款余额) from  table_商户账号 ", connC);
+                object obj4 = cmd4.ExecuteScalar();
+                if (obj4 != null)
+                {
+                    Label_余额总额.Text = obj4.ToString();
+                }
+
+
+                MySqlCommand cmd5 = new MySqlCommand("select sum(出款银行卡余额)  from  table_后台出款银行卡管理  where  状态='启用'", connC);
+                object obj5 = cmd5.ExecuteScalar();
+                if (obj5 != null && obj5.ToString() != "")
+                {
+                    Label_出款总额.Text = obj5.ToString();
+                }
+                else
+                {
+                    Label_出款总额.Text = "0";
+                }
+
+                MySqlCommand cmd6 = new MySqlCommand("select sum(交易金额) from table_商户明细提款  where 状态='待处理'", connC);
+                object obj6 = cmd6.ExecuteScalar();
+                if (obj6 != null && obj6.ToString() != "")
+                {
+                    Label_待处理金额.Text = obj6.ToString();
+                }
+                else
+                {
+                    Label_待处理金额.Text = "0";
+                }
+
+
+
+                Label_差额.Text = (Convert.ToDouble(Label_出款总额.Text) - Convert.ToDouble(Label_余额总额.Text)).ToString();
+                Label_差额.Text = " " + Label_出款总额.Text + " - " + Label_余额总额.Text + " = " + Label_差额.Text + "  （注意补齐待处理金额）";
+                connC.Close();
+            }
         }
-
-       
-      MySqlCommand cmd5 = new MySqlCommand("select sum(出款银行卡余额)  from  table_后台出款银行卡管理  where  状态='启用'", connC);
-      object obj5 = cmd5.ExecuteScalar();
-      if (obj5 != null&& obj5.ToString()!="")
-      {
-        Label_出款总额.Text = obj5.ToString();
-      }
-      else{
-          Label_出款总额.Text ="0";
-        }
-
-        MySqlCommand cmd6 = new MySqlCommand("select sum(交易金额) from table_商户明细提款  where 状态='待处理'", connC);
-        object obj6 = cmd6.ExecuteScalar();
-        if (obj6 != null && obj6.ToString() != "")
-        {
-         Label_待处理金额.Text = obj6.ToString();
-        }
-        else
-        {
-          Label_待处理金额.Text = "0";
-        }
-
-
-
-        Label_差额.Text = (Convert.ToDouble( Label_出款总额.Text)- Convert.ToDouble(Label_余额总额.Text)).ToString();
-        Label_差额.Text =" "+ Label_出款总额.Text+" - "+ Label_余额总额.Text+" = " + Label_差额.Text+ "  （注意补齐待处理金额）";
-        connC.Close();
-      }
-    }
 
         public void 判断响起提示音()
         {
@@ -427,6 +432,15 @@ namespace web1.WebsiteBackstage.L1.ControlCenter
 
         }
 
+        private void LoadTable()
+        {
+            using (SqlSugarClient dbClient = new DBClient().GetClient())
+            {
+                DataTable dt = dbClient.Queryable<table_DiffLog>().Where(it => DateTime.Now <= it.CreateTime.AddDays(7)).OrderBy(it => it.Id, OrderByType.Desc).ToDataTable();
+                GridView1.DataSource = dt;
+                GridView1.DataBind();
+            }
+        }
 
     }
 }

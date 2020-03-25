@@ -291,6 +291,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Sugar.Enties\table_DiffLog.cs" />
     <Compile Include="Sugar.Enties\table_代理日志管理等级1.cs" />
     <Compile Include="Sugar.Enties\table_代理日志管理等级2.cs" />
     <Compile Include="Sugar.Enties\table_代理账号等级1.cs" />

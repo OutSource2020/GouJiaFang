@@ -1077,6 +1077,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
 
             using (SqlSugarClient dbClient = new DBClient().GetClient())
             {
+                dbClient.Ado.ExecuteCommand("SET autocommit=0;");
                 dbClient.Ado.ExecuteCommand("set session transaction isolation level serializable;");
                 for (int i = 0; i < GridView1.Rows.Count; i++)
                 {
@@ -1148,6 +1149,20 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                                     };
                                     dbClient.Insertable(outCardHistory).ExecuteCommand();
 
+                                    table_DiffLog diffLog = new table_DiffLog()
+                                    {
+                                        OrderId = 订单号,
+                                        MerchantID = record.商户ID,
+                                        Amount = 本单交易金额,
+                                        OutTotal = dbClient.Queryable<table_后台出款银行卡管理>().Sum(it => it.出款银行卡余额),
+                                        MerchantTotal = dbClient.Queryable<table_商户账号>().Sum(it => it.提款余额),
+                                        Pending = dbClient.Queryable<table_商户明细提款>().Where(it => it.状态 == "待处理").Sum(it => it.交易金额),
+                                        后台处理批次ID组 = OperatorId,
+                                        Status = "成功",
+                                        CreateTime = now
+                                    };
+                                    diffLog.Diff = diffLog.OutTotal - diffLog.MerchantTotal;
+                                    dbClient.Insertable(diffLog).ExecuteCommand();
                                 }
                                 dbClient.Updateable<table_商户明细提款>().SetColumns(it =>
                                 new table_商户明细提款()
@@ -1230,6 +1245,20 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                                         时间创建 = now,
                                     };
                                     dbClient.Insertable(money).ExecuteCommand();
+                                    table_DiffLog diffLog = new table_DiffLog()
+                                    {
+                                        OrderId = 订单号,
+                                        MerchantID = record.商户ID,
+                                        Amount = 本单交易金额,
+                                        OutTotal = dbClient.Queryable<table_后台出款银行卡管理>().Sum(it => it.出款银行卡余额),
+                                        MerchantTotal = dbClient.Queryable<table_商户账号>().Sum(it => it.提款余额),
+                                        Pending = dbClient.Queryable<table_商户明细提款>().Where(it => it.状态 == "待处理").Sum(it => it.交易金额),
+                                        后台处理批次ID组 = OperatorId,
+                                        Status = "失败",
+                                        CreateTime = now
+                                    };
+                                    diffLog.Diff = diffLog.OutTotal - diffLog.MerchantTotal;
+                                    dbClient.Insertable(diffLog).ExecuteCommand();
                                 }
 
                                 dbClient.Ado.ExecuteCommand("UPDATE `table_商户明细提款` SET `备注管理写` = '" + TextBox_备注.Text +
@@ -1249,6 +1278,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                     calCount++;
                     arr.Remove(GridView1.DataKeys[i].Value);
                 }
+                dbClient.Ado.ExecuteCommand("SET autocommit=1;");
             }
             ViewState["SelectedRecords"] = arr;
             hfCount.Value = "0";

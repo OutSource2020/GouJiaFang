@@ -180,6 +180,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
         string 时间创建 = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
 
         dbClient.Ado.UseTran(() => { });
+        dbClient.Ado.ExecuteCommand("set session transaction isolation level serializable;");
         var result =  dbClient.Ado.UseTran(() =>
            {
              var orderNumInfo = dbClient.Queryable<table_商户明细提款>().Where(it => it.订单号 == 从URL传来值).First();
