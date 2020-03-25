@@ -10,6 +10,8 @@ using MySql.Data.MySqlClient;
 using System.Media;
 using SqlSugar;
 using Sugar.Enties;
+using NPOI.SS.UserModel;
+using NPOI.HSSF.UserModel;
 
 namespace web1.WebsiteBackstage.L1.ControlCenter
 {
@@ -442,5 +444,66 @@ namespace web1.WebsiteBackstage.L1.ControlCenter
             }
         }
 
+        protected void Button_导出Excel_Click(object sender, EventArgs e)
+        {
+            DataTable dt = new DataTable();
+            string[] headers = { "订单号", "商户ID", "交易金额", "出款银行卡总金额", "出款银行卡总金额（已开启）", "商户总金额", "待处理金额", "差值", "订单状态", "后台处理批次ID组", "创建时间" };
+
+            foreach (string head in headers)
+            {
+                dt.Columns.Add(head, typeof(string));
+            }
+
+            DataRow dr = dt.NewRow();
+            for (int i = 0; i < headers.Length; ++i)
+            {
+                dr[i] = headers[i];
+            }
+            dt.Rows.Add(dr);
+
+            using (SqlSugarClient dbClient = new DBClient().GetClient())
+            {
+                List< table_DiffLog > list = dbClient.Queryable<table_DiffLog>().Where(it => DateTime.Now <= it.CreateTime.AddDays(7)).OrderBy(it => it.Id, OrderByType.Desc).ToList();
+                foreach(table_DiffLog dl in list)
+                {
+                    dr = dt.NewRow();
+                    dr[0] = dl.OrderId;
+                    dr[1] = dl.MerchantID;
+                    dr[2] = dl.Amount.Value.ToString();
+                    dr[3] = dl.OutTotal.Value.ToString();
+                    dr[4] = dl.EnableOutTotal.Value.ToString();
+                    dr[5] = dl.MerchantTotal.Value.ToString();
+                    dr[6] = dl.Pending.Value.ToString();
+                    dr[7] = dl.Diff.Value.ToString();
+                    dr[8] = dl.Status;
+                    dr[9] = dl.后台处理批次ID组.Value.ToString();
+                    dr[10] = dl.CreateTime.ToString("yyyy-MM-dd HH:mm:ss");
+                    dt.Rows.Add(dr);
+                }
+            }
+            IWorkbook wb = new HSSFWorkbook();
+            ISheet sheet = wb.CreateSheet("Sheet1");
+            ICreationHelper cH = wb.GetCreationHelper();
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                IRow row = sheet.CreateRow(i);
+                for (int j = 0; j < headers.Length; j++)
+                {
+                    ICell cell = row.CreateCell(j);
+                    cell.SetCellValue(cH.CreateRichTextString(dt.Rows[i].ItemArray[j].ToString()));
+                }
+                sheet.AutoSizeColumn(i);
+            }
+            string fileName = "差值" + "_" + DateTime.Now.ToString("yyyy-MM-dd HH_mm_ss.fff") + ".xls";
+            Response.ClearContent();
+            Response.Clear();
+            Response.Buffer = true;
+            Response.ContentType = "application/vnd.ms-excel";
+            Response.AddHeader("Content-Disposition",
+                              "attachment; filename=" + fileName + ";");
+            wb.Write(Response.OutputStream);
+            Response.Flush();
+            Response.End();
+        }
     }
 }

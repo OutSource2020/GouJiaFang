@@ -12,6 +12,7 @@ namespace Sugar.Enties
         public string MerchantID { get; set; }
         public double? Amount { get; set; }
         public double? OutTotal { get; set; }
+        public double? EnableOutTotal { get; set; }
         public double? MerchantTotal { get; set; }
         public double? Pending { get; set; }
         public double? Diff { get; set; }
