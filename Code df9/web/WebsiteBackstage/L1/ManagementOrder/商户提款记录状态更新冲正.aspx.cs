@@ -179,6 +179,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
         string 生成编号_出款流水 = "CZHYE" + DateTime.Now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999));
         string 时间创建 = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
 
+        dbClient.Ado.UseTran(() => { });
         var result =  dbClient.Ado.UseTran(() =>
            {
              var orderNumInfo = dbClient.Queryable<table_商户明细提款>().Where(it => it.订单号 == 从URL传来值).First();
