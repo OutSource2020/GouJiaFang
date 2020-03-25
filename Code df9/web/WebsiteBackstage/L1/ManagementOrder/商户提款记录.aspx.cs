@@ -2098,6 +2098,43 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
 
         }
 
+        private void DiffData(bool all, DataTable dt, Action<DataRow, table_DiffLog, int> action)
+        {
+            using (SqlSugarClient dbClient = new DBClient().GetClient())
+            {
+                var list= dbClient.Queryable<table_DiffLog>().Where(it => DateTime.Now <= it.CreateTime.AddDays(7)).OrderBy(it => it.Id, OrderByType.Desc).ToList();
+                int count = list.Count();
+                foreach(table_DiffLog record in list)
+                {
+                    DataRow dr = dt.NewRow();
+                    action(dr, record, 0);
+                    dt.Rows.Add(dr);
+                }
+            }
+        }
+
+        protected void Button_导出差额Exlce_Click(object sender, EventArgs e)
+        {
+            string[] headers = { "订单号", "商户ID", "交易金额", "出款银行卡总金额", "出款银行卡总金额（已开启）", "商户总金额", "待处理金额", "差值", "批量操作状态", "后台处理批次ID组", "创建时间" };
+            ExportGird<table_DiffLog>(true, "差值", headers, DiffData, (dr, dl, i) =>
+            {
+                dr[0] = dl.OrderId;
+                dr[1] = dl.MerchantID;
+                dr[2] = dl.Amount.Value.ToString();
+                dr[3] = dl.OutTotal.Value.ToString();
+                dr[4] = dl.EnableOutTotal.Value.ToString();
+                dr[5] = dl.MerchantTotal.Value.ToString();
+                dr[6] = dl.Pending.Value.ToString();
+                dr[7] = dl.Diff.Value.ToString();
+                dr[8] = dl.Status;
+                dr[9] = dl.后台处理批次ID组.Value.ToString();
+                dr[10] = dl.CreateTime.ToString("yyyy-MM-dd HH:mm:ss");
+            }, (dr1, dr2) =>
+            {
+                return false;
+            });
+        }
+
         private void ExportAllData()
         {
             string[] headers = {"订单号", "商户ID", "出款银行卡名称", "出款银行卡卡号", "交易金额", "交易方卡号", "交易方姓名", "交易方银行", "创建时间",
@@ -2384,6 +2421,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
             ClassLibrary1.ClassMessage.HinXi(Page, "发送了" + count + "条回调");
             Response.Redirect("./商户提款记录.aspx");
         }
+
     }
     public class Model
     {
