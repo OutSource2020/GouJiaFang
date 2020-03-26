@@ -7,6 +7,7 @@ using System.Web.UI.WebControls;
 
 using System.Data;
 using MySql.Data.MySqlClient;
+using Sugar.Enties;
 
 namespace web1.WebsiteBackstage.L1.ManagementOrder
 {
@@ -202,262 +203,107 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
 
         private void 操作更新()//更新出去
         {
-            Button_变更状态.Enabled = false;
 
-            using (MySqlConnection con01 = new MySqlConnection(ClassLibrary1.ClassDataControl.conStr1))
+      DBClient db = new DBClient();
+      var dbCilent = db.GetClient();
+      Button_变更状态.Enabled = false;
+      string 生成编号1 = "CZSXF" + DateTime.Now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999));
+      string 生成编号2= "CZHYE" + DateTime.Now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999));
+
+      DateTime nowTime = DateTime.Now;
+
+
+      dbCilent.UseTran(() => { });
+    var res=  dbCilent.UseTran(() => {
+
+        var rechargeRecord = dbCilent.Queryable<table_商户明细充值>().Where(it => it.订单号 == 从URL获取值()).First();
+        string redkey = DropDownList_下拉框1.SelectedItem.Value;
+        if (rechargeRecord .充值类型== "充值提款余额")
+        {
+          Response.Redirect("商户充值记录状态更新号余额.aspx?Bianhao=" + 从URL获取值() + "");
+
+       
+          if (redkey == "成功")
+          {
+            Response.Redirect("商户充值记录状态更新号余额.aspx?Bianhao=" + 从URL获取值() + "");
+          }
+          if (redkey == "失败")
+          {
+            Response.Redirect("商户充值记录状态更新号余额.aspx?Bianhao=" + 从URL获取值() + "");
+          }
+        }
+
+
+     
+        if(rechargeRecord.状态!= "成功")
+        if (redkey == "成功")
+        {
+            var busInfo = dbCilent.Queryable<table_商户账号>().Where(it => it.商户ID == rechargeRecord.商户ID.ToString()).First();
+
+            var outCard = dbCilent.Queryable<table_后台收款银行卡管理>().Where(it => it.收款银行卡卡号 == DropDownList_选择银行卡.SelectedItem.Value).First();
+
+          table_商户明细手续费 bus = new table_商户明细手续费
+          {
+              订单号 = 生成编号1,
+              商户ID = rechargeRecord.商户ID,
+              类型 = "充值提款手续费",
+              交易金额 = rechargeRecord.充值金额,
+              交易前手续费余额 = busInfo.手续费余额.Value,
+              交易后手续费余额 = busInfo.手续费余额.Value + rechargeRecord.充值金额,
+              状态 = "",
+              时间创建 = nowTime,
+            };
+
+
+            table_后台收款银行卡流水 outCardHistory = new table_后台收款银行卡流水
             {
-                using (MySqlCommand cmd01 = new MySqlCommand("SELECT 订单号,商户ID,商户银行卡卡号,充值类型,充值金额,备注后台,状态 FROM table_商户明细充值 WHERE 订单号=@订单号", con01))
-                {
-                    cmd01.Parameters.AddWithValue("@订单号", 从URL获取值());
-                    using (MySqlDataAdapter da01 = new MySqlDataAdapter(cmd01))
-                    {
-                        DataTable images01 = new DataTable();
-                        da01.Fill(images01);
-                        foreach (DataRow dr01 in images01.Rows)
-                        {
-                            string 订单内商户ID = dr01["商户ID"].ToString();
-                            string 订单内类型 = dr01["充值类型"].ToString();
-                            string 订单内交易金额 = dr01["充值金额"].ToString();
-                            string 订单内状态 = dr01["状态"].ToString();
+              订单号 = 生成编号2,
+              商户ID = Convert.ToInt32(rechargeRecord.商户ID),
+              余额 = outCard.收款银行卡余额 + rechargeRecord.充值金额,
+              类型 = "充值提款手续费",
+              状态 = "成功",
+              时间创建 = nowTime,
+              时间交易 = nowTime,
+              收入 = Convert.ToDouble(rechargeRecord.充值金额.ToString()),
+              收款银行卡名称 = DropDownList_选择银行卡.SelectedItem.Text,
+              收款银行卡卡号 = DropDownList_选择银行卡.SelectedItem.Value
+            };
 
-                            //充值提款手续费
-                            if (dr01["充值类型"].ToString() == "充值提款手续费")
-                            {
-                                string redkey = DropDownList_下拉框1.SelectedItem.Value;
-                                if (redkey == "成功")
-                                {
-                                    //ClassLibrary1.ClassMessage.HinXi(Page, "充值手续费成功");
-                                    //如果订单确定成功的话就充入手续费
-                                    //1. 插入 商户明细手续费 增加
-                                    //2.修改账户内手续费余额
-                                    //3.修改本单状态成功完成
+            // 插入明细余额
+            dbCilent.Insertable<table_商户明细手续费>(bus).ExecuteCommand();
+            // 插入出款卡流水
+            dbCilent.Insertable<table_后台收款银行卡流水>(outCardHistory).ExecuteCommand();
 
-                                    //4.收款银行卡流水 增加记录
-                                    //5.收款终端银行卡 增加订单的余额
+            //如果订单确定成功的话就充入手续费
+            //1. 插入 商户明细手续费 增加
+            //2.修改账户内手续费余额
+            //3.修改本单状态成功完成
+            //4.收款银行卡流水 增加记录
+            //5.收款终端银行卡 增加订单的余额
+          dbCilent.Updateable<table_商户账号>().UpdateColumns(it => new { it.手续费余额 }).Where(it => it.商户ID == rechargeRecord.商户ID.ToString()).ReSetValue(it => it.手续费余额 == (it.手续费余额 + rechargeRecord.充值金额)).ExecuteCommand();
+          dbCilent.Updateable<table_后台收款银行卡管理>().UpdateColumns(it => new { it.收款银行卡余额 }).Where(it => it.收款银行卡卡号 == DropDownList_选择银行卡.SelectedItem.Value).ReSetValue(it => it.收款银行卡余额 == (it.收款银行卡余额 + rechargeRecord.充值金额)).ExecuteCommand();
+          var sql1 = "UPDATE table_商户明细充值 SET  备注后台='" + TextBox_备注后台.Text.ToString() + "',收款银行卡卡号='" + DropDownList_选择银行卡.SelectedItem.Value.ToString() + "',状态='" + DropDownList_下拉框1.SelectedItem.Value.ToString() + "' WHERE 订单号= '" + rechargeRecord.订单号 + "'  ;";
+          // 修改订单状态
+          dbCilent.Ado.ExecuteCommand(sql1);
 
-                                    //查询订单信息
-                                    using (MySqlConnection con31 = new MySqlConnection(ClassLibrary1.ClassDataControl.conStr1))
-                                    {
-                                        using (MySqlCommand cmd31 = new MySqlCommand("SELECT 订单号,商户ID,商户银行卡卡号,充值类型,充值金额,备注后台,状态 FROM table_商户明细充值 WHERE 订单号=@订单号", con31))
-                                        {
-                                            cmd31.Parameters.AddWithValue("@订单号", 从URL获取值());
-                                            using (MySqlDataAdapter da31 = new MySqlDataAdapter(cmd31))
-                                            {
-                                                DataTable images31 = new DataTable();
-                                                da31.Fill(images31);
-                                                foreach (DataRow dr31 in images31.Rows)
-                                                {
-                                                    string 获取商户ID = dr31["商户ID"].ToString();
-                                                    string 获取充值余额 = dr31["充值金额"].ToString();
+        }
+        if (rechargeRecord.状态 != "失败")
+        if (redkey == "失败")
+        {
+            string 从URL传来值 = 从URL获取值();
+            Button_变更状态.Enabled = false;
+            dbCilent.Ado.ExecuteCommand("UPDATE table_商户明细充值 SET  备注后台='" + TextBox_备注后台.Text + "',收款银行卡卡号='" + DropDownList_选择银行卡.SelectedItem.Value + "',状态='" + DropDownList_下拉框1.SelectedItem.Value + "' WHERE 订单号='" + 从URL传来值 + " '");
 
-                                                    //1.插入 商户明细手续费 增加
-                                                    using (MySqlConnection con查询账户内手续费余额 = new MySqlConnection(ClassLibrary1.ClassDataControl.conStr1))
-                                                    {
-                                                        using (MySqlCommand cmd查询账户内手续费余额 = new MySqlCommand("SELECT 商户ID,提款余额,手续费余额 FROM table_商户账号 WHERE 商户ID=@商户ID", con查询账户内手续费余额))
-                                                        {
-                                                            cmd查询账户内手续费余额.Parameters.AddWithValue("@商户ID", 订单内商户ID);
-                                                            using (MySqlDataAdapter da查询账户内手续费余额 = new MySqlDataAdapter(cmd查询账户内手续费余额))
-                                                            {
-                                                                DataTable images查询账户内手续费余额 = new DataTable();
-                                                                da查询账户内手续费余额.Fill(images查询账户内手续费余额);
-                                                                foreach (DataRow dr查询账户内手续费余额 in images查询账户内手续费余额.Rows)
-                                                                {
-                                                                    //double 提款余额 = double.Parse(dr查询账户内手续费余额["提款余额"].ToString());
-                                                                    //double 手续费余额 = double.Parse(dr查询账户内手续费余额["手续费余额"].ToString());
-
-                                                                    string 生成编号 = "CZSXF" + DateTime.Now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999));
-                                                                    string 时间创建 = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
-                                                                    double 交易前手续费余额 = double.Parse(dr查询账户内手续费余额["手续费余额"].ToString());
-                                                                    double 交易后手续费余额 = double.Parse(dr查询账户内手续费余额["手续费余额"].ToString()) + double.Parse(订单内交易金额);
-                                                                    string RegisterTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
-
-                                                                    using (MySqlConnection scon = new MySqlConnection(ClassLibrary1.ClassDataControl.conStr1))
-                                                                    {
-                                                                        string 有哪些 = "订单号,商户ID,类型,手续费收入,交易前手续费余额,交易后手续费余额,时间创建";
-                                                                        string 收哪些 = "@订单号,@商户ID,@类型,@手续费收入,@交易前手续费余额,@交易后手续费余额,@时间创建 ";
-
-                                                                        string str = "insert into table_商户明细手续费(" + 有哪些 + ") values(" + 收哪些 + ")";
-                                                                        scon.Open();
-                                                                        MySqlCommand command = new MySqlCommand();
-
-                                                                        command.Parameters.AddWithValue("@订单号", 生成编号);
-                                                                        command.Parameters.AddWithValue("@商户ID", 订单内商户ID);
-                                                                        command.Parameters.AddWithValue("@类型", 订单内类型);
-                                                                        command.Parameters.AddWithValue("@手续费收入", 订单内交易金额);
-                                                                        command.Parameters.AddWithValue("@交易前手续费余额", 交易前手续费余额);
-                                                                        command.Parameters.AddWithValue("@交易后手续费余额", 交易后手续费余额);
-                                                                        command.Parameters.AddWithValue("@时间创建", RegisterTime);
-
-                                                                        command.Connection = scon;
-                                                                        command.CommandText = str;
-                                                                        int obj = command.ExecuteNonQuery();
-
-                                                                        scon.Close();
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    }
+         }
 
 
-                                                    //2.修改账户内手续费余额
-                                                    using (MySqlConnection conmy12 = new MySqlConnection(ClassLibrary1.ClassDataControl.conStr1))
-                                                    {
-                                                        using (MySqlCommand cmdmy12 = new MySqlCommand("UPDATE table_商户账号 SET 手续费余额= 手续费余额+"+ 获取充值余额 + " where 商户ID=@商户ID ", conmy12))
-                                                        {
-                                                            cmdmy12.Parameters.AddWithValue("@商户ID", 获取商户ID);
+      });
+      dbCilent.UseTran(() => { });
 
-                                                            conmy12.Open();
-                                                            cmdmy12.ExecuteNonQuery();
-                                                            conmy12.Close();
-                                                            //this.SaveImage(filePath);
-
-
-                                                            //Response.Redirect("商户充值记录.aspx");
-                                                        }
-                                                    }
-
-                                                    //3.修改本单信息为成功
-                                                    string 从URL传来值 = 从URL获取值();
-                                                    using (MySqlConnection con13 = new MySqlConnection(ClassLibrary1.ClassDataControl.conStr1))
-                                                    {
-                                                        using (MySqlCommand cmd13 = new MySqlCommand("UPDATE table_商户明细充值 SET 备注后台=@备注后台,收款银行卡卡号=@收款银行卡卡号,状态=@状态 WHERE 订单号=@订单号", con13))
-                                                        {
-                                                            cmd13.Parameters.AddWithValue("@收款银行卡卡号", DropDownList_选择银行卡.SelectedItem.Value);
-                                                            cmd13.Parameters.AddWithValue("@状态", DropDownList_下拉框1.SelectedItem.Value);
-                                                            cmd13.Parameters.AddWithValue("@备注后台", TextBox_备注后台.Text);
-                                                            cmd13.Parameters.AddWithValue("@订单号", 从URL传来值);
-
-                                                            con13.Open();
-                                                            cmd13.ExecuteNonQuery();
-                                                            con13.Close();
-                                                            //this.SaveImage(filePath);
-                                                        }
-                                                    }
-
-                                                    //4.插入 收款银行卡流水明细 本单交易
-                                                    //4.1查询收款终端管理的 原余额
-                                                    using (MySqlConnection con14a = new MySqlConnection(ClassLibrary1.ClassDataControl.conStr1))
-                                                    {
-                                                        using (MySqlCommand cmd14a = new MySqlCommand("SELECT 收款银行卡卡号,收款银行卡余额 FROM table_后台收款银行卡管理 WHERE 收款银行卡卡号=@收款银行卡卡号", con14a))
-                                                        {
-                                                            cmd14a.Parameters.AddWithValue("@收款银行卡卡号", DropDownList_选择银行卡.SelectedItem.Value);
-                                                            using (MySqlDataAdapter da14a = new MySqlDataAdapter(cmd14a))
-                                                            {
-                                                                DataTable images14a = new DataTable();
-                                                                da14a.Fill(images14a);
-                                                                foreach (DataRow dr14a in images14a.Rows)
-                                                                {
-                                                                    double 余额 = double.Parse(dr14a["收款银行卡余额"].ToString()) + double.Parse(订单内交易金额);
-
-                                                                    //4.2插入 收款银行卡流水明细
-                                                                    using (MySqlConnection scon14 = new MySqlConnection(ClassLibrary1.ClassDataControl.conStr1))
-                                                                    {
-                                                                        string 生成编号 = "CZHYE" + DateTime.Now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999));
-                                                                        string 时间创建 = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
-                                                                        string RegisterTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
-                                                                        string 类型 = "充值";
-                                                                        string 状态 = "成功";
-
-                                                                        string 有哪些 = "订单号,商户ID,收入,余额,收款银行卡卡号,收款银行卡名称,类型,状态,时间创建";
-                                                                        string 收哪些 = "@订单号,@商户ID,@收入,@余额,@收款银行卡卡号,@收款银行卡名称,@类型,@状态,@时间创建 ";
-
-                                                                        string str14 = "insert into table_后台收款银行卡流水(" + 有哪些 + ") values(" + 收哪些 + ")";
-                                                                        scon14.Open();
-                                                                        MySqlCommand command = new MySqlCommand();
-                                                                        command.Parameters.AddWithValue("@订单号", 生成编号);
-                                                                        command.Parameters.AddWithValue("@商户ID", 订单内商户ID);
-                                                                        command.Parameters.AddWithValue("@收入", 订单内交易金额);
-                                                                        command.Parameters.AddWithValue("@余额", 余额);
-                                                                        command.Parameters.AddWithValue("@收款银行卡卡号", DropDownList_选择银行卡.SelectedItem.Value);
-                                                                        command.Parameters.AddWithValue("@收款银行卡名称", DropDownList_选择银行卡.SelectedItem.Text);
-                                                                        command.Parameters.AddWithValue("@类型", 类型);
-                                                                        command.Parameters.AddWithValue("@状态", 状态);
-                                                                        command.Parameters.AddWithValue("@时间创建", RegisterTime);
-
-                                                                        command.Connection = scon14;
-                                                                        command.CommandText = str14;
-                                                                        int obj = command.ExecuteNonQuery();
-                                                                    }
-
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-
-                                                    //5. 修改收款银行卡余额 增加本单的额度
-                                                    using (MySqlConnection con15 = new MySqlConnection(ClassLibrary1.ClassDataControl.conStr1))
-                                                    {
-                                                        using (MySqlCommand cmd15 = new MySqlCommand("UPDATE table_后台收款银行卡管理 SET 收款银行卡余额 = 收款银行卡余额+"+ 订单内交易金额 + " WHERE 收款银行卡卡号=@收款银行卡卡号 ", con15))
-                                                        {
-                                                            cmd15.Parameters.AddWithValue("@收款银行卡卡号", DropDownList_选择银行卡.SelectedItem.Value);
-
-
-                                                            con15.Open();
-                                                            cmd15.ExecuteNonQuery();
-                                                            con15.Close();
-                                                            //this.SaveImage(filePath);
-                                                        }
-                                                    }
-
-
-                                                    Response.Redirect("商户充值记录.aspx");
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                                if (redkey == "失败")
-                                {
-                                    //ClassLibrary1.ClassMessage.HinXi(Page, "充值手续费失败");
-
-                                    Button_变更状态.Enabled = false;
-
-                                    //手续费订单失败的话直接设置订单
-                                    string 从URL传来值 = 从URL获取值();
-                                    using (MySqlConnection con32 = new MySqlConnection(ClassLibrary1.ClassDataControl.conStr1))
-                                    {
-                                        using (MySqlCommand cmd32 = new MySqlCommand("UPDATE table_商户明细充值 SET 状态=@状态 ,备注后台=@备注后台 WHERE 订单号=@订单号 ", con32))
-                                        {
-                                            cmd32.Parameters.AddWithValue("@状态", DropDownList_下拉框1.SelectedItem.Value);
-                                            cmd32.Parameters.AddWithValue("@备注后台", TextBox_备注后台.Text);
-                                            cmd32.Parameters.AddWithValue("@订单号", 从URL传来值);
-
-                                            con32.Open();
-                                            cmd32.ExecuteNonQuery();
-                                            con32.Close();
-                                            //this.SaveImage(filePath);
-
-
-                                            Response.Redirect("商户充值记录.aspx");
-                                        }
-                                    }
-                                }
-
-
-                            }
-                            //充值提款余额
-                            if (dr01["充值类型"].ToString() == "充值提款余额")
-                            {
-                                Response.Redirect("商户充值记录状态更新号余额.aspx?Bianhao=" + 从URL获取值() + "");
-
-                                string redkey = DropDownList_下拉框1.SelectedItem.Value;
-                                if (redkey == "成功")
-                                {
-                                    Response.Redirect("商户充值记录状态更新号余额.aspx?Bianhao=" + 从URL获取值() + "");
-                                }
-                                if (redkey == "失败")
-                                {
-                                    Response.Redirect("商户充值记录状态更新号余额.aspx?Bianhao=" + 从URL获取值() + "");
-                                }
-                            }
-
-
-
-                        }
-                    }
-                }
-            }
+      if(res.IsSuccess){
+        ClassLibrary1.ClassMessage.HinXi(Page, "操作成功");
+      }
+    
             
         }
 

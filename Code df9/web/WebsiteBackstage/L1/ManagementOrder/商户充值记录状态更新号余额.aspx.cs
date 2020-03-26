@@ -256,7 +256,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
 
             table_商户明细余额 bus = new table_商户明细余额
             {
-              订单号 = rechargeRecord.订单号,
+              订单号 = 生成编号,
               商户ID = rechargeRecord.商户ID,
               类型 = "充值提款余额",
               交易金额 = rechargeRecord.充值金额.ToString(),
