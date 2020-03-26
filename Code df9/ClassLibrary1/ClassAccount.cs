@@ -95,6 +95,9 @@ namespace ClassLibrary1
 
         public static bool 验证管理L1白名单IP(string 后台ID, string 获取要验证目标IP)
         {
+#if DEBUG
+            return true;
+#else
             MySqlConnection conn = new MySqlConnection(ClassLibrary1.ClassDataControl.conStr1);
             conn.Open();
             MySqlCommand cmd = new MySqlCommand("select 后台ID,后台白名单IP from table_后台白名单管理 where 后台ID=@后台ID and 后台白名单IP=@后台白名单IP", conn);
@@ -116,6 +119,7 @@ namespace ClassLibrary1
                 conn.Close();
                 return false;
             }
+#endif
 
             
         }
@@ -303,6 +307,9 @@ namespace ClassLibrary1
         
         public static bool 验证商户白名单IP(string 商户ID, string 获取要验证目标IP)
         {
+#if DEBUG
+            return true;
+#else
             MySqlConnection conn = new MySqlConnection(ClassLibrary1.ClassDataControl.conStr1);
             conn.Open();
             MySqlCommand cmd = new MySqlCommand("select 商户ID,商户白名单IP from table_商户白名单管理 where 商户ID=@商户ID and 商户白名单IP=@商户白名单IP", conn);
@@ -324,6 +331,7 @@ namespace ClassLibrary1
                 conn.Close();
                 return false;
             }
+#endif
         }
 
         //====================================================================================================
