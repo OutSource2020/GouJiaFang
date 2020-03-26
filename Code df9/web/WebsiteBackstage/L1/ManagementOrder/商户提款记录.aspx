@@ -241,6 +241,12 @@
                         <asp:Button ID="Button_发送近三天订单回调" runat="server" Text="发送近三天所有订单回调" class="btn btn-info btn-fw" OnClick="Button_发送近三天订单回调_Click" />
                     </td>
                 </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <asp:Button ID="Button_导出差额Excel" runat="server" Text="导出差额Excle" class="btn btn-info btn-fw" OnClick="Button_导出差额Exlce_Click" />
+                    </td>
+                </tr>
             </table>
         </div>
 

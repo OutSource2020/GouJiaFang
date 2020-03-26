@@ -367,6 +367,8 @@ namespace web1.WebsiteMerchant.商户订单
                     string 交易金额 = ((TextBox)Gridview1.Rows[i].Cells[4].FindControl("TextBox4")).Text;
                     string 备注 = ((TextBox)Gridview1.Rows[i].Cells[5].FindControl("TextBox5")).Text;
 
+                    DateTime now = DateTime.Now;
+
                     if (!ClassLibrary1.ClassYZ.IsNumber(交易金额))
                     {
                         ClassLibrary1.ClassMessage.HinXi(Page, "金额 不是数字或者小数 忽略该笔继续执行");
@@ -414,8 +416,6 @@ namespace web1.WebsiteMerchant.商户订单
 
                     dbClient.Ado.UseTran(() =>
                     {
-                        DateTime now = DateTime.Now;
-
                         dbClient.Ado.ExecuteCommand("UPDATE `table_商户账号` SET `提款余额` = `提款余额` - '" + 提款金额 + "', " +
                             "`手续费余额` = `手续费余额` - '" + 单笔手续费 + "' WHERE `商户ID` = '" + record.商户ID + "';");
 

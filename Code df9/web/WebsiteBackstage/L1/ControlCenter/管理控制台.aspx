@@ -158,12 +158,6 @@
                             <asp:Label ID="Label_差额" runat="server" Text="0"></asp:Label>
                         </td>
                     </tr>
-                    <tr>
-                        <td colspan="2">
-                            <asp:Button ID="Button_导出Excel" runat="server" Text="导出下表到Excel" class="btn btn-info btn-fw" OnClick="Button_导出Excel_Click" />
-                        </td>
-                    </tr>
-
                 </table>
                 <div id="gridTable">
                     <asp:GridView
@@ -181,7 +175,7 @@
                             <asp:BoundField DataField="MerchantTotal" HeaderText="商户总金额" />
                             <asp:BoundField DataField="Pending" HeaderText="待处理金额" />
                             <asp:BoundField DataField="Diff" HeaderText="差值" />
-                            <asp:BoundField DataField="Status" HeaderText="订单状态" />
+                            <asp:BoundField DataField="Status" HeaderText="批量操作状态" />
                             <asp:BoundField DataField="后台处理批次ID组" HeaderText="后台处理批次ID组" />
                             <asp:BoundField DataField="CreateTime" HeaderText="创建时间" />
                         </Columns>

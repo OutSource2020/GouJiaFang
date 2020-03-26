@@ -483,6 +483,15 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
         protected global::System.Web.UI.WebControls.Button Button_发送近三天订单回调;
 
         /// <summary>
+        /// Button_导出差额Excel control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button Button_导出差额Excel;
+
+        /// <summary>
         /// hfCount control.
         /// </summary>
         /// <remarks>
