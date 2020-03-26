@@ -190,7 +190,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
              var outcardInfo = dbClient.Queryable<table_后台出款银行卡管理>().Where(it => it.出款银行卡卡号 == orderNumInfo.出款银行卡卡号).First();
              // 修改提款状态
              dbClient.Updateable<table_商户明细提款>()
-             .SetColumns(it => new table_商户明细提款() { 类型 = "冲正",状态 = "失败"})
+             .SetColumns(it => new table_商户明细提款() { 类型 = "冲正",状态 = "失败", 时间修改 = now })
              .Where(it=>it.订单号== 从URL传来值).ExecuteCommand();
 
             
