@@ -412,6 +412,9 @@ namespace web1.WebsiteMerchant.商户订单
             Button_批量发起提款订单.Enabled = false;//防止重复操作
             long OperatorId = GetTimeStamp();
             int Sindex = 0;
+            string Cookie_UserName = ClassLibrary1.ClassAccount.检查商户端cookie2();
+            Mutex m = new Mutex(false, Cookie_UserName);
+            m.WaitOne();
             using (SqlSugarClient dbClient = new DBClient().GetClient())
             {
                 for (int i = 0; i < Gridview1.Rows.Count; i++)
@@ -421,6 +424,8 @@ namespace web1.WebsiteMerchant.商户订单
                     string 交易方银行 = ((TextBox)Gridview1.Rows[i].Cells[3].FindControl("TextBox3")).Text;
                     string 交易金额 = ((TextBox)Gridview1.Rows[i].Cells[4].FindControl("TextBox4")).Text;
                     string 备注 = ((TextBox)Gridview1.Rows[i].Cells[5].FindControl("TextBox5")).Text;
+
+                    DateTime now = DateTime.Now;
 
                     if (!ClassLibrary1.ClassYZ.IsNumber(交易金额))
                     {
@@ -442,7 +447,6 @@ namespace web1.WebsiteMerchant.商户订单
                     if (count > 0)
                         continue;
 
-                    string Cookie_UserName = ClassLibrary1.ClassAccount.检查商户端cookie2();
                     dbClient.Ado.UseTran(() => { }); // select 之前保证一次 commit，即使什么都不做
                     table_商户账号 record = null;
                     dbClient.Ado.UseTran(() =>
@@ -483,8 +487,6 @@ namespace web1.WebsiteMerchant.商户订单
 
                     dbClient.Ado.UseTran(() =>
                     {
-                        DateTime now = DateTime.Now;
-
                         dbClient.Ado.ExecuteCommand("UPDATE `table_商户账号` SET `提款余额` = `提款余额` - '" + 提款金额 + "', " +
                             "`手续费余额` = `手续费余额` - '" + 单笔手续费 + "' WHERE `商户ID` = '" + record.商户ID + "';");
 
@@ -539,8 +541,10 @@ namespace web1.WebsiteMerchant.商户订单
 
                         dbClient.Insertable(detail).ExecuteCommand();
                     });
+                    Thread.Sleep(100);
                 }
             }
+            m.ReleaseMutex();
             Response.Redirect("./商户提款记录.aspx");
         }
 

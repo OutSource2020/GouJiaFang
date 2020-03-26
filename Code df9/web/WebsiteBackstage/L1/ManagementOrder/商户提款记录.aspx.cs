@@ -17,6 +17,7 @@ using System.Net.Http.Headers;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
+using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using web1.API.Enties;
@@ -2301,6 +2302,25 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
             return sBuilder.ToString();
         }
 
+        private void AddUpdateLog(string logInfo)
+        {
+            try
+            {
+                string rootPath = Path.Combine(HttpRuntime.AppDomainAppPath.ToString(), "Log\\");
+                if (!Directory.Exists(rootPath))
+                {
+                    Directory.CreateDirectory(rootPath);
+                }
+
+                File.AppendAllText(rootPath + "LOG_CALLBACK_" + DateTime.Now.ToString("yyyyMMdd") + ".log",
+                        "[" + System.DateTime.Now.ToString("HH:mm:ss:fff") + "]  " + logInfo + "\r\n",
+                        Encoding.UTF8);
+            }
+            catch
+            {
+            }
+        }
+
         private int SendAllCallBack(Func<SqlSugarClient, List<table_商户明细提款>> func)
         {
             int count = 0;
@@ -2358,14 +2378,16 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                             string sign = GetMd5Hash(md5Hash, unsign);
                             string url = $"{account.API回调}?timeunix={ts}&signature={sign}";
                             string response = PostResponse(url, JsonConvert.SerializeObject(request), out statusCode);
+                            AddUpdateLog(url + " => " + response);
                             if (statusCode != 200)
                                 baseResponse = new BaseErrors()[(int)BaseErrors.ERROR_NUMBER.LX1016];
                             else
                                 baseResponse = JsonConvert.DeserializeObject<BaseResponse>(response);
                         }
                     }
-                    catch(Exception)
+                    catch(Exception e)
                     {
+                        AddUpdateLog(e.Message);
                         baseResponse = new BaseErrors()[(int)BaseErrors.ERROR_NUMBER.LX1016];
                     }
                     if (baseResponse == null || baseResponse.StatusReplyNumbering != "LX1000")
