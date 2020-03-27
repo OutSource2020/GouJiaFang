@@ -439,7 +439,7 @@ namespace web1.WebsiteBackstage.L1.ControlCenter
         {
             using (SqlSugarClient dbClient = new DBClient().GetClient())
             {
-                DataTable dt = dbClient.Queryable<table_DiffLog>().Where(it => DateTime.Now <= it.CreateTime.AddDays(7)).OrderBy(it => it.Id, OrderByType.Desc).ToDataTable();
+                DataTable dt = dbClient.Queryable<table_difflog>().Where(it => DateTime.Now <= it.CreateTime.AddDays(7)).OrderBy(it => it.Id, OrderByType.Desc).ToDataTable();
                 GridView1.DataSource = dt;
                 GridView1.DataBind();
             }

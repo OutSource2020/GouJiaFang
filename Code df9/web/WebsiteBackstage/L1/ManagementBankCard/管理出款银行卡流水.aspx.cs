@@ -304,7 +304,7 @@ namespace web1.WebsiteBackstage.L1.ManagementBankCard
 
         private void BindGrid(string 时间导入绑定)
         {
-            string strQuery = "select 订单号,收入,支出,余额,商户ID,出款银行卡卡号,出款银行卡名称,备注,类型,状态,时间创建,时间交易 from table_后台出款银行卡流水 where  " + 时间导入绑定 + " order by id desc  LIMIT " + 分页() + " ";
+            string strQuery = "SELECT `订单号`,`收入`,`支出`,`余额`,`商户ID`,`出款银行卡卡号`,`出款银行卡名称`,`备注`,`类型`,`状态`,`时间创建`,`时间交易` FROM `table_后台出款银行卡流水` WHERE " + 时间导入绑定 + " ORDER BY `时间交易` DESC,`订单号` DESC LIMIT " + 分页() + " ";
             DataTable dt = new DataTable();
             String strConnString = ClassLibrary1.ClassDataControl.conStr1;
             MySqlConnection con = new MySqlConnection(strConnString);

@@ -1150,7 +1150,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                                     };
                                     dbClient.Insertable(outCardHistory).ExecuteCommand();
 
-                                    table_DiffLog diffLog = new table_DiffLog()
+                                    table_difflog diffLog = new table_difflog()
                                     {
                                         OrderId = 订单号,
                                         MerchantID = record.商户ID,
@@ -1247,7 +1247,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                                         时间创建 = now,
                                     };
                                     dbClient.Insertable(money).ExecuteCommand();
-                                    table_DiffLog diffLog = new table_DiffLog()
+                                    table_difflog diffLog = new table_difflog()
                                     {
                                         OrderId = 订单号,
                                         MerchantID = record.商户ID,
@@ -2099,13 +2099,13 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
 
         }
 
-        private void DiffData(bool all, DataTable dt, Action<DataRow, table_DiffLog, int> action)
+        private void DiffData(bool all, DataTable dt, Action<DataRow, table_difflog, int> action)
         {
             using (SqlSugarClient dbClient = new DBClient().GetClient())
             {
-                var list= dbClient.Queryable<table_DiffLog>().Where(it => DateTime.Now <= it.CreateTime.AddDays(7)).OrderBy(it => it.Id, OrderByType.Desc).ToList();
+                var list= dbClient.Queryable<table_difflog>().Where(it => DateTime.Now <= it.CreateTime.AddDays(7)).OrderBy(it => it.Id, OrderByType.Desc).ToList();
                 int count = list.Count();
-                foreach(table_DiffLog record in list)
+                foreach(table_difflog record in list)
                 {
                     DataRow dr = dt.NewRow();
                     action(dr, record, 0);
@@ -2117,7 +2117,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
         protected void Button_导出差额Exlce_Click(object sender, EventArgs e)
         {
             string[] headers = { "订单号", "商户ID", "交易金额", "出款银行卡总金额", "出款银行卡总金额（已开启）", "商户总金额", "待处理金额", "差值", "批量操作状态", "后台处理批次ID组", "创建时间" };
-            ExportGird<table_DiffLog>(true, "差值", headers, DiffData, (dr, dl, i) =>
+            ExportGird<table_difflog>(true, "差值", headers, DiffData, (dr, dl, i) =>
             {
                 dr[0] = dl.OrderId;
                 dr[1] = dl.MerchantID;
