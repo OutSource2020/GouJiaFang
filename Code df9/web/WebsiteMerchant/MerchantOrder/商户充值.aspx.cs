@@ -338,7 +338,8 @@ namespace web1.WebsiteMerchant.商户订单
             时间创建 = nowTime,
             商户充值目标姓名 = TextBox_目标姓名.Text,
             商户充值目标卡号 = TextBox_目标卡号.Text,
-            商户充值目标银行 = TextBox_目标银行名称.Text
+            商户充值目标银行 = TextBox_目标银行名称.Text,
+            产生手续费 = userInfo.单笔手续费
           };
 
           double a = double.Parse(TextBox_金额.Text);
