@@ -7,6 +7,8 @@ using System.Web.UI.WebControls;
 
 using System.Data;
 using MySql.Data.MySqlClient;
+using SqlSugar;
+using Sugar.Enties;
 
 namespace web1.WebsiteMerchant.商户订单
 {
@@ -234,76 +236,65 @@ namespace web1.WebsiteMerchant.商户订单
             //因为是充值手续费 充手续费不扣 手续费比率和单笔手续费 
 
             Button_充值.Enabled = false;//防止重复点击按钮
+      var res = new DbResult<bool>();
 
-            string Cookie_UserName = ClassLibrary1.ClassAccount.检查商户端cookie2();
+      string Cookie_UserName = ClassLibrary1.ClassAccount.检查商户端cookie2();
+            using (SqlSugarClient dbClient = new DBClient().GetClient())
+      {
 
-            using (MySqlConnection con = new MySqlConnection(ClassLibrary1.ClassDataControl.conStr1))
+        dbClient.UseTran(() => { });
+
+
+      res=   dbClient.UseTran(() =>
+          {
+            //先定义
+            DateTime nowTime = DateTime.Now;
+            string 生成编号标头 = "MRONHF";
+            string 生成编号 = 生成编号标头 + DateTime.Now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999)); ;
+            string RegisterTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
+            string 充值类型 = "充值提款手续费";
+            var usercardInfo = dbClient.Queryable<table_商户银行卡>().Where(it => it.商户银行卡卡号 == DropDownList_发起卡号.SelectedItem.Value).First();
+
+            
+          
+
+            table_商户明细充值 money = new table_商户明细充值
             {
-                using (MySqlCommand cmd = new MySqlCommand("SELECT 商户ID,商户银行卡卡号 FROM table_商户银行卡 WHERE 商户ID=@商户ID and 商户银行卡卡号=@商户银行卡卡号 and 状态='启用'", con))
-                {
-                    cmd.Parameters.AddWithValue("@商户ID", Cookie_UserName);
-                    cmd.Parameters.AddWithValue("@商户银行卡卡号", DropDownList_发起卡号.SelectedItem.Value);
-                    using (MySqlDataAdapter da = new MySqlDataAdapter(cmd))
-                    {
-                        DataTable images = new DataTable();
-                        da.Fill(images);
-                        foreach (DataRow dr in images.Rows)
-                        {
+              订单号 = 生成编号,
+              商户ID = Convert.ToInt32(Cookie_UserName),
+              商户银行卡卡号 = DropDownList_发起卡号.SelectedItem.Value,
+              充值类型 = "充值提款手续费",
+              充值金额 =Convert.ToDouble(TextBox_金额.Text),
+              状态 = "待处理",
+              时间创建 = nowTime,
+              商户充值目标姓名 = TextBox_目标姓名.Text,
+              商户充值目标卡号 = TextBox_目标卡号.Text,
+              商户充值目标银行 = TextBox_目标银行名称.Text
+            };
 
-                            if (dr["商户银行卡卡号"].ToString() != null)
-                            {
-                                //查询账户手续费有多少
-                                using (MySqlConnection con13 = new MySqlConnection(ClassLibrary1.ClassDataControl.conStr1))
-                                {
-                                    using (MySqlCommand cmd13 = new MySqlCommand("SELECT 商户ID,手续费余额 FROM table_商户账号 WHERE 商户ID=@商户ID", con13))
-                                    {
-                                        cmd13.Parameters.AddWithValue("@商户ID", Cookie_UserName);
-                                        using (MySqlDataAdapter da13 = new MySqlDataAdapter(cmd13))
-                                        {
-                                            DataTable images13 = new DataTable();
-                                            da13.Fill(images13);
-                                            foreach (DataRow dr13 in images13.Rows)
-                                            {
-                                                string 账户内手续费余额 = dr13["手续费余额"].ToString();
-
-                                                //先定义
-                                                string 生成编号标头 = "MRONHF";
-                                                string 生成编号 = 生成编号标头 + DateTime.Now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999)); ;
-                                                string RegisterTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
-                                                string 充值类型 = "充值提款手续费";
-
-                                                //插入 充值信息 到 table_商户明细充值
-                                                using (MySqlConnection scon = new MySqlConnection(ClassLibrary1.ClassDataControl.conStr1))
-                                                {
-                                                    string 有哪些 = "订单号,商户ID,商户银行卡卡号,充值类型,充值金额,状态,时间创建,商户充值目标姓名,商户充值目标卡号,商户充值目标银行 ";
-                                                    string 收哪些 = "'" + 生成编号 + "','" + Cookie_UserName + "','" + DropDownList_发起卡号.SelectedItem.Value + "','" + 充值类型 + "','" + TextBox_金额.Text + "','待处理','" + RegisterTime + "','" + TextBox_目标姓名.Text + "','" + TextBox_目标卡号.Text + "','"+TextBox_目标银行名称.Text+"' ";
-
-                                                    string str = "insert into table_商户明细充值(" + 有哪些 + ") values(" + 收哪些 + ")";
-                                                    scon.Open();
-                                                    MySqlCommand command = new MySqlCommand();
-                                                    command.Connection = scon;
-                                                    command.CommandText = str;
-                                                    int obj = command.ExecuteNonQuery();
-
-                                                    scon.Close();
-                                                }
-
-                                                Response.Redirect("商户充值记录.aspx");
-                                            }
-                                        }
-                                    }
-                                }
-
-                            }
-                            else
-                            {
-                                ClassLibrary1.ClassMessage.HinXi(Page, "卡号为空");
-                                //Response.Redirect("./商户充值记录.aspx");
-                            }
-                        }
-                    }
-                }
+            if (usercardInfo.商户银行卡卡号 != null)
+              dbClient.Insertable<table_商户明细充值>(money).ExecuteCommand();
+            else
+            {
+              ClassLibrary1.ClassMessage.HinXi(Page, "卡号为空");
+              //Response.Redirect("./商户充值记录.aspx");
             }
+
+
+          });
+
+        dbClient.UseTran(() => { });
+
+        
+
+      }
+            if(res.IsSuccess){
+        Response.Redirect("商户充值记录.aspx");
+
+      }else{
+        ClassLibrary1.ClassMessage.HinXi(Page, "充值失败");
+      }
+   
         }
 
 
@@ -312,140 +303,100 @@ namespace web1.WebsiteMerchant.商户订单
             //充值提款余额  按账户设置的手续费比率扣除手续费
 
             Button_充值.Enabled = false;//防止重复点击按钮
+      var res = new DbResult<bool>();
 
             string Cookie_UserName = ClassLibrary1.ClassAccount.检查商户端cookie2();
+      using (SqlSugarClient dbClient = new DBClient().GetClient())
+      {
+
+        dbClient.UseTran(() => { });
 
 
-            using (MySqlConnection con = new MySqlConnection(ClassLibrary1.ClassDataControl.conStr1))
-            {
-                using (MySqlCommand cmd = new MySqlCommand("SELECT 商户ID,商户银行卡卡号 FROM table_商户银行卡 WHERE 商户ID=@商户ID and 商户银行卡卡号=@商户银行卡卡号 and 状态='启用'", con))
-                {
-                    cmd.Parameters.AddWithValue("@商户ID", Cookie_UserName);
-                    cmd.Parameters.AddWithValue("@商户银行卡卡号", DropDownList_发起卡号.SelectedItem.Value);
-                    using (MySqlDataAdapter da = new MySqlDataAdapter(cmd))
-                    {
-                        DataTable images = new DataTable();
-                        da.Fill(images);
-                        foreach (DataRow dr in images.Rows)
-                        {
-
-                            if (dr["商户银行卡卡号"].ToString() != null)
-                            {
-                                string 卡号 = dr["商户银行卡卡号"].ToString();
-
-
-                                //查询账户余额多少
-                                using (MySqlConnection con13 = new MySqlConnection(ClassLibrary1.ClassDataControl.conStr1))
-                                {
-                                    using (MySqlCommand cmd13 = new MySqlCommand("SELECT 商户ID,提款余额,手续费余额,手续费比率,单笔手续费 FROM table_商户账号 WHERE 商户ID=@商户ID", con13))
-                                    {
-                                        cmd13.Parameters.AddWithValue("@商户ID", Cookie_UserName);
-                                        using (MySqlDataAdapter da13 = new MySqlDataAdapter(cmd13))
-                                        {
-                                            DataTable images13 = new DataTable();
-                                            da13.Fill(images13);
-                                            foreach (DataRow dr13 in images13.Rows)
-                                            {
-                                                double 账户内提款余额 = double.Parse(dr13["提款余额"].ToString());
-                                                double 账户内手续费余额 = double.Parse(dr13["手续费余额"].ToString());
-
-                                                double a = double.Parse(TextBox_金额.Text);
-                                                double b = 100;
-                                                double c = double.Parse(dr13["手续费比率"].ToString());
-                                                //double d = double.Parse(dr13["单笔手续费"].ToString());
-                                                //double 手续费计算 = (((a / b) * c) + d);
-                                                double 手续费计算 = ((a / b) * c);
-
-                                                //double 手续费多少 = Math.Round(手续费计算, 2);
-                                                double 手续费多少 = 手续费计算;
-
-                                                //判定本次充值所需支付的手续费是否足够支付
-                                                if ((账户内手续费余额 - 手续费多少) >= 0)
-                                                {
-                                                    //判定条件都通过就开始执行任务
-                                                    //1.插入订单充值订单
-                                                    //2.插入手续费明细
-                                                    //3.扣除账户内的手续费
-
-                                                    string 生成编号 = "MRONB" + DateTime.Now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999));
-                                                    string RegisterTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
-                                                    string 充值类型 = "充值提款余额";
+       res= dbClient.UseTran(() =>
+        {
+          //先定义
+          DateTime nowTime = DateTime.Now;
+          string 生成编号 = "MRONB" + DateTime.Now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999));
+          string RegisterTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
+          string 充值类型 = "充值提款余额";
 
 
 
-                                                    //插入订单-充值订单
-                                                    using (MySqlConnection scon = new MySqlConnection(ClassLibrary1.ClassDataControl.conStr1))
-                                                    {
-                                                        string 有哪些 = "订单号,商户ID,商户银行卡卡号,充值类型,充值金额,产生手续费,状态,时间创建,商户充值目标姓名,商户充值目标卡号,商户充值目标银行 ";
-                                                        string 收哪些 = "'" + 生成编号 + "','" + Cookie_UserName + "','" + DropDownList_发起卡号.SelectedItem.Value + "','" + 充值类型 + "','" + TextBox_金额.Text + "','" + 手续费多少 + "','待处理','" + RegisterTime + "','" + TextBox_目标姓名.Text + "','" + TextBox_目标卡号.Text + "','" + TextBox_目标银行名称.Text + "' ";
+          var usercardInfo = dbClient.Queryable<table_商户银行卡>().Where(it => it.商户银行卡卡号 == DropDownList_发起卡号.SelectedItem.Value).First();
+          var userInfo = dbClient.Queryable<table_商户账号>().Where(it => it.商户ID == Cookie_UserName).First();
 
-                                                        string str = "insert into table_商户明细充值(" + 有哪些 + ") values(" + 收哪些 + ")";
-                                                        scon.Open();
-                                                        MySqlCommand command = new MySqlCommand();
-                                                        command.Connection = scon;
-                                                        command.CommandText = str;
-                                                        int obj = command.ExecuteNonQuery();
 
-                                                        scon.Close();
-                                                    }
 
-                                                    //2. 插入订单-手续费明细
-                                                    double 查询交易前手续费余额 = double.Parse(dr13["手续费余额"].ToString());
-                                                    double 定义交易后手续费余额 = double.Parse(dr13["手续费余额"].ToString()) - System.Convert.ToDouble(手续费多少);
-                                                    using (MySqlConnection scon = new MySqlConnection(ClassLibrary1.ClassDataControl.conStr1))
-                                                    {
-                                                        string 有哪些 = "订单号,商户ID,商户银行卡卡号,类型,交易金额,手续费支出,交易前手续费余额,交易后手续费余额,时间创建 ";
-                                                        string 收哪些 = "'" + 生成编号 + "','" + Cookie_UserName + "','" + DropDownList_发起卡号.SelectedItem.Value + "','" + 充值类型 + "','" + TextBox_金额.Text + "','" + 手续费多少 + "','" + 查询交易前手续费余额 + "','" + 定义交易后手续费余额 + "','" + RegisterTime + "'";
+          table_商户明细充值 money = new table_商户明细充值
+          {
+            订单号 = 生成编号,
+            商户ID = Convert.ToInt32(Cookie_UserName),
+            商户银行卡卡号 = DropDownList_发起卡号.SelectedItem.Value,
+            充值类型 = "充值提款余额",
+            充值金额 = Convert.ToDouble(TextBox_金额.Text),
+            状态 = "待处理",
+            时间创建 = nowTime,
+            商户充值目标姓名 = TextBox_目标姓名.Text,
+            商户充值目标卡号 = TextBox_目标卡号.Text,
+            商户充值目标银行 = TextBox_目标银行名称.Text
+          };
 
-                                                        string str = "insert into table_商户明细手续费(" + 有哪些 + ") values(" + 收哪些 + ")";
-                                                        scon.Open();
-                                                        MySqlCommand command = new MySqlCommand();
-                                                        command.Connection = scon;
-                                                        command.CommandText = str;
-                                                        int obj = command.ExecuteNonQuery();
+          double a = double.Parse(TextBox_金额.Text);
+          double b = 100;
+          double c = userInfo.手续费比率.Value;
+          //double d = double.Parse(dr13["单笔手续费"].ToString());
+          //double 手续费计算 = (((a / b) * c) + d);
+          double 手续费计算 = ((a / b) * c);
 
-                                                        scon.Close();
-                                                    }
+          //double 手续费多少 = Math.Round(手续费计算, 2);
+          double 手续费多少 = 手续费计算;
+          table_商户明细手续费 bus = new table_商户明细手续费
+          {
+            订单号 = 生成编号,
+            商户ID = Convert.ToInt32(Cookie_UserName),
+            类型 = "充值提款余额",
+            交易金额 = Convert.ToDouble(TextBox_金额.Text),
+            交易前手续费余额 = userInfo.手续费余额.Value,
+            交易后手续费余额 = userInfo.手续费余额.Value - 手续费计算,
+            状态 = "",
+            时间创建 = nowTime,
+          };
+          //1.插入订单充值订单
+          //2.插入手续费明细
+          //3.扣除账户内的手续费
+          if(userInfo.手续费余额.Value - 手续费计算 <= 0){
+            ClassLibrary1.ClassMessage.HinXi(Page, "手续费余额不足");
+            return;
+          }
+          
+          if (usercardInfo.商户银行卡卡号 != null){
+            dbClient.Insertable<table_商户明细充值>(money).ExecuteCommand();
+            dbClient.Insertable<table_商户明细手续费>(bus).ExecuteCommand();
+          }
+           
+          else
+          {
+            ClassLibrary1.ClassMessage.HinXi(Page, "卡号为空");
+            return;
+            //Response.Redirect("./商户充值记录.aspx");
+          }
 
-                                                    //3.扣商户账号内的手续费
-                                                    using (MySqlConnection conGX = new MySqlConnection(ClassLibrary1.ClassDataControl.conStr1))
-                                                    {
-                                                        using (MySqlCommand cmdGX = new MySqlCommand("UPDATE table_商户账号 SET 手续费余额=手续费余额-'" + 手续费多少 + "' WHERE 商户ID='" + Cookie_UserName + "'", conGX))
-                                                        {
+          dbClient.Updateable<table_商户账号>().UpdateColumns(it => new { it.手续费余额 }).Where(it => it.商户ID == Cookie_UserName)
+          .ReSetValue(it => it.手续费余额 == (it.手续费余额- 手续费计算)).ExecuteCommand();
 
-                                                            //cmd.Parameters.AddWithValue("@订单号", id);
-                                                            //cmd.Parameters.AddWithValue("@备注", txtName.Text);
-                                                            //cmd.Parameters.AddWithValue("@状态", DropDownList_下拉框1.SelectedItem.Value);
-                                                            conGX.Open();
-                                                            cmdGX.ExecuteNonQuery();
-                                                            conGX.Close();
+        });
+        dbClient.UseTran(() => { });
 
-                                                            //Response.Redirect(Request.Url.AbsoluteUri, false);
-                                                        }
-                                                    }
+      }
+      if (res.IsSuccess)
+      {
+        Response.Redirect("商户充值记录.aspx");
+      }
+      else{
+        ClassLibrary1.ClassMessage.HinXi(Page, "充值失败");
+      }
 
-                                                    Response.Redirect("商户充值记录.aspx");
-                                                }
-                                                else
-                                                {
-                                                    ClassLibrary1.ClassMessage.HinXi(Page, "目标充值金额,所需的手续费不足");
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-                            else
-                            {
-                                ClassLibrary1.ClassMessage.HinXi(Page, "卡号为空");
-                                //Response.Redirect("./商户充值记录.aspx");
-                            }
-                        }
-                    }
-                }
-            }
-        }
+   }
 
     protected void GridView_收金额卡_SelectedIndexChanged(object sender, EventArgs e)
     {
