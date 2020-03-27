@@ -344,8 +344,6 @@ namespace web1.WebsiteMerchant.商户订单
             long OperatorId = GetTimeStamp();
             int Sindex = 0;
             string Cookie_UserName = ClassLibrary1.ClassAccount.检查商户端cookie2();
-            Mutex m = new Mutex(false, Cookie_UserName);
-            m.WaitOne();
             using (SqlSugarClient dbClient = new DBClient().GetClient())
             {
                 for (int i = 0; i < Gridview1.Rows.Count; i++)
@@ -461,7 +459,6 @@ namespace web1.WebsiteMerchant.商户订单
                     Thread.Sleep(100);
                 }
             }
-            m.ReleaseMutex();
             Response.Redirect("./商户提款记录.aspx");
         }
 
