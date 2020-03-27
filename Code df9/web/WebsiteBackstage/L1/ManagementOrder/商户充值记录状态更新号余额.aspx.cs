@@ -299,7 +299,8 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
             dbCilent.Updateable<table_后台出款银行卡管理>().UpdateColumns(it => new { it.出款银行卡余额 }).Where(it=>it.出款银行卡卡号 == DropDownList_选择银行卡.SelectedItem.Value).ReSetValue(it => it.出款银行卡余额 == (it.出款银行卡余额 + rechargeRecord.充值金额)).ExecuteCommand();
        
 
-          }).IsSuccess) { ClassLibrary1.ClassMessage.HinXi(Page, "充值成功"); };
+          }).IsSuccess) { ClassLibrary1.ClassMessage.HinXi(Page, "充值成功"); }
+           else{ ClassLibrary1.ClassMessage.HinXi(Page, "充值失败"); }
           dbCilent.UseTran(() => { });
 
 
