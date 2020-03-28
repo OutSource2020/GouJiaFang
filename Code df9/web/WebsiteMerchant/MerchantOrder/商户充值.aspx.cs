@@ -30,7 +30,7 @@ namespace web1.WebsiteMerchant.商户订单
 
 
 
-    protected void Button_返回_Click(object sender, EventArgs e)
+        protected void Button_返回_Click(object sender, EventArgs e)
         {
             Response.Redirect("商户充值记录.aspx");
         }
@@ -153,7 +153,7 @@ namespace web1.WebsiteMerchant.商户订单
                                             {
                                                 double 充值最低手续费 = double.Parse(dr["充值最低手续费"].ToString());
 
-                                                
+
                                                 if (double.Parse(TextBox_金额.Text) >= 充值最低手续费)
                                                 {
                                                     选了充商户手续费余额();
@@ -167,7 +167,7 @@ namespace web1.WebsiteMerchant.商户订单
                                         }
                                     }
                                 }
-                                
+
                             }
 
                             //如果选择充值提款余额
@@ -188,7 +188,7 @@ namespace web1.WebsiteMerchant.商户订单
                                                 double 充值最低余额 = double.Parse(dr["充值最低余额"].ToString());
 
 
-                                                if (double.Parse(TextBox_金额.Text) >= 充值最低余额 )
+                                                if (double.Parse(TextBox_金额.Text) >= 充值最低余额)
                                                 {
                                                     选了充商户提款余额();
                                                 }
@@ -201,7 +201,7 @@ namespace web1.WebsiteMerchant.商户订单
                                         }
                                     }
                                 }
-                                
+
 
                             }
 
@@ -234,67 +234,76 @@ namespace web1.WebsiteMerchant.商户订单
         private void 选了充商户手续费余额()
         {
             //因为是充值手续费 充手续费不扣 手续费比率和单笔手续费 
-
             Button_充值.Enabled = false;//防止重复点击按钮
-      var res = new DbResult<bool>();
-
-      string Cookie_UserName = ClassLibrary1.ClassAccount.检查商户端cookie2();
+            var res = new DbResult<bool>();
+            string Cookie_UserName = ClassLibrary1.ClassAccount.检查商户端cookie2();
             using (SqlSugarClient dbClient = new DBClient().GetClient())
-      {
-
-        dbClient.UseTran(() => { });
-
-
-      res=   dbClient.UseTran(() =>
-          {
-            //先定义
-            DateTime nowTime = DateTime.Now;
-            string 生成编号标头 = "MRONHF";
-            string 生成编号 = 生成编号标头 + DateTime.Now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999)); ;
-            string RegisterTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
-            string 充值类型 = "充值提款手续费";
-            var usercardInfo = dbClient.Queryable<table_商户银行卡>().Where(it => it.商户银行卡卡号 == DropDownList_发起卡号.SelectedItem.Value).First();
-
-            
-          
-
-            table_商户明细充值 money = new table_商户明细充值
             {
-              订单号 = 生成编号,
-              商户ID = Convert.ToInt32(Cookie_UserName),
-              商户银行卡卡号 = DropDownList_发起卡号.SelectedItem.Value,
-              充值类型 = "充值提款手续费",
-              充值金额 =Convert.ToDouble(TextBox_金额.Text),
-              状态 = "待处理",
-              时间创建 = nowTime,
-              商户充值目标姓名 = TextBox_目标姓名.Text,
-              商户充值目标卡号 = TextBox_目标卡号.Text,
-              商户充值目标银行 = TextBox_目标银行名称.Text
-            };
+                dbClient.Ado.ExecuteCommand("set session transaction isolation level serializable;");
 
-            if (usercardInfo.商户银行卡卡号 != null)
-              dbClient.Insertable<table_商户明细充值>(money).ExecuteCommand();
+                int count = 0;
+
+                dbClient.Ado.UseTran(() => { }); // select 之前保证一次 commit，即使什么都不做
+                dbClient.Ado.UseTran(() =>
+                {
+                    count = dbClient.Queryable<table_商户明细充值>().Where(it => 
+                        it.商户ID == Convert.ToInt32(Cookie_UserName)
+                        && it.商户银行卡卡号 == DropDownList_发起卡号.SelectedItem.Value
+                        && it.充值金额.Value.ToString() == TextBox_金额.Text
+                        && it.商户充值目标姓名 == TextBox_目标姓名.Text
+                        && it.商户充值目标卡号 == TextBox_目标卡号.Text
+                        && it.商户充值目标银行 == TextBox_目标银行名称.Text
+                        && DateTime.Now < it.时间创建.Value.AddMinutes(10)).Count();
+                });
+
+                if (count > 0)
+                {
+                    ClassLibrary1.ClassMessage.HinXi(Page, "10分钟内不允许提交相同的订单");
+                    return;
+                }
+
+                dbClient.UseTran(() => { });
+                res = dbClient.UseTran(() =>
+                {
+                    //先定义
+                    DateTime nowTime = DateTime.Now;
+                    string 生成编号标头 = "MRONHF";
+                    string 生成编号 = 生成编号标头 + DateTime.Now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999)); ;
+                    string RegisterTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
+                    string 充值类型 = "充值提款手续费";
+                    var usercardInfo = dbClient.Queryable<table_商户银行卡>().Where(it => it.商户银行卡卡号 == DropDownList_发起卡号.SelectedItem.Value).First();
+
+                    table_商户明细充值 money = new table_商户明细充值
+                    {
+                        订单号 = 生成编号,
+                        商户ID = Convert.ToInt32(Cookie_UserName),
+                        商户银行卡卡号 = DropDownList_发起卡号.SelectedItem.Value,
+                        充值类型 = "充值提款手续费",
+                        充值金额 = Convert.ToDouble(TextBox_金额.Text),
+                        状态 = "待处理",
+                        时间创建 = nowTime,
+                        商户充值目标姓名 = TextBox_目标姓名.Text,
+                        商户充值目标卡号 = TextBox_目标卡号.Text,
+                        商户充值目标银行 = TextBox_目标银行名称.Text
+                    };
+
+                    if (usercardInfo.商户银行卡卡号 != null)
+                        dbClient.Insertable<table_商户明细充值>(money).ExecuteCommand();
+                    else
+                    {
+                        ClassLibrary1.ClassMessage.HinXi(Page, "卡号为空");
+                    }
+               });
+                dbClient.UseTran(() => { });
+            }
+            if (res.IsSuccess)
+            {
+                Response.Redirect("商户充值记录.aspx");
+            }
             else
             {
-              ClassLibrary1.ClassMessage.HinXi(Page, "卡号为空");
-              //Response.Redirect("./商户充值记录.aspx");
+                ClassLibrary1.ClassMessage.HinXi(Page, "充值失败");
             }
-
-
-          });
-
-        dbClient.UseTran(() => { });
-
-        
-
-      }
-            if(res.IsSuccess){
-        Response.Redirect("商户充值记录.aspx");
-
-      }else{
-        ClassLibrary1.ClassMessage.HinXi(Page, "充值失败");
-      }
-   
         }
 
 
@@ -303,183 +312,186 @@ namespace web1.WebsiteMerchant.商户订单
             //充值提款余额  按账户设置的手续费比率扣除手续费
 
             Button_充值.Enabled = false;//防止重复点击按钮
-      var res = new DbResult<bool>();
+            var res = new DbResult<bool>();
 
             string Cookie_UserName = ClassLibrary1.ClassAccount.检查商户端cookie2();
-      using (SqlSugarClient dbClient = new DBClient().GetClient())
-      {
+            using (SqlSugarClient dbClient = new DBClient().GetClient())
+            {
+                dbClient.Ado.ExecuteCommand("set session transaction isolation level serializable;");
 
-        dbClient.UseTran(() => { });
+                int count = 0;
 
+                dbClient.Ado.UseTran(() => { }); // select 之前保证一次 commit，即使什么都不做
+                dbClient.Ado.UseTran(() =>
+                {
+                    count = dbClient.Queryable<table_商户明细充值>().Where(it => 
+                        it.商户ID == Convert.ToInt32(Cookie_UserName)
+                        && it.商户银行卡卡号 == DropDownList_发起卡号.SelectedItem.Value
+                        && it.充值金额.Value.ToString() == TextBox_金额.Text
+                        && it.商户充值目标姓名 == TextBox_目标姓名.Text
+                        && it.商户充值目标卡号 == TextBox_目标卡号.Text
+                        && it.商户充值目标银行 == TextBox_目标银行名称.Text
+                        && DateTime.Now < it.时间创建.Value.AddMinutes(10)).Count();
+                });
 
-       res= dbClient.UseTran(() =>
+                if (count > 0)
+                {
+                    ClassLibrary1.ClassMessage.HinXi(Page, "10分钟内不允许提交相同的订单");
+                    return;
+                }
+
+                dbClient.UseTran(() => { });
+                res = dbClient.UseTran(() =>
+                {
+                    //先定义
+                    DateTime nowTime = DateTime.Now;
+                    string 生成编号 = "MRONB" + DateTime.Now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999));
+                    string RegisterTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
+                    string 充值类型 = "充值提款余额";
+
+                    var usercardInfo = dbClient.Queryable<table_商户银行卡>().Where(it => it.商户银行卡卡号 == DropDownList_发起卡号.SelectedItem.Value).First();
+                    var userInfo = dbClient.Queryable<table_商户账号>().Where(it => it.商户ID == Cookie_UserName).First();
+
+                    table_商户明细充值 money = new table_商户明细充值
+                    {
+                        订单号 = 生成编号,
+                        商户ID = Convert.ToInt32(Cookie_UserName),
+                        商户银行卡卡号 = DropDownList_发起卡号.SelectedItem.Value,
+                        充值类型 = "充值提款余额",
+                        充值金额 = Convert.ToDouble(TextBox_金额.Text),
+                        状态 = "待处理",
+                        时间创建 = nowTime,
+                        商户充值目标姓名 = TextBox_目标姓名.Text,
+                        商户充值目标卡号 = TextBox_目标卡号.Text,
+                        商户充值目标银行 = TextBox_目标银行名称.Text,
+                        产生手续费 = userInfo.单笔手续费
+                    };
+
+                    double a = double.Parse(TextBox_金额.Text);
+                    double b = 100;
+                    double c = userInfo.手续费比率.Value;
+                    double 手续费计算 = ((a / b) * c);
+
+                    double 手续费多少 = 手续费计算;
+                    table_商户明细手续费 bus = new table_商户明细手续费
+                    {
+                        订单号 = 生成编号,
+                        商户ID = Convert.ToInt32(Cookie_UserName),
+                        类型 = "充值提款余额",
+                        交易金额 = Convert.ToDouble(TextBox_金额.Text),
+                        交易前手续费余额 = userInfo.手续费余额.Value,
+                        交易后手续费余额 = userInfo.手续费余额.Value - 手续费计算,
+                        状态 = "",
+                        时间创建 = nowTime,
+                    };
+                    //1.插入订单充值订单
+                    //2.插入手续费明细
+                    //3.扣除账户内的手续费
+                    if (userInfo.手续费余额.Value - 手续费计算 <= 0)
+                    {
+                        ClassLibrary1.ClassMessage.HinXi(Page, "手续费余额不足");
+                        return;
+                    }
+
+                    if (usercardInfo.商户银行卡卡号 != null)
+                    {
+                        dbClient.Insertable<table_商户明细充值>(money).ExecuteCommand();
+                        dbClient.Insertable<table_商户明细手续费>(bus).ExecuteCommand();
+                    }
+                    else
+                    {
+                        ClassLibrary1.ClassMessage.HinXi(Page, "卡号为空");
+                        return;
+                    }
+
+                    dbClient.Updateable<table_商户账号>().UpdateColumns(it => new { it.手续费余额 })
+                        .Where(it => it.商户ID == Cookie_UserName)
+                        .ReSetValue(it => it.手续费余额 == (it.手续费余额 - 手续费计算)).ExecuteCommand();
+                });
+                dbClient.UseTran(() => { });
+            }
+            if (res.IsSuccess)
+            {
+                Response.Redirect("商户充值记录.aspx");
+            }
+            else
+            {
+                ClassLibrary1.ClassMessage.HinXi(Page, "充值失败");
+            }
+
+        }
+
+        protected void GridView_收金额卡_SelectedIndexChanged(object sender, EventArgs e)
         {
-          //先定义
-          DateTime nowTime = DateTime.Now;
-          string 生成编号 = "MRONB" + DateTime.Now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999));
-          string RegisterTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
-          string 充值类型 = "充值提款余额";
+            Button button = (Button)sender;
+            GridViewRow gvr = (GridViewRow)button.Parent.Parent;
+            string pk = GridView_收金额卡.DataKeys[gvr.RowIndex].Value.ToString();
+
+        }
 
 
 
-          var usercardInfo = dbClient.Queryable<table_商户银行卡>().Where(it => it.商户银行卡卡号 == DropDownList_发起卡号.SelectedItem.Value).First();
-          var userInfo = dbClient.Queryable<table_商户账号>().Where(it => it.商户ID == Cookie_UserName).First();
 
+        protected void GridView_收手续费卡_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Button button = (Button)sender;
+            GridViewRow gvr = (GridViewRow)button.Parent.Parent;
+            string pk = GridView_收金额卡.DataKeys[gvr.RowIndex].Value.ToString();
 
+        }
 
-          table_商户明细充值 money = new table_商户明细充值
-          {
-            订单号 = 生成编号,
-            商户ID = Convert.ToInt32(Cookie_UserName),
-            商户银行卡卡号 = DropDownList_发起卡号.SelectedItem.Value,
-            充值类型 = "充值提款余额",
-            充值金额 = Convert.ToDouble(TextBox_金额.Text),
-            状态 = "待处理",
-            时间创建 = nowTime,
-            商户充值目标姓名 = TextBox_目标姓名.Text,
-            商户充值目标卡号 = TextBox_目标卡号.Text,
-            商户充值目标银行 = TextBox_目标银行名称.Text,
-            产生手续费 = userInfo.单笔手续费
-          };
+        protected void GridView1_RowCreated(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType != DataControlRowType.DataRow) return;
 
-          double a = double.Parse(TextBox_金额.Text);
-          double b = 100;
-          double c = userInfo.手续费比率.Value;
-          //double d = double.Parse(dr13["单笔手续费"].ToString());
-          //double 手续费计算 = (((a / b) * c) + d);
-          double 手续费计算 = ((a / b) * c);
+            if (e.Row.FindControl("ButtonS_收手续卡") != null)
+            {
+                Button CtlButton = (Button)e.Row.FindControl("ButtonS_收手续卡");
+                CtlButton.Click += new EventHandler(Select_收手续费卡);
+            }
+        }
 
-          //double 手续费多少 = Math.Round(手续费计算, 2);
-          double 手续费多少 = 手续费计算;
-          table_商户明细手续费 bus = new table_商户明细手续费
-          {
-            订单号 = 生成编号,
-            商户ID = Convert.ToInt32(Cookie_UserName),
-            类型 = "充值提款余额",
-            交易金额 = Convert.ToDouble(TextBox_金额.Text),
-            交易前手续费余额 = userInfo.手续费余额.Value,
-            交易后手续费余额 = userInfo.手续费余额.Value - 手续费计算,
-            状态 = "",
-            时间创建 = nowTime,
-          };
-          //1.插入订单充值订单
-          //2.插入手续费明细
-          //3.扣除账户内的手续费
-          if(userInfo.手续费余额.Value - 手续费计算 <= 0){
-            ClassLibrary1.ClassMessage.HinXi(Page, "手续费余额不足");
-            return;
-          }
-          
-          if (usercardInfo.商户银行卡卡号 != null){
-            dbClient.Insertable<table_商户明细充值>(money).ExecuteCommand();
-            dbClient.Insertable<table_商户明细手续费>(bus).ExecuteCommand();
-          }
-           
-          else
-          {
-            ClassLibrary1.ClassMessage.HinXi(Page, "卡号为空");
-            return;
-            //Response.Redirect("./商户充值记录.aspx");
-          }
+        protected void GridView2_RowCreated(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType != DataControlRowType.DataRow) return;
 
-          dbClient.Updateable<table_商户账号>().UpdateColumns(it => new { it.手续费余额 }).Where(it => it.商户ID == Cookie_UserName)
-          .ReSetValue(it => it.手续费余额 == (it.手续费余额- 手续费计算)).ExecuteCommand();
+            if (e.Row.FindControl("ButtonS_收金额卡") != null)
+            {
+                Button CtlButton = (Button)e.Row.FindControl("ButtonS_收金额卡");
+                CtlButton.Click += new EventHandler(Select_收金额卡);
+            }
 
-        });
-        dbClient.UseTran(() => { });
+        }
 
-      }
-      if (res.IsSuccess)
-      {
-        Response.Redirect("商户充值记录.aspx");
-      }
-      else{
-        ClassLibrary1.ClassMessage.HinXi(Page, "充值失败");
-      }
+        private void Select_收手续费卡(object sender, EventArgs e)
+        {
+            Button button = (Button)sender;
+            GridViewRow gvr = (GridViewRow)button.Parent.Parent;
+            int index = gvr.RowIndex;
+            var bank = GridView_收手续费卡.Rows[index].Cells[0].Text;
+            var userNmae = GridView_收手续费卡.Rows[index].Cells[1].Text;
+            var cardNumber = GridView_收手续费卡.Rows[index].Cells[2].Text;
+            TextBox_目标姓名.Text = userNmae;
+            TextBox_目标银行名称.Text = bank;
+            TextBox_目标卡号.Text = cardNumber;
 
-   }
+        }
 
-    protected void GridView_收金额卡_SelectedIndexChanged(object sender, EventArgs e)
-    {
-      Button button = (Button)sender;
-      GridViewRow gvr = (GridViewRow)button.Parent.Parent;
-      string pk = GridView_收金额卡.DataKeys[gvr.RowIndex].Value.ToString();
+        private void Select_收金额卡(object sender, EventArgs e)
+        {
+            Button button = (Button)sender;
+            GridViewRow gvr = (GridViewRow)button.Parent.Parent;
+            int index = gvr.RowIndex;
+
+            var bank = GridView_收金额卡.Rows[index].Cells[0].Text;
+            var userNmae = GridView_收金额卡.Rows[index].Cells[1].Text;
+            var cardNumber = GridView_收金额卡.Rows[index].Cells[2].Text;
+            TextBox_目标姓名.Text = userNmae;
+            TextBox_目标银行名称.Text = bank;
+            TextBox_目标卡号.Text = cardNumber;
+
+        }
+
 
     }
-
-
-  
-
-    protected void GridView_收手续费卡_SelectedIndexChanged(object sender, EventArgs e)
-    {
-      Button button = (Button)sender;
-      GridViewRow gvr = (GridViewRow)button.Parent.Parent;
-      string pk = GridView_收金额卡.DataKeys[gvr.RowIndex].Value.ToString();
-
-    }
-
-    protected void GridView1_RowCreated(object sender, GridViewRowEventArgs e)
-    {
-      if (e.Row.RowType != DataControlRowType.DataRow) return;
-
-      if (e.Row.FindControl("ButtonS_收手续卡") != null)
-      {
-        Button CtlButton = (Button)e.Row.FindControl("ButtonS_收手续卡");
-        CtlButton.Click += new EventHandler(Select_收手续费卡);
-      }
-    }
-
-    protected void GridView2_RowCreated(object sender, GridViewRowEventArgs e)
-    {
-      if (e.Row.RowType != DataControlRowType.DataRow) return;
-
-      if (e.Row.FindControl("ButtonS_收金额卡") != null)
-      {
-        Button CtlButton = (Button)e.Row.FindControl("ButtonS_收金额卡");
-        CtlButton.Click += new EventHandler(Select_收金额卡);
-      }
-
-    }
-
-    private void Select_收手续费卡(object sender, EventArgs e)
-    {
-      Button button = (Button)sender;
-      GridViewRow gvr = (GridViewRow)button.Parent.Parent;
-      int index = gvr.RowIndex;
-      var bank= GridView_收手续费卡.Rows[index].Cells[0].Text;
-      var userNmae = GridView_收手续费卡.Rows[index].Cells[1].Text;
-      var cardNumber = GridView_收手续费卡.Rows[index].Cells[2].Text;
-      TextBox_目标姓名.Text = userNmae;
-      TextBox_目标银行名称.Text = bank;
-      TextBox_目标卡号.Text = cardNumber;
-
-    }
-
-    private void Select_收金额卡(object sender, EventArgs e)
-    {
-      Button button = (Button)sender;
-      GridViewRow gvr = (GridViewRow)button.Parent.Parent;
-      int index = gvr.RowIndex;
-
-      var bank = GridView_收金额卡.Rows[index].Cells[0].Text;
-      var userNmae = GridView_收金额卡.Rows[index].Cells[1].Text;
-      var cardNumber = GridView_收金额卡.Rows[index].Cells[2].Text;
-      TextBox_目标姓名.Text = userNmae;
-      TextBox_目标银行名称.Text = bank;
-      TextBox_目标卡号.Text = cardNumber;
-
-    }
-
-
-  }
-
-
-
-
-
-
-
-
-
-
 }
