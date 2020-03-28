@@ -356,10 +356,13 @@ namespace web1.WebsiteMerchant.商户订单
             订单号 = 生成编号,
             商户ID = Convert.ToInt32(Cookie_UserName),
             类型 = "充值提款余额",
+            手续费支出= 手续费计算,
+            手续费收入=0,
+            商户银行卡卡号= DropDownList_发起卡号.SelectedItem.Value,
             交易金额 = Convert.ToDouble(TextBox_金额.Text),
             交易前手续费余额 = userInfo.手续费余额.Value,
             交易后手续费余额 = userInfo.手续费余额.Value - 手续费计算,
-            状态 = "",
+            状态 = "成功",
             时间创建 = nowTime,
           };
           //1.插入订单充值订单
