@@ -241,8 +241,6 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                 string 生成编号2 = "CZHYE" + DateTime.Now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999));
                 string 生成编号 = "CZHYE" + DateTime.Now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999));
 
-
-
                 string redkey = DropDownList_下拉框1.SelectedItem.Value;
                 if (redkey == "成功")
                 {
