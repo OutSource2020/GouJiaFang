@@ -483,7 +483,7 @@ namespace web1.WebsiteMerchant.商户订单
                         continue;
                     }
 
-                    dbClient.Ado.UseTran(() =>
+                    var result = dbClient.Ado.UseTran(() =>
                     {
                         dbClient.Ado.ExecuteCommand("UPDATE `table_商户账号` SET `提款余额` = `提款余额` - '" + 提款金额 + "', " +
                             "`手续费余额` = `手续费余额` - '" + 单笔手续费 + "' WHERE `商户ID` = '" + record.商户ID + "';");
@@ -539,7 +539,11 @@ namespace web1.WebsiteMerchant.商户订单
 
                         dbClient.Insertable(detail).ExecuteCommand();
                     });
-                    Thread.Sleep(100);
+                    if (!result.IsSuccess)
+                    {
+                        ClassLibrary1.ClassMessage.HinXi(Page, "网络开小差，请重试");
+                    }
+                    Thread.Sleep(1000);
                 }
             }
             Response.Redirect("./商户提款记录.aspx");
