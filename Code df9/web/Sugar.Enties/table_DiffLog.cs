@@ -5,7 +5,7 @@ using System.Web;
 
 namespace Sugar.Enties
 {
-    public class table_DiffLog
+    public class table_difflog
     {
         public long? Id { get; set; }
         public string OrderId { get; set; }

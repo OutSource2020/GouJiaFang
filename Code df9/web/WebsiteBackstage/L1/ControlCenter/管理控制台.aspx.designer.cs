@@ -285,15 +285,6 @@ namespace web1.WebsiteBackstage.L1.ControlCenter
         protected global::System.Web.UI.WebControls.Label Label_差额;
 
         /// <summary>
-        /// Button_导出Excel control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button Button_导出Excel;
-
-        /// <summary>
         /// GridView1 control.
         /// </summary>
         /// <remarks>

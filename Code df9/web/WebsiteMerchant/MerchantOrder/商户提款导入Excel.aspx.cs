@@ -343,6 +343,7 @@ namespace web1.WebsiteMerchant.商户订单
             Button_确认订单发起.Enabled = false;//防止重复操作
             long OperatorId = GetTimeStamp();
             int Sindex = 0;
+            string Cookie_UserName = ClassLibrary1.ClassAccount.检查商户端cookie2();
             using (SqlSugarClient dbClient = new DBClient().GetClient())
             {
                 for (int i = 0; i < Gridview1.Rows.Count; i++)
@@ -359,7 +360,6 @@ namespace web1.WebsiteMerchant.商户订单
                         continue;
                     }
 
-                    string Cookie_UserName = ClassLibrary1.ClassAccount.检查商户端cookie2();
                     dbClient.Ado.UseTran(() => { }); // select 之前保证一次 commit，即使什么都不做
                     table_商户账号 record = null;
                     dbClient.Ado.UseTran(() =>
@@ -456,6 +456,7 @@ namespace web1.WebsiteMerchant.商户订单
 
                         dbClient.Insertable(detail).ExecuteCommand();
                     });
+                    Thread.Sleep(100);
                 }
             }
             Response.Redirect("./商户提款记录.aspx");

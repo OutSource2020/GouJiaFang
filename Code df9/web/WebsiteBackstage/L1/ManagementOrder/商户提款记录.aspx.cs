@@ -17,6 +17,7 @@ using System.Net.Http.Headers;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
+using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using web1.API.Enties;
@@ -1149,7 +1150,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                                     };
                                     dbClient.Insertable(outCardHistory).ExecuteCommand();
 
-                                    table_DiffLog diffLog = new table_DiffLog()
+                                    table_difflog diffLog = new table_difflog()
                                     {
                                         OrderId = 订单号,
                                         MerchantID = record.商户ID,
@@ -1246,7 +1247,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                                         时间创建 = now,
                                     };
                                     dbClient.Insertable(money).ExecuteCommand();
-                                    table_DiffLog diffLog = new table_DiffLog()
+                                    table_difflog diffLog = new table_difflog()
                                     {
                                         OrderId = 订单号,
                                         MerchantID = record.商户ID,
@@ -2098,6 +2099,43 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
 
         }
 
+        private void DiffData(bool all, DataTable dt, Action<DataRow, table_difflog, int> action)
+        {
+            using (SqlSugarClient dbClient = new DBClient().GetClient())
+            {
+                var list= dbClient.Queryable<table_difflog>().Where(it => DateTime.Now <= it.CreateTime.AddDays(7)).OrderBy(it => it.Id, OrderByType.Desc).ToList();
+                int count = list.Count();
+                foreach(table_difflog record in list)
+                {
+                    DataRow dr = dt.NewRow();
+                    action(dr, record, 0);
+                    dt.Rows.Add(dr);
+                }
+            }
+        }
+
+        protected void Button_导出差额Exlce_Click(object sender, EventArgs e)
+        {
+            string[] headers = { "订单号", "商户ID", "交易金额", "出款银行卡总金额", "出款银行卡总金额（已开启）", "商户总金额", "待处理金额", "差值", "批量操作状态", "后台处理批次ID组", "创建时间" };
+            ExportGird<table_difflog>(true, "差值", headers, DiffData, (dr, dl, i) =>
+            {
+                dr[0] = dl.OrderId;
+                dr[1] = dl.MerchantID;
+                dr[2] = dl.Amount.Value.ToString();
+                dr[3] = dl.OutTotal.Value.ToString();
+                dr[4] = dl.EnableOutTotal.Value.ToString();
+                dr[5] = dl.MerchantTotal.Value.ToString();
+                dr[6] = dl.Pending.Value.ToString();
+                dr[7] = dl.Diff.Value.ToString();
+                dr[8] = dl.Status;
+                dr[9] = dl.后台处理批次ID组.Value.ToString();
+                dr[10] = dl.CreateTime.ToString("yyyy-MM-dd HH:mm:ss");
+            }, (dr1, dr2) =>
+            {
+                return false;
+            });
+        }
+
         private void ExportAllData()
         {
             string[] headers = {"订单号", "商户ID", "出款银行卡名称", "出款银行卡卡号", "交易金额", "交易方卡号", "交易方姓名", "交易方银行", "创建时间",
@@ -2264,6 +2302,25 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
             return sBuilder.ToString();
         }
 
+        private void AddUpdateLog(string logInfo)
+        {
+            try
+            {
+                string rootPath = Path.Combine(HttpRuntime.AppDomainAppPath.ToString(), "Log\\");
+                if (!Directory.Exists(rootPath))
+                {
+                    Directory.CreateDirectory(rootPath);
+                }
+
+                File.AppendAllText(rootPath + "LOG_CALLBACK_" + DateTime.Now.ToString("yyyyMMdd") + ".log",
+                        "[" + System.DateTime.Now.ToString("HH:mm:ss:fff") + "]  " + logInfo + "\r\n",
+                        Encoding.UTF8);
+            }
+            catch
+            {
+            }
+        }
+
         private int SendAllCallBack(Func<SqlSugarClient, List<table_商户明细提款>> func)
         {
             int count = 0;
@@ -2321,14 +2378,16 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                             string sign = GetMd5Hash(md5Hash, unsign);
                             string url = $"{account.API回调}?timeunix={ts}&signature={sign}";
                             string response = PostResponse(url, JsonConvert.SerializeObject(request), out statusCode);
+                            AddUpdateLog(url + " => " + response);
                             if (statusCode != 200)
                                 baseResponse = new BaseErrors()[(int)BaseErrors.ERROR_NUMBER.LX1016];
                             else
                                 baseResponse = JsonConvert.DeserializeObject<BaseResponse>(response);
                         }
                     }
-                    catch(Exception)
+                    catch(Exception e)
                     {
+                        AddUpdateLog(e.Message);
                         baseResponse = new BaseErrors()[(int)BaseErrors.ERROR_NUMBER.LX1016];
                     }
                     if (baseResponse == null || baseResponse.StatusReplyNumbering != "LX1000")
@@ -2384,6 +2443,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
             ClassLibrary1.ClassMessage.HinXi(Page, "发送了" + count + "条回调");
             Response.Redirect("./商户提款记录.aspx");
         }
+
     }
     public class Model
     {
