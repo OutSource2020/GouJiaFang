@@ -342,6 +342,7 @@ namespace web1.WebsiteMerchant.商户订单
 
        res= dbClient.UseTran(() =>
         {
+
           //先定义
           DateTime nowTime = DateTime.Now;
           string 生成编号 = "MRONB" + DateTime.Now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999));
@@ -353,7 +354,12 @@ namespace web1.WebsiteMerchant.商户订单
           var usercardInfo = dbClient.Queryable<table_商户银行卡>().Where(it => it.商户银行卡卡号 == DropDownList_发起卡号.SelectedItem.Value).First();
           var userInfo = dbClient.Queryable<table_商户账号>().Where(it => it.商户ID == Cookie_UserName).First();
 
-
+          double a = double.Parse(TextBox_金额.Text);
+          double b = 100;
+          double c = userInfo.手续费比率.Value;
+          //double d = double.Parse(dr13["单笔手续费"].ToString());
+          //double 手续费计算 = (((a / b) * c) + d);
+          double 手续费计算 = ((a / b) * c);
 
           table_商户明细充值 money = new table_商户明细充值
           {
@@ -367,15 +373,10 @@ namespace web1.WebsiteMerchant.商户订单
             商户充值目标姓名 = TextBox_目标姓名.Text,
             商户充值目标卡号 = TextBox_目标卡号.Text,
             商户充值目标银行 = TextBox_目标银行名称.Text,
-            产生手续费 = userInfo.单笔手续费
+            产生手续费 = 手续费计算
           };
 
-          double a = double.Parse(TextBox_金额.Text);
-          double b = 100;
-          double c = userInfo.手续费比率.Value;
-          //double d = double.Parse(dr13["单笔手续费"].ToString());
-          //double 手续费计算 = (((a / b) * c) + d);
-          double 手续费计算 = ((a / b) * c);
+
 
           //double 手续费多少 = Math.Round(手续费计算, 2);
           double 手续费多少 = 手续费计算;
