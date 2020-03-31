@@ -1078,7 +1078,6 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
 
             using (SqlSugarClient dbClient = new DBClient().GetClient())
             {
-                dbClient.Ado.ExecuteCommand("SET autocommit=0;");
                 dbClient.Ado.ExecuteCommand("set session transaction isolation level serializable;");
                 for (int i = 0; i < GridView1.Rows.Count; i++)
                 {
@@ -1281,7 +1280,6 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                     calCount++;
                     arr.Remove(GridView1.DataKeys[i].Value);
                 }
-                dbClient.Ado.ExecuteCommand("SET autocommit=1;");
             }
             ViewState["SelectedRecords"] = arr;
             hfCount.Value = "0";

@@ -378,7 +378,14 @@ namespace web1.WebsiteBackstage.L1.ControlCenter
 
 
 
-                Label_差额.Text = (Convert.ToDouble(Label_出款总额.Text) - Convert.ToDouble(Label_余额总额.Text)).ToString();
+                try
+                {
+                    Label_差额.Text = (Convert.ToDouble(Label_出款总额.Text) - Convert.ToDouble(Label_余额总额.Text)).ToString();
+                }
+                catch(Exception e)
+                {
+                    Label_差额.Text = "0";
+                }
                 Label_差额.Text = " " + Label_出款总额.Text + " - " + Label_余额总额.Text + " = " + Label_差额.Text + "  （注意补齐待处理金额）";
                 connC.Close();
             }

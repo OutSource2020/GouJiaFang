@@ -222,6 +222,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
 
             using (SqlSugarClient dbClient = new DBClient().GetClient())
             {
+                dbClient.Ado.ExecuteCommand("set session transaction isolation level serializable;");
              var result=   dbClient.Ado.UseTran(() =>
                 {
                     if (设置订单的状态 == "成功")

@@ -431,6 +431,7 @@ namespace web1.WebsiteMerchant.商户订单
                         continue;
                     }
 
+                    // 这个地方有可能失灵，需要测试
                     int count = 0;
 
                     dbClient.Ado.UseTran(() => { }); // select 之前保证一次 commit，即使什么都不做
