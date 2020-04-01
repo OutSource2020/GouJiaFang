@@ -1295,6 +1295,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
 
             }
             勾选循环全部取消();
+            Button_发送近三天订单回调_Click(null, null);
         }
 
         private void DeleteRecord(string CustomerID)
