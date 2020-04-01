@@ -45,6 +45,7 @@
     </button>
     <div class="dropdown-content">
       <a href="/WebsiteBackstage/L1/ControlCenter/管理控制台.aspx">管理控制台</a>
+      <a href="/WebsiteBackstage/L1/ControlCenter/对账页面.aspx">商户对账</a>
       <a href="/WebsiteBackstage/L1/ManagementBackstage/后台账号列表.aspx">后台账号列表</a>
       <a href="/WebsiteBackstage/L1/ManagementBackstage/后台账号安全白名单.aspx">后台账号安全白名单</a>
     </div>

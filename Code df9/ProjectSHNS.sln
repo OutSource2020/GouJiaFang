@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Google.Authenticator", "Goo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IISLogger", "IISLogger\IISLogger.csproj", "{2E3BA179-D21B-4D82-A63F-3335A9F9E63F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Snapshot", "Snapshot\Snapshot.csproj", "{AA1340A4-9315-4B4F-8F70-587337B4BCE8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,14 @@ Global
 		{2E3BA179-D21B-4D82-A63F-3335A9F9E63F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2E3BA179-D21B-4D82-A63F-3335A9F9E63F}.Release|x86.ActiveCfg = Release|Any CPU
 		{2E3BA179-D21B-4D82-A63F-3335A9F9E63F}.Release|x86.Build.0 = Release|Any CPU
+		{AA1340A4-9315-4B4F-8F70-587337B4BCE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA1340A4-9315-4B4F-8F70-587337B4BCE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA1340A4-9315-4B4F-8F70-587337B4BCE8}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{AA1340A4-9315-4B4F-8F70-587337B4BCE8}.Debug|x86.Build.0 = Debug|Any CPU
+		{AA1340A4-9315-4B4F-8F70-587337B4BCE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA1340A4-9315-4B4F-8F70-587337B4BCE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA1340A4-9315-4B4F-8F70-587337B4BCE8}.Release|x86.ActiveCfg = Release|Any CPU
+		{AA1340A4-9315-4B4F-8F70-587337B4BCE8}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

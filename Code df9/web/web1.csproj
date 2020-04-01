@@ -163,6 +163,7 @@
     <Content Include="WebsiteAgent\L2\DetailedData\商户统计提款笔数.aspx" />
     <Content Include="WebsiteAgent\L2\Overview\代理首页L2.aspx" />
     <Content Include="WebsiteAgent\L2\Login\登入.aspx" />
+    <Content Include="WebsiteBackstage\L1\ControlCenter\对账页面.aspx" />
     <Content Include="WebsiteBackstage\L1\ManagementBackstage\后台账号列表新增.aspx" />
     <Content Include="WebsiteBackstage\L1\ManagementBackstage\后台账号列表设置账号信息.aspx" />
     <Content Include="WebsiteBackstage\L1\ManagementBackstage\后台账号安全白名单.aspx" />
@@ -293,6 +294,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Sugar.Enties\table_difflog.cs" />
+    <Compile Include="Sugar.Enties\table_snapshot.cs" />
     <Compile Include="Sugar.Enties\table_代理日志管理等级1.cs" />
     <Compile Include="Sugar.Enties\table_代理日志管理等级2.cs" />
     <Compile Include="Sugar.Enties\table_代理账号等级1.cs" />
@@ -426,6 +428,13 @@
     </Compile>
     <Compile Include="WebsiteAgent\L2\Login\登入.aspx.designer.cs">
       <DependentUpon>登入.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ControlCenter\对账页面.aspx.cs">
+      <DependentUpon>对账页面.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ControlCenter\对账页面.aspx.designer.cs">
+      <DependentUpon>对账页面.aspx</DependentUpon>
     </Compile>
     <Compile Include="WebsiteBackstage\L1\ManagementBackstage\后台账号列表新增.aspx.cs">
       <DependentUpon>后台账号列表新增.aspx</DependentUpon>
