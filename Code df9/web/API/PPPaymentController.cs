@@ -86,8 +86,6 @@ namespace web1.API
         [HttpPost]
         public ActionResult OrderCreate(int? timeunix, string signature, OrderCreateRequest request)
         {
-
-
             var getByWhere = sqlSugarClient.Queryable<table_商户账号>().Where(it => it.商户ID == request.UserName).ToList();
             table_商户账号 account = getByWhere[0];
 
@@ -108,7 +106,7 @@ namespace web1.API
                 return GetStandardError(BaseErrors.ERROR_NUMBER.LX1013, request.UserName, request.UserPassword);
             }
             JsonResult jsonResult = null;
-      sqlSugarClient.Ado.UseTran(() => { });
+            sqlSugarClient.Ado.UseTran(() => { });
             var result = sqlSugarClient.Ado.UseTran(() =>
             {
                 getByWhere = sqlSugarClient.Queryable<table_商户账号>().Where(it => it.商户ID == request.UserName).ToList();
@@ -124,7 +122,12 @@ namespace web1.API
                 account.手续费余额 -= Convert.ToDouble(account.单笔手续费);
                 account.API回调 = request.CallBack;
 
-                sqlSugarClient.Updateable(account).UpdateColumns(it => new { it.提款余额, it.手续费余额, it.API回调 }).ExecuteCommand();
+                // sqlSugarClient.Updateable(account).UpdateColumns(it => new { it.提款余额, it.手续费余额, it.API回调 }).ExecuteCommand();
+                sqlSugarClient.Updateable<table_商户账号>().Where(it => it.商户ID == account.商户ID)
+                .SetColumns(it => it.提款余额 == it.提款余额 - Convert.ToDouble(request.AimsMoney))
+                .SetColumns(it => it.手续费余额 == it.手续费余额 - Convert.ToDouble(account.单笔手续费))
+                .SetColumns(it => it.API回调 == request.CallBack)
+                .ExecuteCommand();
 
                 table_商户明细手续费 fee = new table_商户明细手续费();
                 fee.订单号 = "MHFON" + DateTime.Now.ToString("yyyyMMddHHmmss") + Convert.ToString(ClassLibrary1.ClassHelpMe.GenerateRandomCode(1, 1000, 9999));
@@ -181,8 +184,8 @@ namespace web1.API
                 jsonResult = new JsonResult();
                 jsonResult.Data = orderCreateResponse;
             });
-      sqlSugarClient.Ado.UseTran(() => { });
-      if (!result.IsSuccess)
+            sqlSugarClient.Ado.UseTran(() => { });
+            if (!result.IsSuccess)
             {
                 jsonResult = GetStandardError(BaseErrors.ERROR_NUMBER.LX1016, request.UserName, request.UserPassword);
                 BaseResponse baseResponse = (BaseResponse)jsonResult.Data;
