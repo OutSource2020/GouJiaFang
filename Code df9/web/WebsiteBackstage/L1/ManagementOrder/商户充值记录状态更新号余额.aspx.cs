@@ -271,7 +271,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                                 订单号 = 生成编号2,
                                 商户ID = Convert.ToInt32(rechargeRecord.商户ID),
                                 余额 = outCard.出款银行卡余额 + rechargeRecord.充值金额,
-                                类型 = "充值提款余额",
+                                类型 = "充值",
                                 状态 = "成功",
                                 时间创建 = nowTime,
                                 时间交易 = nowTime,

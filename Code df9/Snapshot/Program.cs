@@ -26,29 +26,33 @@ namespace Snapshot
                 if (accounts == null)
                     return;
 
+                DateTime current = DateTime.Now;
+                DateTime dateTime = new DateTime(current.Year, current.Month, current.Day, 23, 59, 0);
+
                 foreach (string id in accounts)
                 {
                     dbClient.Ado.UseTran(() =>
                     {
                         var detail = dbClient.Queryable<table_商户明细余额>()
-                            .Where(it => DateTime.Now >= it.时间创建.Value.AddDays(1) && it.商户ID == int.Parse(id))
+                            .Where(it => dateTime >= it.时间创建.Value.AddDays(1) && it.商户ID == int.Parse(id))
                             .First();
-                        if (detail == null)
-                            return;
+                        double balance = 0;
+                        if (detail != null)
+                            balance = Double.Parse(detail.交易后账户余额);
                         var reverse = dbClient.Queryable<table_商户明细提款>()
-                            .Where(it => it.类型 == "冲正" && SqlFunc.DateIsSame(it.时间创建, DateTime.Now) && it.商户ID == id)
+                            .Where(it => it.类型 == "冲正" && SqlFunc.DateIsSame(it.时间创建, current) && it.商户ID == id)
                             .Sum(it => it.交易金额);
                         var deposit = dbClient.Queryable<table_商户明细充值>()
-                            .Where(it => it.充值类型 == "充值提款余额" && it.状态 == "成功" && it.商户ID == int.Parse(id))
+                            .Where(it => it.充值类型 == "充值提款余额" && it.状态 == "成功" && SqlFunc.DateIsSame(it.时间创建, current)  && it.商户ID == int.Parse(id))
                             .Sum(it => it.充值金额);
                         var withdraw = dbClient.Queryable<table_商户明细提款>()
-                            .Where(it => it.类型 == "提款" && it.状态 == "成功" && SqlFunc.DateIsSame(it.时间创建, DateTime.Now) && it.商户ID == id)
+                            .Where(it => it.类型 == "提款" && it.状态 == "成功" && SqlFunc.DateIsSame(it.时间创建, current) && it.商户ID == id)
                             .Sum(it => it.交易金额);
 
                         table_snapshot snapshot = new table_snapshot()
                         {
-                            MerchantID = detail.商户ID.Value.ToString(),
-                            Balance = Double.Parse(detail.交易后账户余额),
+                            MerchantID = id,
+                            Balance = balance,
                             Reverse = reverse,
                             Deposit = deposit,
                             Withdraw = withdraw,
@@ -66,13 +70,17 @@ namespace Snapshot
 #if DEBUG
             TakeSnapshot();
 #else
+            bool finished = true;
             while(true)
             {
                 DateTime now = DateTime.Now;
-                if (now.Hour == 23 && now.Minute == 58)
+                if (now.Hour == 23 && now.Minute == 58 && finished)
+                {
                     TakeSnapshot();
-                else
-                    Console.WriteLine("Hello World");
+                    finished = false;
+                }
+                else if (now.Hour == 0)
+                    finished = true;
                 Thread.Sleep(1000);
             }
 #endif
