@@ -133,7 +133,8 @@ namespace web1.WebsiteBackstage.L1.ManagementMerchant
 
                         // 商户.手续费余额 += Convert.ToDouble(充值金额);
                         // sqlSugarClient.Updateable(商户).UpdateColumns(it => new { it.手续费余额 }).ExecuteCommand();
-                        sqlSugarClient.Updateable<table_商户账号>().SetColumns(it => it.手续费余额 == it.手续费余额 + Convert.ToDouble(充值金额)).ExecuteCommand();
+                        sqlSugarClient.Updateable<table_商户账号>().Where(it => it.商户ID == 商户.商户ID)
+                            .SetColumns(it => it.手续费余额 == it.手续费余额 + Convert.ToDouble(充值金额)).ExecuteCommand();
                     }
                     else
                     {
@@ -151,7 +152,8 @@ namespace web1.WebsiteBackstage.L1.ManagementMerchant
 
                         // 商户.提款余额 += Convert.ToDouble(充值金额);
                         // sqlSugarClient.Updateable(商户).UpdateColumns(it => new { it.提款余额 }).ExecuteCommand();
-                        sqlSugarClient.Updateable<table_商户账号>().SetColumns(it => it.提款余额 == it.提款余额 + Convert.ToDouble(充值金额)).ExecuteCommand();
+                        sqlSugarClient.Updateable<table_商户账号>().Where(it => it.商户ID == 商户.商户ID)
+                            .SetColumns(it => it.提款余额 == it.提款余额 + Convert.ToDouble(充值金额)).ExecuteCommand();
                     }
                 }
                 else
