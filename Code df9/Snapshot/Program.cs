@@ -35,6 +35,7 @@ namespace Snapshot
                     {
                         var detail = dbClient.Queryable<table_商户明细余额>()
                             .Where(it => dateTime >= it.时间创建.Value.AddDays(1) && it.商户ID == int.Parse(id))
+                            .OrderBy(it => it.id, OrderByType.Desc)
                             .First();
                         double balance = 0;
                         if (detail != null)

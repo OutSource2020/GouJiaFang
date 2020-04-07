@@ -2004,10 +2004,14 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
             string[] headers = { "收款账户列", "收款户名列", "转账金额列", "备注列", "收款银行列", "收款银行支行列", "收款省/直辖市列", "收款市县列", "转出账号/卡", "转账模式" };
             ExportGird<GridViewRow>(all, "招商银行", headers, DataFromView, (dr, row, index) =>
             {
+                string x = row.Cells[8].Text;
+                x = x.Replace("邮政储蓄", "中国邮政储蓄")
+                .Replace("中国交通银行", "交通银行")
+                .Replace("农业银行", "中国农业银行");
                 dr[0] = row.Cells[6].Text;
                 dr[1] = row.Cells[7].Text;
                 dr[2] = row.Cells[5].Text;
-                dr[4] = row.Cells[8].Text;
+                dr[4] = x;
                 dr[9] = "实时";
             }, (dr1, dr2) =>
             {
