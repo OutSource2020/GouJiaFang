@@ -2005,9 +2005,14 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
             ExportGird<GridViewRow>(all, "招商银行", headers, DataFromView, (dr, row, index) =>
             {
                 string x = row.Cells[8].Text;
-                x = x.Replace("邮政储蓄", "中国邮政储蓄")
-                .Replace("中国交通银行", "交通银行")
-                .Replace("农业银行", "中国农业银行");
+                if (!x.Contains("中国"))
+                {
+                    x = x.Replace("邮政储蓄", "中国邮政储蓄")
+                         .Replace("工商银行", "中国工商银行")
+                         .Replace("农业银行", "中国农业银行");
+                }
+                x = x.Replace("中国交通银行", "交通银行")
+                     .Replace("中国民生银行", "民生银行");
                 dr[0] = row.Cells[6].Text;
                 dr[1] = row.Cells[7].Text;
                 dr[2] = row.Cells[5].Text;
