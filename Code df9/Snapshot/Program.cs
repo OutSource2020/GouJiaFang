@@ -60,9 +60,9 @@ namespace Snapshot
                         table_snapshot snapshot = new table_snapshot()
                         {
                             MerchantID = id,
-                            Reverse = reverse,
-                            Deposit = deposit,
-                            Withdraw = withdraw,
+                            Reverse = reverse.HasValue ? reverse.Value : 0,
+                            Deposit = deposit.HasValue ? deposit.Value : 0,
+                            Withdraw = withdraw.HasValue ? withdraw.Value : 0,
                             CreateTime = DateTime.Now
                         };
                         dbClient.Insertable(snapshot).ExecuteCommand();
