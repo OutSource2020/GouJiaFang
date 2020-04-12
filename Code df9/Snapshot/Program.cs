@@ -33,12 +33,7 @@ namespace Snapshot
                 {
                     dbClient.Ado.UseTran(() =>
                     {
-                        var detail = dbClient.Queryable<table_商户明细余额>()
-                            .Where(it => dateTime >= it.时间创建.Value.AddDays(1) && it.商户ID == int.Parse(id))
-                            .First();
-                        double balance = 0;
-                        if (detail != null)
-                            balance = Double.Parse(detail.交易后账户余额);
+                        var balance = dbClient.Queryable<table_商户账号>().Where(it => it.商户ID == id).Select(it => it.提款余额).First();
                         var reverse = dbClient.Queryable<table_商户明细提款>()
                             .Where(it => it.类型 == "冲正" && SqlFunc.DateIsSame(it.时间创建, current) && it.商户ID == id)
                             .Sum(it => it.交易金额);
@@ -49,16 +44,27 @@ namespace Snapshot
                             .Where(it => it.类型 == "提款" && it.状态 == "成功" && SqlFunc.DateIsSame(it.时间创建, current) && it.商户ID == id)
                             .Sum(it => it.交易金额);
 
+                        var tableId = dbClient.Queryable<table_snapshot>()
+                        .Where(it => it.MerchantID == id)
+                        .OrderBy(it => it.Id, OrderByType.Desc)
+                        .Select(it => it.Id).First();
+
+                        if (tableId.HasValue)
+                        {
+                            dbClient.Updateable<table_snapshot>()
+                            .SetColumns(it => it.Balance == balance.Value)
+                            .SetColumns(it => it.Diff == balance.Value + it.Reverse + it.Deposit - it.Withdraw)
+                            .Where(it => it.Id == tableId.Value).ExecuteCommand();
+                        }
+
                         table_snapshot snapshot = new table_snapshot()
                         {
                             MerchantID = id,
-                            Balance = balance,
-                            Reverse = reverse,
-                            Deposit = deposit,
-                            Withdraw = withdraw,
+                            Reverse = reverse.HasValue ? reverse.Value : 0,
+                            Deposit = deposit.HasValue ? deposit.Value : 0,
+                            Withdraw = withdraw.HasValue ? withdraw.Value : 0,
                             CreateTime = DateTime.Now
                         };
-                        snapshot.Diff = snapshot.Balance + snapshot.Reverse + snapshot.Deposit - snapshot.Withdraw;
                         dbClient.Insertable(snapshot).ExecuteCommand();
                     });
                 }
