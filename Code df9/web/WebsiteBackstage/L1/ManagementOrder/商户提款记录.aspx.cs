@@ -17,6 +17,8 @@ using System.Net.Http.Headers;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -2367,8 +2369,8 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                         Userpassword = account.商户密码API,
                         OrderNumberSite = record.订单号,
                         OrderNumberMerchant = record.商户API订单号,
-                        OrderType = HttpUtility.UrlEncode(record.类型, Encoding.UTF8),
-                        OrderStatus = HttpUtility.UrlEncode(record.状态, Encoding.UTF8),
+                        OrderType = record.类型,
+                        OrderStatus = record.状态,
                         OrderTimeCreation = record.时间创建.Value.ToString("yyyy-MM-dd HH:mm:ss"),
                         OrderTimeEnd = record.时间完成.Value.ToString("yyyy-MM-dd HH:mm:ss"),
                         OrderMoney = record.交易金额.Value.ToString()
@@ -2444,11 +2446,14 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
 
         protected void Button_发送近三天订单回调_Click(object sender, EventArgs e)
         {
-            int count = SendAllCallBack(dbClient =>
+            Task.Run(() =>
             {
-                return dbClient.Queryable<table_商户明细提款>().Where(it => it.创建方式 == "接口" && DateTime.Now <= it.时间完成.Value.AddDays(3)).ToList();
+                int count = SendAllCallBack(dbClient =>
+                {
+                    return dbClient.Queryable<table_商户明细提款>().Where(it => it.创建方式 == "接口" && DateTime.Now <= it.时间完成.Value.AddDays(3)).ToList();
+                });
+                ClassLibrary1.ClassMessage.HinXi(Page, "发送了" + count + "条回调");
             });
-            ClassLibrary1.ClassMessage.HinXi(Page, "发送了" + count + "条回调");
             Response.Redirect("./商户提款记录.aspx");
         }
 
