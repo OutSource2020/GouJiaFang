@@ -1295,7 +1295,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
 
             }
             勾选循环全部取消();
-            // Button_发送近三天订单回调_Click(null, null);
+            Button_发送近三天订单回调_Click(null, null);
         }
 
         private void DeleteRecord(string CustomerID)
@@ -2367,8 +2367,8 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                         Userpassword = account.商户密码API,
                         OrderNumberSite = record.订单号,
                         OrderNumberMerchant = record.商户API订单号,
-                        OrderType = record.类型,
-                        OrderStatus = record.状态,
+                        OrderType = HttpUtility.UrlEncode(record.类型, Encoding.UTF8),
+                        OrderStatus = HttpUtility.UrlEncode(record.状态, Encoding.UTF8),
                         OrderTimeCreation = record.时间创建.Value.ToString("yyyy-MM-dd HH:mm:ss"),
                         OrderTimeEnd = record.时间完成.Value.ToString("yyyy-MM-dd HH:mm:ss"),
                         OrderMoney = record.交易金额.Value.ToString()
