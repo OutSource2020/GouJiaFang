@@ -2423,25 +2423,27 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
             string condition = DropDownList_回调.SelectedItem.Text;
             if (condition == "未选择")
                 return;
-            int count = SendAllCallBack(dbClient =>
+            Task.Run(() =>
             {
-                if (condition == "商户ID")
-                    return dbClient.Queryable<table_商户明细提款>().Where(it => it.创建方式 == "接口" && it.商户ID == TextBox_回调.Text).ToList();
-                else
-                    return dbClient.Queryable<table_商户明细提款>().Where(it => it.创建方式 == "接口" && it.商户API订单号 == TextBox_回调.Text).ToList();
+                SendAllCallBack(dbClient =>
+                {
+                    if (condition == "商户ID")
+                        return dbClient.Queryable<table_商户明细提款>().Where(it => it.创建方式 == "接口" && it.商户ID == TextBox_回调.Text).ToList();
+                    else
+                        return dbClient.Queryable<table_商户明细提款>().Where(it => it.创建方式 == "接口" && it.商户API订单号 == TextBox_回调.Text).ToList();
+                });
             });
-            ClassLibrary1.ClassMessage.HinXi(Page, "发送了" + count + "条回调");
-            Response.Redirect("./商户提款记录.aspx");
         }
 
         protected void Button_发送未发送回调_Click(object sender, EventArgs e)
         {
-            int count = SendAllCallBack(dbClient =>
+            Task.Run(() =>
             {
-                return dbClient.Queryable<table_商户明细提款>().Where(it => it.创建方式 == "接口" && it.API回调次数 == 0).ToList();
+                int count = SendAllCallBack(dbClient =>
+                {
+                    return dbClient.Queryable<table_商户明细提款>().Where(it => it.创建方式 == "接口" && it.API回调次数 == 0).ToList();
+                });
             });
-            ClassLibrary1.ClassMessage.HinXi(Page, "发送了" + count + "条回调");
-            Response.Redirect("./商户提款记录.aspx");
         }
 
         protected void Button_发送近三天订单回调_Click(object sender, EventArgs e)
@@ -2452,9 +2454,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                 {
                     return dbClient.Queryable<table_商户明细提款>().Where(it => it.创建方式 == "接口" && DateTime.Now <= it.时间完成.Value.AddDays(3)).ToList();
                 });
-                ClassLibrary1.ClassMessage.HinXi(Page, "发送了" + count + "条回调");
             });
-            Response.Redirect("./商户提款记录.aspx");
         }
 
     }
