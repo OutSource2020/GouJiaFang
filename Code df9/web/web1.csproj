@@ -175,6 +175,11 @@
     <Content Include="WebsiteBackstage\L1\ManagementBackstage\后台账号列表设置密码.aspx" />
     <Content Include="WebsiteBackstage\L1\ManagementMerchant\商户删除.aspx" />
     <Content Include="WebsiteBackstage\L1\ManagementMerchant\商户余额扣除.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementOrder\商户回调通知-修改地址.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementOrder\商户日志-API回调通知.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementOrder\商户回调通知-自动通知.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementOrder\商户回调通知-地址设置.aspx" />
+    <Content Include="WebsiteBackstage\L1\ManagementOrder\商户回调通知-测试调试.aspx" />
     <Content Include="WebsiteBackstage\L2\ControlCenter\管理控制台.aspx" />
     <Content Include="WebsiteBackstage\L2\Login\登入.aspx" />
     <Content Include="WebsiteBackstage\L2\ManagementOrder\商户充值记录.aspx" />
@@ -293,6 +298,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Sugar.Enties\table_config.cs" />
     <Compile Include="Sugar.Enties\table_difflog.cs" />
     <Compile Include="Sugar.Enties\table_snapshot.cs" />
     <Compile Include="Sugar.Enties\table_代理日志管理等级1.cs" />
@@ -512,6 +518,41 @@
     </Compile>
     <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户余额扣除.aspx.designer.cs">
       <DependentUpon>商户余额扣除.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementOrder\商户回调通知-修改地址.aspx.cs">
+      <DependentUpon>商户回调通知-修改地址.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementOrder\商户回调通知-修改地址.aspx.designer.cs">
+      <DependentUpon>商户回调通知-修改地址.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementOrder\商户日志-API回调通知.aspx.cs">
+      <DependentUpon>商户日志-API回调通知.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementOrder\商户日志-API回调通知.aspx.designer.cs">
+      <DependentUpon>商户日志-API回调通知.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementOrder\商户回调通知-自动通知.aspx.cs">
+      <DependentUpon>商户回调通知-自动通知.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementOrder\商户回调通知-自动通知.aspx.designer.cs">
+      <DependentUpon>商户回调通知-自动通知.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementOrder\商户回调通知-地址设置.aspx.cs">
+      <DependentUpon>商户回调通知-地址设置.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementOrder\商户回调通知-地址设置.aspx.designer.cs">
+      <DependentUpon>商户回调通知-地址设置.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementOrder\商户回调通知-测试调试.aspx.cs">
+      <DependentUpon>商户回调通知-测试调试.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementOrder\商户回调通知-测试调试.aspx.designer.cs">
+      <DependentUpon>商户回调通知-测试调试.aspx</DependentUpon>
     </Compile>
     <Compile Include="WebsiteBackstage\L2\ControlCenter\管理控制台.aspx.cs">
       <DependentUpon>管理控制台.aspx</DependentUpon>
