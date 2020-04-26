@@ -159,7 +159,7 @@
                         </td>
                     </tr>
                 </table>
-                <div id="gridTable">
+<%--                <div id="gridTable">
                     <asp:GridView
                         ID="GridView1"
                         runat="server"
@@ -181,7 +181,7 @@
                         </Columns>
                         <EmptyDataTemplate>No Record Available 沒有可用記錄</EmptyDataTemplate>
                     </asp:GridView>
-                </div>
+                </div>--%>
                 <asp:Timer ID="Timer_自动刷新" runat="server" OnTick="TimerTick" />
             </ContentTemplate>
         </asp:UpdatePanel>
