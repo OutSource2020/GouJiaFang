@@ -39,7 +39,7 @@ namespace web1.WebsiteBackstage.L1.ControlCenter
 
             判断响起提示音();
 
-            LoadTable();
+            //LoadTable();
 
             //页面自动刷新();
             Label_刷新时间.Text = "载入时间: " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
@@ -442,14 +442,14 @@ namespace web1.WebsiteBackstage.L1.ControlCenter
 
         }
 
-        private void LoadTable()
-        {
-            using (SqlSugarClient dbClient = new DBClient().GetClient())
-            {
-                DataTable dt = dbClient.Queryable<table_difflog>().Where(it => DateTime.Now <= it.CreateTime.AddDays(7)).OrderBy(it => it.Id, OrderByType.Desc).ToDataTable();
-                GridView1.DataSource = dt;
-                GridView1.DataBind();
-            }
-        }
+        //private void LoadTable()
+        //{
+        //    using (SqlSugarClient dbClient = new DBClient().GetClient())
+        //    {
+        //        DataTable dt = dbClient.Queryable<table_difflog>().Where(it => DateTime.Now <= it.CreateTime.AddDays(7)).OrderBy(it => it.Id, OrderByType.Desc).ToDataTable();
+        //        GridView1.DataSource = dt;
+        //        GridView1.DataBind();
+        //    }
+        //}
     }
 }
