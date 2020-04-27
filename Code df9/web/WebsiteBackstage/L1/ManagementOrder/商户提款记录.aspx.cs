@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
+using Org.BouncyCastle.Ocsp;
 using SqlSugar;
 using Sugar.Enties;
 using System;
@@ -2331,9 +2332,8 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
             }
         }
 
-        private int SendAllCallBack(Func<SqlSugarClient, List<table_商户明细提款>> func)
+        private void SendAllCallBack(Func<SqlSugarClient, List<table_商户明细提款>> func)
         {
-            int count = 0;
             using (SqlSugarClient dbClient = new DBClient().GetClient())
             {
                 List<table_商户明细提款> records = null;
@@ -2344,7 +2344,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                 });
 
                 if (records == null)
-                    return count;
+                    return;
 
                 foreach (table_商户明细提款 record in records)
                 {
@@ -2375,6 +2375,8 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                         OrderTimeEnd = record.时间完成.Value.ToString("yyyy-MM-dd HH:mm:ss"),
                         OrderMoney = record.交易金额.Value.ToString()
                     };
+                    AddUpdateLog(string.Format("user id : {0}, order id : {1}, api id : {2}\r\nurl : {3}, data : {4}",
+                        account.商户ID, request.OrderNumberSite, request.OrderNumberMerchant, account.API回调, JsonConvert.SerializeObject(request)));
                     BaseResponse baseResponse = null;
                     try
                     {
@@ -2397,7 +2399,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                     }
                     catch(Exception e)
                     {
-                        AddUpdateLog(e.Message);
+                        AddUpdateLog(account.API回调 + " => " + e.Message);
                         baseResponse = new BaseErrors()[(int)BaseErrors.ERROR_NUMBER.LX1016];
                     }
                     if (baseResponse == null || baseResponse.StatusReplyNumbering != "LX1000")
@@ -2412,10 +2414,8 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                     {
                         dbClient.Updateable(record).UpdateColumns(it => new { it.API回调次数, it.最后一次回调返回的状态 }).ExecuteCommand();
                     });
-                    count++;
                 }
             }
-            return count;
         }
 
         protected void Button_发送回调_Click(object sender, EventArgs e)
@@ -2439,7 +2439,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
         {
             Task.Run(() =>
             {
-                int count = SendAllCallBack(dbClient =>
+                SendAllCallBack(dbClient =>
                 {
                     return dbClient.Queryable<table_商户明细提款>().Where(it => it.创建方式 == "接口" && it.API回调次数 == 0).ToList();
                 });
@@ -2453,7 +2453,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                 int i = 0;
                 while (i++ < 5)
                 {
-                    int count = SendAllCallBack(dbClient =>
+                    SendAllCallBack(dbClient =>
                     {
                         return dbClient.Queryable<table_商户明细提款>().Where(it => it.创建方式 == "接口" && DateTime.Now <= it.时间完成.Value.AddDays(3)).ToList();
                     });
