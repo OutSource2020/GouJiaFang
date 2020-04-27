@@ -364,7 +364,10 @@ namespace web1.WebsiteMerchant.商户订单
                                 {
                                     if (支付密码 == TextBox_输入支付密码.Text)//支付密码必须和数据库中一致
                                     {
-                                        if (Session["TimeOut"] == null || GetTimeStamp() - (long)Session["TimeOut"] > 60 * 1000)
+                
+                    //SqlSugarClient dbClient = new DBClient().GetClient();
+                    //dbClient.Queryable<table_商户明细提款>().Where(it => it.交易方卡号 == ((TextBox)Gridview1.Rows[i].Cells[1].FindControl("TextBox1")).Text).Any();
+                                        if (Session["TimeOut"] == null || GetTimeStamp() - (long)Session["TimeOut"] > 15 * 1000)
                                         {
                                             Session.Add("TimeOut", GetTimeStamp());
                                             Button_批量发起提款订单.Enabled = false;//防止重复操作
@@ -372,7 +375,8 @@ namespace web1.WebsiteMerchant.商户订单
                                         }
                                         else
                                         {
-                                            ClassLibrary1.ClassMessage.HinXi(Page, "1分钟之内不能发起重复订单");
+                      ClassLibrary1.ClassMessage.HinXi(Page, "请不要频繁提交订单");
+                                           // ClassLibrary1.ClassMessage.HinXi(Page, "1分钟之内不能发起重复订单");
                                             // Response.Redirect("../MerchantOverview/商户首页.aspx");
                                         }
                                     }
