@@ -2455,7 +2455,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                 {
                     int count = SendAllCallBack(dbClient =>
                     {
-                        return dbClient.Queryable<table_商户明细提款>().Where(it => it.创建方式 == "接口" && DateTime.Now <= it.时间完成.Value.AddDays(1)).ToList();
+                        return dbClient.Queryable<table_商户明细提款>().Where(it => it.创建方式 == "接口" && DateTime.Now <= it.时间完成.Value.AddDays(3)).ToList();
                     });
                 }
             });
