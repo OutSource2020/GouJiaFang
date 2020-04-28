@@ -367,7 +367,7 @@ namespace web1.WebsiteMerchant.商户订单
                 
                     //SqlSugarClient dbClient = new DBClient().GetClient();
                     //dbClient.Queryable<table_商户明细提款>().Where(it => it.交易方卡号 == ((TextBox)Gridview1.Rows[i].Cells[1].FindControl("TextBox1")).Text).Any();
-                                        if (Session["TimeOut"] == null || GetTimeStamp() - (long)Session["TimeOut"] > 15 * 1000)
+                                        if (Session["TimeOut"] == null || GetTimeStamp() - (long)Session["TimeOut"] > 10 * 1000)
                                         {
                                             Session.Add("TimeOut", GetTimeStamp());
                                             Button_批量发起提款订单.Enabled = false;//防止重复操作
