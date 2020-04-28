@@ -2413,6 +2413,9 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                     if (account.API回调 == null || account.API回调 == "")
                         continue;
 
+                    if (account.商户ID == "1632003")
+                        continue;
+
                     CallbackRequest request = new CallbackRequest()
                     {
                         Username = account.商户ID,
