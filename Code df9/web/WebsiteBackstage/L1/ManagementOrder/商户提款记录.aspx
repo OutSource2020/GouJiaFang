@@ -238,6 +238,9 @@
                     <td></td>
                     <td>
                         <asp:Button ID="Button_发送回调全部完成" runat="server" Text="发送所有未发送的订单回调" class="btn btn-info btn-fw" OnClick="Button_发送未发送回调_Click" />
+                        <asp:Button ID="Button_发送半小时订单回调" runat="server" Text="发送半小时订单回调" class="btn btn-info btn-fw" OnClick="Button_发送半小时单回调_Click" />
+                        <asp:Button ID="Button_发送三小时订单回调" runat="server" Text="发送三小时订单回调" class="btn btn-info btn-fw" OnClick="Button_发送三小时单回调_Click" />
+                        <asp:Button ID="Button_发送半天订单回调" runat="server" Text="发送半天订单回调" class="btn btn-info btn-fw" OnClick="Button_发送半天单回调_Click" />
                         <asp:Button ID="Button_发送近三天订单回调" runat="server" Text="发送近三天所有订单回调" class="btn btn-info btn-fw" OnClick="Button_发送近三天订单回调_Click" />
                     </td>
                 </tr>

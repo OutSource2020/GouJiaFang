@@ -474,6 +474,33 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
         protected global::System.Web.UI.WebControls.Button Button_发送回调全部完成;
 
         /// <summary>
+        /// Button_发送半小时订单回调 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button Button_发送半小时订单回调;
+
+        /// <summary>
+        /// Button_发送三小时订单回调 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button Button_发送三小时订单回调;
+
+        /// <summary>
+        /// Button_发送半天订单回调 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button Button_发送半天订单回调;
+
+        /// <summary>
         /// Button_发送近三天订单回调 control.
         /// </summary>
         /// <remarks>

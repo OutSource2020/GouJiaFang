@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -2301,6 +2302,54 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
             return null;
         }
 
+        public async Task<Stream> AsyncPost(string url, string data)
+        {
+            var tcs = new TaskCompletionSource<Stream>();
+            byte[] d = Encoding.UTF8.GetBytes(data);
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.Method = "POST";
+            request.ContentType = "application/json; charset=UTF-8";
+            request.ContentLength = d.Length;
+            Stream dataStream = request.GetRequestStream();
+            dataStream.Write(d, 0, d.Length);
+            dataStream.Close();
+            await Task.Factory.FromAsync<WebResponse>(request.BeginGetResponse, request.EndGetResponse, null)
+                .ContinueWith(task =>
+                {
+                    Stream responseStream;
+                    HttpWebResponse webResponse = null;
+                    try
+                    {
+                        webResponse = (HttpWebResponse)task.Result;
+                        responseStream = webResponse.GetResponseStream();
+                        if (webResponse.ContentEncoding.ToLower().Contains("gzip"))
+                            responseStream = new GZipStream(responseStream, CompressionMode.Decompress);
+                        else if (webResponse.ContentEncoding.ToLower().Contains("deflate"))
+                            responseStream = new DeflateStream(responseStream, CompressionMode.Decompress);
+                    }
+                    catch (Exception e)
+                    {
+                        try
+                        {
+                            var webException = e.InnerException as WebException;
+                            responseStream = webException.Response.GetResponseStream();
+                        }
+                        catch (Exception)
+                        {
+                            responseStream = new MemoryStream();
+                        }
+                    }
+                    MemoryStream stream = new MemoryStream();
+                    responseStream.CopyTo(stream);
+                    tcs.TrySetResult(stream);
+                    responseStream.Close();
+                    if (webResponse != null)
+                        webResponse.Close();
+                });
+            return tcs.Task.Result;
+        }
+
+
         private static string GetMd5Hash(MD5 md5Hash, string input)
         {
 
@@ -2360,6 +2409,7 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                     if (account == null)
                         continue;
 
+                    AddUpdateLog(string.Format("user id : {0}, callback : {1}", account.商户ID, account.API回调));
                     if (account.API回调 == null || account.API回调 == "")
                         continue;
 
@@ -2377,43 +2427,42 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
                     };
                     AddUpdateLog(string.Format("user id : {0}, order id : {1}, api id : {2}\r\nurl : {3}, data : {4}",
                         account.商户ID, request.OrderNumberSite, request.OrderNumberMerchant, account.API回调, JsonConvert.SerializeObject(request)));
-                    BaseResponse baseResponse = null;
-                    try
+                    using (MD5 md5Hash = MD5.Create())
                     {
-                        int statusCode = 0;
-                        using (MD5 md5Hash = MD5.Create())
+                        // 商户ID + 商户API密码 + 当前unix时间 + 商户自定义订单号 + 生成订单号 + 类型 + 状态 + 公共密匙(公匙)
+                        long ts = GetTimeStamp();
+                        string unsign = account.商户ID + account.商户密码API + ts +
+                            request.OrderNumberMerchant + request.OrderNumberSite + request.OrderType + request.OrderStatus + account.公共密匙;
+                        string sign = GetMd5Hash(md5Hash, unsign);
+                        string url = $"{account.API回调}?timeunix={ts}&signature={sign}";
+                        var _result = AsyncPost(url, JsonConvert.SerializeObject(request));
+                        _result.ContinueWith(task =>
                         {
-                            // 商户ID + 商户API密码 + 当前unix时间 + 商户自定义订单号 + 生成订单号 + 类型 + 状态 + 公共密匙(公匙)
-                            long ts = GetTimeStamp();
-                            string unsign = account.商户ID + account.商户密码API + ts +
-                                request.OrderNumberMerchant + request.OrderNumberSite + request.OrderType + request.OrderStatus + account.公共密匙;
-                            string sign = GetMd5Hash(md5Hash, unsign);
-                            string url = $"{account.API回调}?timeunix={ts}&signature={sign}";
-                            string response = PostResponse(url, JsonConvert.SerializeObject(request), out statusCode);
-                            AddUpdateLog(url + " => " + response);
-                            if (statusCode != 200)
+                            string content = Encoding.UTF8.GetString(((MemoryStream)task.Result).ToArray());
+                            AddUpdateLog(url + " => " + content);
+                            BaseResponse baseResponse = null;
+                            try
+                            {
+                                baseResponse = JsonConvert.DeserializeObject<BaseResponse>(content);
+                            }
+                            catch (Exception)
+                            {
                                 baseResponse = new BaseErrors()[(int)BaseErrors.ERROR_NUMBER.LX1016];
+                            }
+                            if (baseResponse == null || baseResponse.StatusReplyNumbering != "LX1000")
+                                record.最后一次回调返回的状态 = "失败";
                             else
-                                baseResponse = JsonConvert.DeserializeObject<BaseResponse>(response);
-                        }
+                                record.最后一次回调返回的状态 = "成功";
+                            if (record.API回调次数.HasValue)
+                                record.API回调次数++;
+                            else
+                                record.API回调次数 = 1;
+                            dbClient.Ado.UseTran(() =>
+                            {
+                                dbClient.Updateable(record).UpdateColumns(it => new { it.API回调次数, it.最后一次回调返回的状态 }).ExecuteCommand();
+                            });
+                        });
                     }
-                    catch(Exception e)
-                    {
-                        AddUpdateLog(account.API回调 + " => " + e.Message);
-                        baseResponse = new BaseErrors()[(int)BaseErrors.ERROR_NUMBER.LX1016];
-                    }
-                    if (baseResponse == null || baseResponse.StatusReplyNumbering != "LX1000")
-                        record.最后一次回调返回的状态 = "失败";
-                    else
-                        record.最后一次回调返回的状态 = "成功";
-                    if (record.API回调次数.HasValue)
-                        record.API回调次数++;
-                    else
-                        record.API回调次数 = 1;
-                    dbClient.Ado.UseTran(() =>
-                    {
-                        dbClient.Updateable(record).UpdateColumns(it => new { it.API回调次数, it.最后一次回调返回的状态 }).ExecuteCommand();
-                    });
                 }
             }
         }
@@ -2451,16 +2500,41 @@ namespace web1.WebsiteBackstage.L1.ManagementOrder
             Task.Run(() =>
             {
                 int i = 0;
-                while (i++ < 5)
+                while (i++ < 3)
                 {
                     SendAllCallBack(dbClient =>
                     {
-                        return dbClient.Queryable<table_商户明细提款>().Where(it => it.创建方式 == "接口" && DateTime.Now <= it.时间完成.Value.AddDays(3)).ToList();
+                        DateTime current = DateTime.Now;
+                        DateTime dateTime = new DateTime(current.Year, current.Month, current.Day, 23, 59, 0);
+                        return dbClient.Queryable<table_商户明细提款>().Where(it => it.创建方式 == "接口" && dateTime <= it.时间完成.Value.AddDays(3)).ToList();
                     });
                 }
             });
         }
 
+        protected void Button_发送半小时单回调_Click(object sender, EventArgs e)
+        {
+            SendAllCallBack(dbClient =>
+            {
+                return dbClient.Queryable<table_商户明细提款>().Where(it => it.创建方式 == "接口" && DateTime.Now <= it.时间完成.Value.AddMinutes(30)).ToList();
+            });
+        }
+
+        protected void Button_发送三小时单回调_Click(object sender, EventArgs e)
+        {
+            SendAllCallBack(dbClient =>
+            {
+                return dbClient.Queryable<table_商户明细提款>().Where(it => it.创建方式 == "接口" && DateTime.Now <= it.时间完成.Value.AddHours(3)).ToList();
+            });
+        }
+
+        protected void Button_发送半天单回调_Click(object sender, EventArgs e)
+        {
+            SendAllCallBack(dbClient =>
+            {
+                return dbClient.Queryable<table_商户明细提款>().Where(it => it.创建方式 == "接口" && DateTime.Now <= it.时间完成.Value.AddHours(12)).ToList();
+            });
+        }
     }
     public class Model
     {
