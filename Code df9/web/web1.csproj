@@ -519,6 +519,7 @@
     <Compile Include="WebsiteBackstage\L1\ManagementMerchant\商户余额扣除.aspx.designer.cs">
       <DependentUpon>商户余额扣除.aspx</DependentUpon>
     </Compile>
+    <Compile Include="WebsiteBackstage\L1\ManagementOrder\TResult.cs" />
     <Compile Include="WebsiteBackstage\L1\ManagementOrder\商户回调通知-修改地址.aspx.cs">
       <DependentUpon>商户回调通知-修改地址.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
