@@ -22,10 +22,12 @@ namespace web1.Filters
         private string signKey = "signature";
         private string tsKey = "timeunix";
 
-        private JsonResult GetStandardError(BaseErrors.ERROR_NUMBER errorNumber, string username)
+        private JsonResult GetStandardError(BaseErrors.ERROR_NUMBER errorNumber, string username, string pad = null)
         {
             JsonResult jsonResult = new JsonResult();
             BaseResponse baseResponse = new BaseErrors()[(int)errorNumber];
+            if (pad != null)
+                baseResponse.StatusReply += pad;
             baseResponse.Username = username;
             jsonResult.Data = baseResponse;
             return jsonResult;
@@ -80,9 +82,9 @@ namespace web1.Filters
             string secret = dbAccount.公共密匙;
             int? timeunix = filterContext.ActionParameters[tsKey] as int?;
             Int32 unixTimestamp = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
-            if (unixTimestamp - timeunix.Value > 30)
+            if (unixTimestamp - timeunix.Value > 180)
             {
-                filterContext.Result = GetStandardError(BaseErrors.ERROR_NUMBER.LX1006, dbAccount.商户ID);
+                filterContext.Result = GetStandardError(BaseErrors.ERROR_NUMBER.LX1006, dbAccount.商户ID, unixTimestamp + "-" + timeunix.Value + "=" + (unixTimestamp - timeunix.Value));
                 return;
             }
             string signature = filterContext.ActionParameters[signKey] as string;
