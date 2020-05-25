@@ -365,6 +365,18 @@ namespace web1.WebsiteBackstage.L1.ControlCenter
                     Label_出款总额.Text = "0";
                 }
 
+                // Label_收款总额
+                MySqlCommand cmd7 = new MySqlCommand("select sum(收款银行卡余额)  from  table_后台收款银行卡管理  where  状态='启用'", connC);
+                object obj7 = cmd7.ExecuteScalar();
+                if (obj7 != null && obj7.ToString() != "")
+                {
+                    Label_收款总额.Text = obj7.ToString();
+                }
+                else
+                {
+                    Label_收款总额.Text = "0";
+                }
+
                 MySqlCommand cmd6 = new MySqlCommand("select sum(交易金额) from table_商户明细提款  where 状态='待处理'", connC);
                 object obj6 = cmd6.ExecuteScalar();
                 if (obj6 != null && obj6.ToString() != "")
