@@ -95,7 +95,7 @@ namespace web1
                     }
                     else if (now.Hour == 0)
                         finished = true;
-                    Thread.Sleep(1000);
+                    Thread.Sleep(1000 * 60);
                 }
 #endif
             });

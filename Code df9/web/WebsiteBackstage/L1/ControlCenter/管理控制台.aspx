@@ -141,6 +141,12 @@
                         </td>
                     </tr>
                     <tr>
+                        <td style="width: 30%">收款银行卡总金额(开启)（5.25 开始计算）</td>
+                        <td>
+                            <asp:Label ID="Label_收款总额" runat="server" Text="0"></asp:Label>
+                        </td>
+                    </tr>
+                    <tr>
                         <td style="width: 30%">商户卡余额总额</td>
                         <td>
                             <asp:Label ID="Label_余额总额" runat="server" Text="0"></asp:Label>
