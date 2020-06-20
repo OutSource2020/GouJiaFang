@@ -66,7 +66,7 @@
         <tr>
             <td>
                 <asp:Button ID="Button1" runat="server" Text="查找" class="btn btn-info btn-fw" OnClick="Button_查找_Click" />
-                 <asp:Button ID="Button2" runat="server" Text="提款" class="btn btn-info btn-fw" OnClick="Button_提款_Click" />
+                 <asp:Button ID="Button2" runat="server" Text="发起提款" class="btn btn-info btn-fw" OnClick="Button_提款_Click" />
             </td>
             <td>
 
