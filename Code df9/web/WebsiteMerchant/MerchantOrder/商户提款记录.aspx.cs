@@ -867,7 +867,7 @@ namespace web1.WebsiteMerchant.商户订单
 
     protected void Button_提款_Click(object sender, EventArgs e)
     {
-      Response.Redirect("~/WebsiteMerchant/MerchantOrder/商户提款多笔.aspx");  //刷新頁面
+      Response.Redirect("~/WebsiteMerchant/MerchantOrder/商户提款引导.aspx");  //刷新頁面
     }
 
     protected void Button4_Click(object sender, EventArgs e)

@@ -86,9 +86,12 @@ namespace web1.API
         [HttpPost]
         public ActionResult OrderCreate(int? timeunix, string signature, OrderCreateRequest request)
         {
-            var getByWhere = sqlSugarClient.Queryable<table_商户账号>().Where(it => it.商户ID == request.UserName).ToList();
-            table_商户账号 account = getByWhere[0];
-
+            table_商户账号 account = null;
+            sqlSugarClient.Ado.UseTran(() => { });
+            sqlSugarClient.Ado.UseTran(() =>
+            {
+                account = sqlSugarClient.Queryable<table_商户账号>().Where(it => it.商户ID == request.UserName).First();
+            });
             if (Convert.ToDouble(account.手续费余额) - Convert.ToDouble(account.单笔手续费) < 0)
             {
                 return GetStandardError(BaseErrors.ERROR_NUMBER.LX1010, request.UserName, request.UserPassword);
@@ -107,10 +110,23 @@ namespace web1.API
             }
             JsonResult jsonResult = null;
             sqlSugarClient.Ado.UseTran(() => { });
+            sqlSugarClient.Ado.UseTran(() =>
+            {
+                var getByWhere = sqlSugarClient.Queryable<table_商户明细提款>()
+                .Where(it => it.商户ID == request.UserName && it.商户API订单号 == request.OrderNumberMerchant).ToList();
+                if (getByWhere.Count > 0)
+                {
+                    jsonResult = GetStandardError(BaseErrors.ERROR_NUMBER.LX1020, request.UserName, request.UserPassword);
+                }
+            });
+            if (jsonResult != null)
+            {
+                return jsonResult;
+            }
+            sqlSugarClient.Ado.UseTran(() => { });
             var result = sqlSugarClient.Ado.UseTran(() =>
             {
-                getByWhere = sqlSugarClient.Queryable<table_商户账号>().Where(it => it.商户ID == request.UserName).ToList();
-                account = getByWhere[0];
+                account = sqlSugarClient.Queryable<table_商户账号>().Where(it => it.商户ID == request.UserName).First();
                 string 状态 = "待处理";
                 string 类型 = "提款";
                 DateTime 时间创建 = DateTime.Now;

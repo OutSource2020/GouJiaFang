@@ -8,6 +8,9 @@ using System.Web.UI.WebControls;
 using System.Data;
 //using System.Data.SqlClient;
 using MySql.Data.MySqlClient;
+using SqlSugar;
+using System.IO;
+using System.Text;
 
 namespace web1.WebsiteBackstage.L1.ManagementMerchant
 {
@@ -85,6 +88,25 @@ namespace web1.WebsiteBackstage.L1.ManagementMerchant
             }
         }
 
+        private void AddUpdateLog(string logInfo)
+        {
+            try
+            {
+                string rootPath = Path.Combine(HttpRuntime.AppDomainAppPath.ToString(), "Log\\");
+                if (!Directory.Exists(rootPath))
+                {
+                    Directory.CreateDirectory(rootPath);
+                }
+
+                File.AppendAllText(rootPath + "LOG_DELETE_" + DateTime.Now.ToString("yyyyMMdd") + ".log",
+                        "[" + System.DateTime.Now.ToString("HH:mm:ss:fff") + "]  " + logInfo + "\r\n",
+                        Encoding.UTF8);
+            }
+            catch
+            {
+            }
+        }
+
         protected void Button_操作删除_Click(object sender, EventArgs e)
         {
             Button_操作删除.Enabled = false;
@@ -92,6 +114,7 @@ namespace web1.WebsiteBackstage.L1.ManagementMerchant
             MySqlConnection conn2 = new MySqlConnection(ClassLibrary1.ClassDataControl.conStr1);
             conn2.Open();
             MySqlCommand scmd2 = new MySqlCommand("delete from table_商户账号 where 商户ID = '" + 从URL获取值() + "' ", conn2);
+            AddUpdateLog("delete from table_商户账号 where 商户ID = '" + 从URL获取值() + "' ");
             scmd2.ExecuteNonQuery();
             scmd2.Dispose();
             conn2.Close();
